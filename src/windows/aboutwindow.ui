@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+    <class>AboutWindow</class>
+    <widget class="QDialog" name="AboutWindow">
+        <property name="geometry">
+            <rect>
+                <x>0</x>
+                <y>0</y>
+                <width>320</width>
+                <height>180</height>
+            </rect>
+        </property>
+        <property name="windowTitle">
+            <string>About...</string>
+        </property>
+        <layout class="QGridLayout" name="gridLayout" rowstretch="0,1,0" columnstretch="0,1">
+            <item row="0" column="0">
+                <widget class="QLabel" name="imageLabel">
+                    <property name="text">
+                        <string/>
+                    </property>
+                    <property name="pixmap">
+                        <pixmap resource="../resources.qrc">:/icons/about.svg</pixmap>
+                    </property>
+                    <property name="scaledContents">
+                        <bool>false</bool>
+                    </property>
+                </widget>
+            </item>
+            <item row="2" column="0" colspan="2">
+                <widget class="QDialogButtonBox" name="buttonBox">
+                    <property name="standardButtons">
+                        <set>QDialogButtonBox::Close</set>
+                    </property>
+                </widget>
+            </item>
+            <item row="0" column="1">
+                <widget class="QLabel" name="titleLabel">
+                    <property name="text">
+                        <string>qFM1000</string>
+                    </property>
+                    <property name="alignment">
+                        <set>Qt::AlignCenter</set>
+                    </property>
+                </widget>
+            </item>
+            <item row="1" column="0" colspan="2">
+                <widget class="QLabel" name="textLabel">
+                    <property name="text">
+                        <string>TextLabel</string>
+                    </property>
+                </widget>
+            </item>
+        </layout>
+    </widget>
+    <resources>
+        <include location="../resources.qrc"/>
+    </resources>
+    <connections/>
+</ui>

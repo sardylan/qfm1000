@@ -1,0 +1,26 @@
+language: cpp
+os: linux
+compiler: gcc
+sudo: required
+dist: trusty
+addons:
+  apt:
+    packages:
+      - build-essential
+      - pkg-config
+      - cmake
+before_install:
+  - sudo apt-add-repository --yes ppa:beineri/opt-qt58-trusty
+  - sudo apt-get -qq update
+install:
+  - sudo apt-get --yes install build-essential automake autoconf libtool pkg-config cmake
+  - sudo apt-get --yes install qt58-meta-full
+before_script:
+  - QTDIR="/opt/qt58"
+  - PATH="$QTDIR/bin:$PATH"
+  - source /opt/qt58/bin/qt58-env.sh
+script:
+  - mkdir build
+  - cd build
+  - cmake ..
+  - make
