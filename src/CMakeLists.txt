@@ -1,5 +1,6 @@
 add_subdirectory(config)
 add_subdirectory(windows)
+add_subdirectory(eeprom)
 
 set(QFM1000_SOURCES
         qfm1000.cpp)
@@ -42,6 +43,7 @@ add_executable(qfm1000
 target_link_libraries(qfm1000
         config
         windows
+        eeprom
         Qt5::Core
         Qt5::Gui
         Qt5::Svg
