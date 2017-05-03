@@ -21,6 +21,7 @@
 
 #include <QDebug>
 #include <QOpenGLWidget>
+#include <QtWidgets/QFileDialog>
 
 #include "mainwindow.hpp"
 #include "ui_mainwindow.h"
@@ -33,6 +34,8 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
     status = Status::getInstance();
     config = Config::getInstance();
 
+    tableModel = new TableModel(this);
+
     signalConnect();
     initUi();
     initStatusBar();
@@ -44,12 +47,14 @@ MainWindow::~MainWindow() {
 }
 
 void MainWindow::signalConnect() {
+    connect(ui->actionFileOpen, SIGNAL(triggered()), this, SLOT(openFile()));
     connect(ui->actionFileQuit, SIGNAL(triggered()), this, SLOT(applicationClose()));
 
     connect(ui->actionHelpAbout, SIGNAL(triggered()), this, SLOT(showAboutWindow()));
 }
 
 void MainWindow::initUi() {
+    ui->tableView->setModel(tableModel);
 }
 
 void MainWindow::initStatusBar() {
@@ -58,6 +63,18 @@ void MainWindow::initStatusBar() {
 
 void MainWindow::applicationClose() {
     QApplication::quit();
+}
+
+void MainWindow::openFile() {
+    QFileDialog fileDialog;
+    fileDialog.setAcceptMode(QFileDialog::AcceptOpen);
+    fileDialog.setFileMode(QFileDialog::ExistingFile);
+    fileDialog.setOption(QFileDialog::ReadOnly, true);
+    fileDialog.exec();
+
+    QString fileName = fileDialog.selectedFiles().at(0);
+
+    emit actionLoadFile(fileName);
 }
 
 void MainWindow::showStatusBarMessage(QString message) {
@@ -70,4 +87,8 @@ void MainWindow::showConfigWindow() {
 
 void MainWindow::showAboutWindow() {
     emit actionAbout();
+}
+
+void MainWindow::eepromUpdated() {
+    ui->tableView->update();
 }

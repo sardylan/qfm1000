@@ -29,6 +29,7 @@
 #include <status.hpp>
 
 #include "widgets/statusbar.hpp"
+#include "model/tablemodel.hpp"
 
 namespace Ui {
     class MainWindow;
@@ -44,6 +45,8 @@ public:
 
 public slots:
 
+    void eepromUpdated();
+
 private:
 
     Ui::MainWindow *ui;
@@ -52,6 +55,7 @@ private:
     Config *config;
 
     StatusBarWidgets *statusBarWidgets;
+    TableModel *tableModel;
 
     void signalConnect();
 
@@ -65,6 +69,8 @@ private slots:
 
     void applicationClose();
 
+    void openFile();
+
     void showConfigWindow();
 
     void showAboutWindow();
@@ -74,6 +80,8 @@ signals:
     void actionConfig();
 
     void actionAbout();
+
+    void actionLoadFile(QString filename);
 
 };
 

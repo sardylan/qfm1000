@@ -22,16 +22,23 @@
 #ifndef __QFM1000_EEPROM_CONFIG_H
 #define __QFM1000_EEPROM_CONFIG_H
 
+#define CHANNELS_COUNT 96
+
 #include <QVector>
 
 #include "channel.hpp"
 
 class EEPROM {
-public:
+
+private:
     EEPROM();
 
+    static EEPROM *instance;
+
 public:
-    Channel channels[96];
+    static EEPROM *getInstance();
+
+    Channel *channels[CHANNELS_COUNT];
     uint8_t tot;
 
 };

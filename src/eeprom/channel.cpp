@@ -24,8 +24,8 @@
 Channel::Channel() {
     rxFreq = 144000000;
     txFreq = 144000000;
-    rxCtcss = OFF;
-    txCtcss = OFF;
+    rxCtcss = 0;
+    txCtcss = 0;
 }
 
 unsigned int Channel::getRxFreq() const {
@@ -44,18 +44,18 @@ void Channel::setTxFreq(unsigned int txFreq) {
     Channel::txFreq = txFreq;
 }
 
-CTCSS Channel::getRxCtcss() const {
+unsigned int Channel::getRxCtcss() const {
     return rxCtcss;
 }
 
-void Channel::setRxCtcss(CTCSS rxCtcss) {
+void Channel::setRxCtcss(unsigned int rxCtcss) {
     Channel::rxCtcss = rxCtcss;
 }
 
-CTCSS Channel::getTxCtcss() const {
+unsigned int Channel::getTxCtcss() const {
     return txCtcss;
 }
 
-void Channel::setTxCtcss(CTCSS txCtcss) {
+void Channel::setTxCtcss(unsigned int txCtcss) {
     Channel::txCtcss = txCtcss;
 }

@@ -4,6 +4,12 @@ set(QFM1000_WINDOWS_WIDGET_SOURCES
 set(QFM1000_WINDOWS_WIDGET_HEADERS
         widgets/statusbar.hpp)
 
+set(QFM1000_WINDOWS_MODEL_SOURCES
+        model/tablemodel.cpp)
+
+set(QFM1000_WINDOWS_MODEL_HEADERS
+        model/tablemodel.hpp)
+
 set(QFM1000_WINDOWS_MAIN
         mainwindow.cpp
         mainwindow.hpp
@@ -29,6 +35,8 @@ find_package(Qt5 REQUIRED COMPONENTS
 add_library(windows
         ${QFM1000_WINDOWS_WIDGET_SOURCES}
         ${QFM1000_WINDOWS_WIDGET_HEADERS}
+        ${QFM1000_WINDOWS_MODEL_SOURCES}
+        ${QFM1000_WINDOWS_MODEL_HEADERS}
         ${QFM1000_WINDOWS_MAIN}
         ${QFM1000_WINDOWS_CONFIG}
         ${QFM1000_WINDOWS_ABOUT})

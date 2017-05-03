@@ -21,6 +21,19 @@
 
 #include "eeprom.hpp"
 
+EEPROM *EEPROM::instance = nullptr;
+
+EEPROM *EEPROM::getInstance() {
+    if (instance == 0)
+        instance = new EEPROM();
+
+    return instance;
+}
+
+
 EEPROM::EEPROM() {
+    for (int i = 0; i < CHANNELS_COUNT; i++)
+        channels[i] = new Channel();
+
     tot = 0;
 }

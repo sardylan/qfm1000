@@ -23,6 +23,7 @@
 #include <config/manager.hpp>
 #include <windows/configwindow.hpp>
 #include <windows/aboutwindow.hpp>
+#include <eeprom/filemanager.hpp>
 
 #include "qfm1000.hpp"
 
@@ -40,6 +41,7 @@ int main(int argc, char *argv[]) {
 QFM1000::QFM1000(int &argc, char **argv) : QApplication(argc, argv) {
     status = Status::getInstance();
     config = Config::getInstance();
+    eeprom = EEPROM::getInstance();
 
     mainWindow = new MainWindow();
 }
@@ -54,6 +56,7 @@ void QFM1000::prepare() {
 
     connect(mainWindow, SIGNAL(actionConfig()), this, SLOT(showConfigWindow()));
     connect(mainWindow, SIGNAL(actionAbout()), this, SLOT(showAboutWindow()));
+    connect(mainWindow, SIGNAL(actionLoadFile(QString)), this, SLOT(loadEepromFile(QString)));
 }
 
 int QFM1000::run() {
@@ -70,4 +73,9 @@ void QFM1000::showConfigWindow() {
 void QFM1000::showAboutWindow() {
     AboutWindow aboutWindow;
     aboutWindow.exec();
+}
+
+void QFM1000::loadEepromFile(QString fileName) {
+    FileManager::loadFromFile(eeprom, fileName);
+    mainWindow->eepromUpdated();
 }

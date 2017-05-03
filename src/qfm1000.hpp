@@ -30,6 +30,7 @@
 
 #include <config/config.hpp>
 #include <config/status.hpp>
+#include <eeprom/eeprom.hpp>
 
 
 class QFM1000 : public QApplication {
@@ -49,12 +50,15 @@ private:
     Status *status;
     Config *config;
     MainWindow *mainWindow;
+    EEPROM *eeprom;
 
 private slots:
 
     void showConfigWindow();
 
     void showAboutWindow();
+
+    void loadEepromFile(QString fileName);
 };
 
 #endif

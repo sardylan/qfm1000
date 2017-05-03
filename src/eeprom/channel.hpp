@@ -22,15 +22,13 @@
 #ifndef __QFM1000_EEPROM_CHANNEL_H
 #define __QFM1000_EEPROM_CHANNEL_H
 
-#include "ctcss.hpp"
-
 class Channel {
 
 private:
     unsigned int rxFreq;
     unsigned int txFreq;
-    CTCSS rxCtcss;
-    CTCSS txCtcss;
+    unsigned int rxCtcss;
+    unsigned int txCtcss;
 
 public:
     Channel();
@@ -43,13 +41,13 @@ public:
 
     void setTxFreq(unsigned int txFreq);
 
-    CTCSS getRxCtcss() const;
+    unsigned int getRxCtcss() const;
 
-    void setRxCtcss(CTCSS rxCtcss);
+    void setRxCtcss(unsigned int rxCtcss);
 
-    CTCSS getTxCtcss() const;
+    unsigned int getTxCtcss() const;
 
-    void setTxCtcss(CTCSS txCtcss);
+    void setTxCtcss(unsigned int txCtcss);
 };
 
 #endif
