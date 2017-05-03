@@ -44,20 +44,9 @@ MainWindow::~MainWindow() {
 }
 
 void MainWindow::signalConnect() {
-//    connect(ui->actionFileExit, SIGNAL(triggered()), this, SLOT(applicationClose()));
-//    connect(ui->actionSetupConfig, SIGNAL(triggered()), this, SLOT(showConfigWindow()));
-//    connect(ui->actionSetupRun, SIGNAL(triggered()), this, SLOT(toogleSerialPort()));
-//    connect(ui->actionHelpAbout, SIGNAL(triggered()), this, SLOT(showAboutWindow()));
-//
-//    connect(ui->clearLineButton, SIGNAL(clicked()), this, SLOT(clearLine()));
-//    connect(ui->clearTextButton, SIGNAL(clicked()), this, SLOT(clearText()));
-//
-//    connect(ui->timerIntervalSlider, SIGNAL(valueChanged(int)), this, SLOT(updateLineInterval(int)));
-//
-//    connect(ui->encoderSpeedSlider, SIGNAL(valueChanged(int)), this, SLOT(updateEncoderSpeed(int)));
-//
-//    connect(ui->playButton, SIGNAL(clicked()), this, SLOT(tooglePlayer()));
-//    connect(ui->morseText, SIGNAL(selectionChanged()), this, SLOT(emitNewSelectedText()));
+    connect(ui->actionFileQuit, SIGNAL(triggered()), this, SLOT(applicationClose()));
+
+    connect(ui->actionHelpAbout, SIGNAL(triggered()), this, SLOT(showAboutWindow()));
 }
 
 void MainWindow::initUi() {

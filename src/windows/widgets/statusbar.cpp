@@ -33,7 +33,6 @@ StatusBarWidgets::StatusBarWidgets(QObject *parent) : QObject(parent) {
 
     habSerial = new QLabel();
     initLabelStyle(habSerial);
-    initHabSerial();
 
     timeTimer = new QTimer();
     initTimeTimer();
@@ -55,10 +54,6 @@ void StatusBarWidgets::initLabelStyle(QLabel *label) {
 
 void StatusBarWidgets::initTime() {
     time->setText("time");
-}
-
-void StatusBarWidgets::initHabSerial() {
-    habSerial->setText("habSerial");
 }
 
 void StatusBarWidgets::initTimeTimer() {

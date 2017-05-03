@@ -71,17 +71,10 @@ private slots:
 
 signals:
 
-    void newActionRun(bool);
-
     void actionConfig();
 
     void actionAbout();
 
-    void newSelectedText(QString text);
-
-    void newActionPlayer(bool);
-
-    void newEncoderSpeed(int);
 };
 
 #endif

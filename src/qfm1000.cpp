@@ -52,8 +52,6 @@ void QFM1000::prepare() {
     ConfigManager::load();
     ConfigManager::save();
 
-    connect(mainWindow, SIGNAL(newActionRun(bool)), this, SLOT(newActionRun(bool)));
-    connect(mainWindow, SIGNAL(newActionPlayer(bool)), this, SLOT(newActionPlayer(bool)));
     connect(mainWindow, SIGNAL(actionConfig()), this, SLOT(showConfigWindow()));
     connect(mainWindow, SIGNAL(actionAbout()), this, SLOT(showAboutWindow()));
 }

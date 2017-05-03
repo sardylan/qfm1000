@@ -53,8 +53,6 @@ private:
 
     void initTime();
 
-    void initHabSerial();
-
     void initTimeTimer();
 
     static QString serialPortParams(QSerialPort::DataBits dataBits,
