@@ -27,12 +27,13 @@
 #include "channel.hpp"
 
 class EEPROM {
-
 public:
     EEPROM();
 
-private:
-    QVector<Channel> channels;
+public:
+    Channel channels[96];
+    uint8_t tot;
+
 };
 
 #endif

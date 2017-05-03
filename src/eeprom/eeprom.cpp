@@ -22,6 +22,5 @@
 #include "eeprom.hpp"
 
 EEPROM::EEPROM() {
-    Channel channel;
-    channels.fill(channel, 100);
+    tot = 0;
 }

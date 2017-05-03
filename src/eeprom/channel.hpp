@@ -27,21 +27,21 @@
 class Channel {
 
 private:
-    int rxFreq;
-    int txFreq;
+    unsigned int rxFreq;
+    unsigned int txFreq;
     CTCSS rxCtcss;
     CTCSS txCtcss;
 
 public:
     Channel();
 
-    int getRxFreq() const;
+    unsigned int getRxFreq() const;
 
-    void setRxFreq(int rxFreq);
+    void setRxFreq(unsigned int rxFreq);
 
-    int getTxFreq() const;
+    unsigned int getTxFreq() const;
 
-    void setTxFreq(int txFreq);
+    void setTxFreq(unsigned int txFreq);
 
     CTCSS getRxCtcss() const;
 

@@ -19,10 +19,41 @@
  *
  */
 
+#include <QFile>
+
 #include "filemanager.hpp"
 
-void FileManager::loadFromFile(EEPROM *eeprom, QString file) {
+void FileManager::loadFromFile(EEPROM *eeprom, QString filename) {
+    QFile file(filename);
+    if (!file.exists())
+        return;
 
+    if (!file.open(QIODevice::ReadOnly))
+        return;
+
+    QByteArray data = file.readAll();
+    file.close();
+
+    if (data.length() != 2048)
+        return;
+
+    for (int i = 0; i < 96; i++) {
+        uint16_t rxFreqBits = ((uint8_t) data.at(0x26 + (i * 8)) << 8) | ((uint8_t) data.at(0x27 + (i * 8)));
+        unsigned int rxFreq = (unsigned int) (rxFreqBits * 6250);
+        eeprom->channels[i].setRxFreq(rxFreq);
+
+        uint16_t txFreqBits = ((uint8_t) data.at(0x28 + (i * 8)) << 8) | ((uint8_t) data.at(0x29 + (i * 8)));
+        unsigned int txFreq = (unsigned int) (txFreqBits * 6250);
+        eeprom->channels[i].setTxFreq(txFreq);
+
+        uint8_t rxCtcssBit = (uint8_t) data.at(0x2a + (i * 8));
+        eeprom->channels[i].setRxCtcss(OFF);
+
+        uint8_t txCtcssBit = (uint8_t) data.at(0x2b + (i * 8));
+        eeprom->channels[i].setTxCtcss(OFF);
+    }
+
+    eeprom->tot = (uint8_t) data.at(0x719);
 }
 
 void FileManager::saveToFile(EEPROM *eeprom, QString file) {

@@ -22,25 +22,25 @@
 #include "channel.hpp"
 
 Channel::Channel() {
-    rxFreq = 0;
-    txFreq = 0;
+    rxFreq = 144000000;
+    txFreq = 144000000;
     rxCtcss = OFF;
     txCtcss = OFF;
 }
 
-int Channel::getRxFreq() const {
+unsigned int Channel::getRxFreq() const {
     return rxFreq;
 }
 
-void Channel::setRxFreq(int rxFreq) {
+void Channel::setRxFreq(unsigned int rxFreq) {
     Channel::rxFreq = rxFreq;
 }
 
-int Channel::getTxFreq() const {
+unsigned int Channel::getTxFreq() const {
     return txFreq;
 }
 
-void Channel::setTxFreq(int txFreq) {
+void Channel::setTxFreq(unsigned int txFreq) {
     Channel::txFreq = txFreq;
 }
 
