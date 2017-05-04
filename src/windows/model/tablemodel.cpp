@@ -19,6 +19,9 @@
  *
  */
 
+#include <QRegExp>
+#include <QtMath>
+
 #include "tablemodel.hpp"
 
 TableModel::TableModel(QObject *parent) : QAbstractTableModel(parent) {
@@ -49,11 +52,11 @@ QVariant TableModel::data(const QModelIndex &index, int role) const {
             case 0:
                 return index.row();
             case 1:
-                return channel->getRxFreq();
+                return intFreqToStr(channel->getRxFreq());
             case 2:
-                return channel->getTxFreq();
+                return intFreqToStr(channel->getTxFreq());
             case 3:
-                return (int) (channel->getTxFreq() - channel->getRxFreq());
+                return shiftToStr(channel->getTxFreq(), channel->getRxFreq());
             case 4:
                 return channel->getRxCtcss();
             case 5:
@@ -75,11 +78,11 @@ QVariant TableModel::headerData(int section, Qt::Orientation orientation, int ro
             case 0:
                 return tr("Channel");
             case 1:
-                return tr("RX Freq");
+                return tr("RX Freq (kHz)");
             case 2:
-                return tr("TX Freq");
+                return tr("TX Freq (kHz)");
             case 3:
-                return tr("Shift");
+                return tr("Shift (kHz)");
             case 4:
                 return tr("RX CTCSS");
             case 5:
@@ -97,17 +100,23 @@ bool TableModel::setData(const QModelIndex &index, const QVariant &value, int ro
         int row = index.row();
 
         Channel *channel = eeprom->channels[row];
-
+        unsigned int newValue = 0;
         switch (index.column()) {
             case 0:
                 return false;
 
             case 1:
-                channel->setRxFreq(value.toUInt());
+                newValue = strFreqToInt(value.toString());
+                if (newValue == 0)
+                    return false;
+                channel->setRxFreq(newValue);
                 break;
 
             case 2:
-                channel->setTxFreq(value.toUInt());
+                newValue = strFreqToInt(value.toString());
+                if (newValue == 0)
+                    return false;
+                channel->setTxFreq(newValue);
                 break;
 
             case 3:
@@ -137,4 +146,47 @@ Qt::ItemFlags TableModel::flags(const QModelIndex &index) const {
         return Qt::ItemIsEnabled;
 
     return QAbstractTableModel::flags(index) | Qt::ItemIsEditable;
+}
+
+unsigned int TableModel::strFreqToInt(QString input) {
+    if (input.contains(QRegExp("^\\d{3}\\.{0,1}$"))) {
+        QRegExp regExp("^(\\d{3})\\.{0,1}$");
+        regExp.indexIn(input);
+        return regExp.cap(1).leftJustified(3, '0').toUInt() * 1000000;
+    } else if (input.contains(QRegExp("^\\d{3}\\.{0,1}\\d{0,3}$"))) {
+        QRegExp regExp("^(\\d{3})\\.{0,1}(\\d{0,3})$");
+        regExp.indexIn(input);
+        return regExp.cap(1).toUInt() * 1000000
+               + regExp.cap(2).leftJustified(3, '0').toUInt() * 1000;
+    } else if (input.contains(QRegExp("^\\d{3}\\.{0,1}\\d{0,3}\\.{0,1}\\d{0,3}$"))) {
+        QRegExp regExp("^(\\d{3})\\.{0,1}(\\d{0,3})\\.{0,1}(\\d{0,3})$");
+        regExp.indexIn(input);
+        return regExp.cap(1).toUInt() * 1000000
+               + regExp.cap(2).leftJustified(3, '0').toUInt() * 1000
+               + regExp.cap(3).leftJustified(3, '0').toUInt();
+    } else {
+        return 0;
+    }
+}
+
+QString TableModel::intFreqToStr(unsigned int input) {
+    QString value = QString::number(input);
+    value.insert(3, '.');
+    value.insert(7, ',');
+    value.chop(2);
+    return value;
+}
+
+QString TableModel::shiftToStr(unsigned int txFreq, unsigned int rxFreq) {
+    int shift = (int) qFabs((int) txFreq - (int) rxFreq);
+    QString value = QString::number(shift);
+    value.insert(3, '.');
+    value.chop(2);
+
+    if (txFreq > rxFreq)
+        value.insert(0, "+");
+    else if (txFreq < rxFreq)
+        value.insert(0, "-");
+
+    return value;
 }

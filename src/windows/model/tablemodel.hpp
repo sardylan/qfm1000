@@ -25,6 +25,8 @@
 #include <QAbstractTableModel>
 #include <QPair>
 #include <QList>
+#include <QString>
+
 #include "../../eeprom/eeprom.hpp"
 
 class TableModel : public QAbstractTableModel {
@@ -32,6 +34,12 @@ Q_OBJECT
 
 private:
     EEPROM *eeprom;
+
+    static unsigned int strFreqToInt(QString input);
+
+    static QString intFreqToStr(unsigned int input);
+
+    static QString shiftToStr(unsigned int txFreq, unsigned int rxFreq);
 
 public:
     TableModel(QObject *parent = 0);
