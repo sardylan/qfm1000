@@ -23,6 +23,7 @@
 #include <QtMath>
 
 #include "tablemodel.hpp"
+#include "ctcss.hpp"
 
 TableModel::TableModel(QObject *parent) : QAbstractTableModel(parent) {
     eeprom = EEPROM::getInstance();
@@ -58,9 +59,9 @@ QVariant TableModel::data(const QModelIndex &index, int role) const {
             case 3:
                 return shiftToStr(channel->getTxFreq(), channel->getRxFreq());
             case 4:
-                return channel->getRxCtcss();
+                return ctcssValues[channel->getRxCtcss()];
             case 5:
-                return channel->getTxCtcss();
+                return ctcssValues[channel->getTxCtcss()];
             default:
                 return QVariant();
         }

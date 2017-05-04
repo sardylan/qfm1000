@@ -5,10 +5,13 @@ set(QFM1000_WINDOWS_WIDGET_HEADERS
         widgets/statusbar.hpp)
 
 set(QFM1000_WINDOWS_MODEL_SOURCES
-        model/tablemodel.cpp)
+        model/tablemodel.cpp
+        model/ctcssdelegate.cpp)
 
 set(QFM1000_WINDOWS_MODEL_HEADERS
-        model/tablemodel.hpp)
+        model/ctcss.hpp
+        model/tablemodel.hpp
+        model/ctcssdelegate.hpp)
 
 set(QFM1000_WINDOWS_MAIN
         mainwindow.cpp

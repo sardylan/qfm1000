@@ -34,14 +34,13 @@ StatusBarWidgets::StatusBarWidgets(QObject *parent) : QObject(parent) {
     habSerial = new QLabel();
     initLabelStyle(habSerial);
 
-    timeTimer = new QTimer();
+    timeTimer = new QTimer(this);
     initTimeTimer();
 
     updateFromConfig();
 }
 
 StatusBarWidgets::~StatusBarWidgets() {
-    delete time;
 }
 
 void StatusBarWidgets::initLabelStyle(QLabel *label) {

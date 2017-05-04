@@ -29,12 +29,15 @@
 MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWindow) {
     ui->setupUi(this);
 
-    statusBarWidgets = new StatusBarWidgets();
+    statusBarWidgets = new StatusBarWidgets(this);
 
     status = Status::getInstance();
     config = Config::getInstance();
 
     tableModel = new TableModel(this);
+
+    rxCtcssDelegate = new CtcssDelegate(this);
+    txCtcssDelegate = new CtcssDelegate(this);
 
     signalConnect();
     initUi();
@@ -43,7 +46,6 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
 
 MainWindow::~MainWindow() {
     delete ui;
-    delete statusBarWidgets;
 }
 
 void MainWindow::signalConnect() {
@@ -55,6 +57,8 @@ void MainWindow::signalConnect() {
 
 void MainWindow::initUi() {
     ui->tableView->setModel(tableModel);
+    ui->tableView->setItemDelegateForColumn(4, rxCtcssDelegate);
+    ui->tableView->setItemDelegateForColumn(5, txCtcssDelegate);
 }
 
 void MainWindow::initStatusBar() {
