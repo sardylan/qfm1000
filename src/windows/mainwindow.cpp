@@ -34,6 +34,8 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
     status = Status::getInstance();
     config = Config::getInstance();
 
+    eeprom = EEPROM::getInstance();
+
     tableModel = new TableModel(this);
 
     rxCtcssDelegate = new CtcssDelegate(this);
@@ -53,12 +55,16 @@ void MainWindow::signalConnect() {
     connect(ui->actionFileQuit, SIGNAL(triggered()), this, SLOT(applicationClose()));
 
     connect(ui->actionHelpAbout, SIGNAL(triggered()), this, SLOT(showAboutWindow()));
+
+    connect(ui->totSlider, SIGNAL(valueChanged(int)), this, SLOT(updateTotValue(int)));
 }
 
 void MainWindow::initUi() {
     ui->tableView->setModel(tableModel);
     ui->tableView->setItemDelegateForColumn(4, rxCtcssDelegate);
     ui->tableView->setItemDelegateForColumn(5, txCtcssDelegate);
+
+    updateTotValue(0);
 }
 
 void MainWindow::initStatusBar() {
@@ -93,6 +99,15 @@ void MainWindow::showAboutWindow() {
     emit actionAbout();
 }
 
+void MainWindow::updateTotValue(int newValue) {
+    if (newValue == 0)
+        ui->totText->setText("DISABLED");
+    else
+        ui->totText->setText(QString("%1 s").arg(newValue));
+}
+
 void MainWindow::eepromUpdated() {
     ui->tableView->update();
+
+    updateTotValue(eeprom->tot);
 }

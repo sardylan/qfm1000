@@ -55,6 +55,8 @@ private:
     Status *status;
     Config *config;
 
+    EEPROM *eeprom;
+
     StatusBarWidgets *statusBarWidgets;
     TableModel *tableModel;
 
@@ -78,6 +80,8 @@ private slots:
     void showConfigWindow();
 
     void showAboutWindow();
+
+    void updateTotValue(int newValue);
 
 signals:
 

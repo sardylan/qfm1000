@@ -65,6 +65,9 @@ QVariant TableModel::data(const QModelIndex &index, int role) const {
             default:
                 return QVariant();
         }
+    } else if (role == Qt::TextAlignmentRole) {
+        return Qt::AlignCenter;
+
     }
 
     return QVariant();

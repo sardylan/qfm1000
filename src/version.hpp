@@ -23,7 +23,7 @@
 #define __QFM1000_VERSION_H
 
 #define APPLICATION_NAME "qFM1000"
-#define APPLICATION_VERSION "0.0.8"
+#define APPLICATION_VERSION "0.1.0"
 
 #define ORGANIZATION_NAME "The HellNet.org"
 #define ORGANIZATION_DOMAIN "thehellnet.org"

@@ -16,20 +16,36 @@
   <widget class="QWidget" name="mainContainer">
    <layout class="QVBoxLayout" name="verticalLayout" stretch="0,1">
     <item>
-     <widget class="QGroupBox" name="fileInfoGroupBox">
+     <widget class="QGroupBox" name="generalConfGroupBox">
       <property name="title">
-       <string>File informations</string>
+       <string>General configuration</string>
       </property>
-      <layout class="QGridLayout" name="gridLayout">
-       <item row="0" column="0">
-        <widget class="QLabel" name="fileNameLabel">
-         <property name="text">
-          <string>File</string>
+      <layout class="QGridLayout" name="gridLayout" columnstretch="0,1,0">
+       <item row="0" column="1">
+        <widget class="QSlider" name="totSlider">
+         <property name="maximum">
+          <number>255</number>
+         </property>
+         <property name="orientation">
+          <enum>Qt::Horizontal</enum>
+         </property>
+         <property name="tickPosition">
+          <enum>QSlider::TicksBelow</enum>
+         </property>
+         <property name="tickInterval">
+          <number>16</number>
          </property>
         </widget>
        </item>
-       <item row="0" column="1">
-        <widget class="QLineEdit" name="fileNameText">
+       <item row="0" column="0">
+        <widget class="QLabel" name="totLabel">
+         <property name="text">
+          <string>TOT</string>
+         </property>
+        </widget>
+       </item>
+       <item row="0" column="2">
+        <widget class="QLineEdit" name="totText">
          <property name="readOnly">
           <bool>true</bool>
          </property>
@@ -43,59 +59,9 @@
       <property name="title">
        <string>Channels configuration</string>
       </property>
-      <layout class="QGridLayout" name="gridLayout_2" rowstretch="0,0,0,1" columnstretch="0,1,0,0">
-       <item row="2" column="3">
-        <widget class="QComboBox" name="txFreqCombo"/>
-       </item>
-       <item row="1" column="3">
-        <widget class="QComboBox" name="rxCtcssCombo"/>
-       </item>
+      <layout class="QGridLayout" name="gridLayout_2">
        <item row="0" column="0">
-        <widget class="QLabel" name="channelLabel">
-         <property name="text">
-          <string>Channel</string>
-         </property>
-        </widget>
-       </item>
-       <item row="1" column="1">
-        <widget class="QLineEdit" name="rxFreqText"/>
-       </item>
-       <item row="1" column="0">
-        <widget class="QLabel" name="rxFreqLabel">
-         <property name="text">
-          <string>RX Frequency</string>
-         </property>
-        </widget>
-       </item>
-       <item row="1" column="2">
-        <widget class="QLabel" name="rxCtcssLabel">
-         <property name="text">
-          <string>RX CTCSS</string>
-         </property>
-        </widget>
-       </item>
-       <item row="2" column="1">
-        <widget class="QLineEdit" name="txFreqText"/>
-       </item>
-       <item row="2" column="0">
-        <widget class="QLabel" name="txFreqLabel">
-         <property name="text">
-          <string>TX Frequency</string>
-         </property>
-        </widget>
-       </item>
-       <item row="3" column="0" colspan="4">
         <widget class="QTableView" name="tableView"/>
-       </item>
-       <item row="0" column="1">
-        <widget class="QComboBox" name="channelComboBox"/>
-       </item>
-       <item row="2" column="2">
-        <widget class="QLabel" name="txCtcssLabel">
-         <property name="text">
-          <string>TX CTCSS</string>
-         </property>
-        </widget>
        </item>
       </layout>
      </widget>

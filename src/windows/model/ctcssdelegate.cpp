@@ -19,6 +19,8 @@
  *
  */
 
+#include <QLineEdit>
+
 #include "ctcssdelegate.hpp"
 #include "ctcss.hpp"
 
@@ -28,6 +30,14 @@ CtcssDelegate::CtcssDelegate(QObject *parent) : QStyledItemDelegate(parent) {
 QWidget *
 CtcssDelegate::createEditor(QWidget *parent, const QStyleOptionViewItem &option, const QModelIndex &index) const {
     QComboBox *comboBox = createCtcssComboBox(parent);
+
+    int value = index.model()->data(index).toInt();
+    int comboIndex = comboBox->findData(value);
+    if (comboIndex != -1)
+        comboBox->setCurrentIndex(value);
+    else
+        comboBox->setCurrentIndex(0);
+
     return comboBox;
 }
 
@@ -47,9 +57,22 @@ void CtcssDelegate::setModelData(QWidget *editor, QAbstractItemModel *model, con
     model->setData(index, data);
 }
 
+void CtcssDelegate::updateEditorGeometry(QWidget *editor, const QStyleOptionViewItem &option,
+                                         const QModelIndex &index) const {
+    editor->setGeometry(option.rect);
+}
+
 QComboBox *CtcssDelegate::createCtcssComboBox(QWidget *parent) {
     QComboBox *comboBox = new QComboBox(parent);
-    for (int i = 0; i < ctcssValues.size(); i++)
+
+    comboBox->setEditable(true);
+    comboBox->lineEdit()->setReadOnly(true);
+    comboBox->lineEdit()->setAlignment(Qt::AlignCenter);
+
+    for (int i = 0; i < ctcssValues.size(); i++) {
         comboBox->addItem(ctcssValues[i], i);
+        comboBox->setItemData(i, Qt::AlignCenter, Qt::TextAlignmentRole);
+    }
+
     return comboBox;
 }
