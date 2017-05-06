@@ -59,6 +59,8 @@ private slots:
     void showAboutWindow();
 
     void loadEepromFile(QString fileName);
+
+    void saveEepromFile(QString fileName);
 };
 
 #endif

@@ -32,6 +32,8 @@ EEPROM *EEPROM::getInstance() {
 
 
 EEPROM::EEPROM() {
+    rawData.clear();
+
     for (int i = 0; i < CHANNELS_COUNT; i++)
         channels[i] = new Channel();
 

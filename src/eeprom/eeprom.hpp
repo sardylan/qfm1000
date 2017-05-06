@@ -38,6 +38,8 @@ private:
 public:
     static EEPROM *getInstance();
 
+    QByteArray rawData;
+
     Channel *channels[CHANNELS_COUNT];
     uint8_t tot;
 

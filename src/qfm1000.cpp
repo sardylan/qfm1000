@@ -57,6 +57,7 @@ void QFM1000::prepare() {
     connect(mainWindow, SIGNAL(actionConfig()), this, SLOT(showConfigWindow()));
     connect(mainWindow, SIGNAL(actionAbout()), this, SLOT(showAboutWindow()));
     connect(mainWindow, SIGNAL(actionLoadFile(QString)), this, SLOT(loadEepromFile(QString)));
+    connect(mainWindow, SIGNAL(actionSaveFile(QString)), this, SLOT(saveEepromFile(QString)));
 }
 
 int QFM1000::run() {
@@ -77,5 +78,10 @@ void QFM1000::showAboutWindow() {
 
 void QFM1000::loadEepromFile(QString fileName) {
     FileManager::loadFromFile(eeprom, fileName);
+    mainWindow->eepromUpdated();
+}
+
+void QFM1000::saveEepromFile(QString fileName) {
+    FileManager::saveToFile(eeprom, fileName);
     mainWindow->eepromUpdated();
 }

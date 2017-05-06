@@ -34,6 +34,9 @@ void FileManager::loadFromFile(EEPROM *eeprom, QString filename) {
     QByteArray data = file.readAll();
     file.close();
 
+    eeprom->rawData.clear();
+    eeprom->rawData.append(data);
+
     for (int i = 0; i < 96; i++) {
         uint16_t rxFreqBits = ((uint8_t) data.at(0x26 + (i * 8)) << 8) | ((uint8_t) data.at(0x27 + (i * 8)));
         unsigned int rxFreq = (unsigned int) (rxFreqBits * 6250);
@@ -54,14 +57,34 @@ void FileManager::loadFromFile(EEPROM *eeprom, QString filename) {
 }
 
 void FileManager::saveToFile(EEPROM *eeprom, QString filename) {
-    QFile file(filename);
-    if (!file.exists() || file.size() != 2048)
-        return;
+    QByteArray data;
+    data.clear();
+    data.append(eeprom->rawData);
 
+    for (int i = 0; i < 96; i++) {
+        unsigned int rxFreq = eeprom->channels[i]->getRxFreq();
+        uint16_t rxValue = (uint16_t) (rxFreq / 6250);
+        data[0x26 + (i * 8)] = (uint8_t) (rxValue >> 8);
+        data[0x27 + (i * 8)] = (uint8_t) (rxValue & 0xff);
+
+        unsigned int txFreq = eeprom->channels[i]->getTxFreq();
+        uint16_t txValue = (uint16_t) (txFreq / 6250);
+        data[0x28 + (i * 8)] = (uint8_t) (txValue >> 8);
+        data[0x29 + (i * 8)] = (uint8_t) (txValue & 0xff);
+
+        uint8_t rxCtcss = (uint8_t) eeprom->channels[i]->getRxCtcss();
+        data[0x2a + (i * 8)] = rxCtcss;
+
+        uint8_t txCtcss = (uint8_t) eeprom->channels[i]->getRxCtcss();
+        data[0x2b + (i * 8)] = txCtcss;
+    }
+
+    data[0x719] = eeprom->tot;
+
+    QFile file(filename);
     if (!file.open(QIODevice::ReadWrite))
         return;
 
-    //TODO: Implement file seek and byte write for each channel and for TOT feature
-
+    file.write(data);
     file.close();
 }

@@ -52,6 +52,7 @@ MainWindow::~MainWindow() {
 
 void MainWindow::signalConnect() {
     connect(ui->actionFileOpen, SIGNAL(triggered()), this, SLOT(openFile()));
+    connect(ui->actionFileSave, SIGNAL(triggered()), this, SLOT(saveFile()));
     connect(ui->actionFileQuit, SIGNAL(triggered()), this, SLOT(applicationClose()));
 
     connect(ui->actionHelpAbout, SIGNAL(triggered()), this, SLOT(showAboutWindow()));
@@ -85,6 +86,17 @@ void MainWindow::openFile() {
     QString fileName = fileDialog.selectedFiles().at(0);
 
     emit actionLoadFile(fileName);
+}
+
+void MainWindow::saveFile() {
+    QFileDialog fileDialog;
+    fileDialog.setAcceptMode(QFileDialog::AcceptSave);
+    fileDialog.setFileMode(QFileDialog::AnyFile);
+    fileDialog.exec();
+
+    QString fileName = fileDialog.selectedFiles().at(0);
+
+    emit actionSaveFile(fileName);
 }
 
 void MainWindow::showStatusBarMessage(QString message) {

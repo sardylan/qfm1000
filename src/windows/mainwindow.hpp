@@ -77,6 +77,8 @@ private slots:
 
     void openFile();
 
+    void saveFile();
+
     void showConfigWindow();
 
     void showAboutWindow();
@@ -90,6 +92,8 @@ signals:
     void actionAbout();
 
     void actionLoadFile(QString filename);
+
+    void actionSaveFile(QString filename);
 
 };
 
