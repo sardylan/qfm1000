@@ -71,6 +71,8 @@ private:
 
     void showStatusBarMessage(QString message);
 
+    void setDefaultChannelValue(uint8_t newValue);
+
 private slots:
 
     void applicationClose();
@@ -84,6 +86,8 @@ private slots:
     void showAboutWindow();
 
     void updateTotValue(int newValue);
+
+    void updateDefaultChannelValue(int newValue);
 
 signals:
 

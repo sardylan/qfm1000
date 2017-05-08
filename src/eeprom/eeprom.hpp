@@ -41,6 +41,7 @@ public:
     QByteArray rawData;
 
     Channel *channels[CHANNELS_COUNT];
+    uint8_t defaultChannel;
     uint8_t tot;
 
 };

@@ -58,6 +58,7 @@ void MainWindow::signalConnect() {
     connect(ui->actionHelpAbout, SIGNAL(triggered()), this, SLOT(showAboutWindow()));
 
     connect(ui->totSlider, SIGNAL(valueChanged(int)), this, SLOT(updateTotValue(int)));
+    connect(ui->defaultChannelComboBox, SIGNAL(currentIndexChanged(int)), this, SLOT(updateDefaultChannelValue(int)));
 }
 
 void MainWindow::initUi() {
@@ -65,6 +66,11 @@ void MainWindow::initUi() {
     ui->tableView->setItemDelegateForColumn(4, rxCtcssDelegate);
     ui->tableView->setItemDelegateForColumn(5, txCtcssDelegate);
 
+    ui->defaultChannelComboBox->clear();
+    for (int i = 0; i < CHANNELS_COUNT; i++)
+        ui->defaultChannelComboBox->addItem(QString("%1").arg(i), i);
+
+    setDefaultChannelValue(0);
     updateTotValue(0);
 }
 
@@ -116,10 +122,20 @@ void MainWindow::updateTotValue(int newValue) {
         ui->totText->setText("DISABLED");
     else
         ui->totText->setText(QString("%1 s").arg(newValue));
+
+    eeprom->tot = (uint8_t) ui->totSlider->value();
+}
+
+void MainWindow::updateDefaultChannelValue(int newValue) {
+    eeprom->defaultChannel = (uint8_t) ui->defaultChannelComboBox->itemData(newValue).toUInt();
+}
+
+void MainWindow::setDefaultChannelValue(uint8_t newValue) {
+    ui->defaultChannelComboBox->setCurrentIndex(ui->defaultChannelComboBox->findData(newValue));
 }
 
 void MainWindow::eepromUpdated() {
     ui->tableView->update();
-
     updateTotValue(eeprom->tot);
+    setDefaultChannelValue(eeprom->defaultChannel);
 }

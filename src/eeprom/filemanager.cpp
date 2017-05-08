@@ -53,6 +53,7 @@ void FileManager::loadFromFile(EEPROM *eeprom, QString filename) {
         eeprom->channels[i]->setTxCtcss(txCtcssBit);
     }
 
+    eeprom->defaultChannel = (uint8_t) data.at(0x1);
     eeprom->tot = (uint8_t) data.at(0x719);
 }
 
@@ -80,6 +81,7 @@ void FileManager::saveToFile(EEPROM *eeprom, QString filename) {
     }
 
     data[0x719] = eeprom->tot;
+    data[0x1] = eeprom->defaultChannel;
 
     QFile file(filename);
     if (!file.open(QIODevice::ReadWrite))
