@@ -23,7 +23,7 @@
 #include <QtMath>
 
 #include "tablemodel.hpp"
-#include "ctcss.hpp"
+#include "helper.hpp"
 
 TableModel::TableModel(QObject *parent) : QAbstractTableModel(parent) {
     eeprom = EEPROM::getInstance();
@@ -36,7 +36,7 @@ int TableModel::rowCount(const QModelIndex &parent) const {
 
 int TableModel::columnCount(const QModelIndex &parent) const {
     Q_UNUSED(parent);
-    return 6;
+    return 9;
 }
 
 QVariant TableModel::data(const QModelIndex &index, int role) const {
@@ -62,6 +62,12 @@ QVariant TableModel::data(const QModelIndex &index, int role) const {
                 return ctcssValues[channel->getRxCtcss()];
             case 5:
                 return ctcssValues[channel->getTxCtcss()];
+            case 6:
+                return powerValues[channel->getPower()];
+            case 7:
+                return channel->isSelectiveCalling();
+            case 8:
+                return channel->isCpuOffset();
             default:
                 return QVariant();
         }
@@ -91,6 +97,12 @@ QVariant TableModel::headerData(int section, Qt::Orientation orientation, int ro
                 return tr("RX CTCSS");
             case 5:
                 return tr("TX CTCSS");
+            case 6:
+                return tr("Power");
+            case 7:
+                return tr("Selective Calling");
+            case 8:
+                return tr("CPU Offset");
             default:
                 return QVariant();
         }
@@ -132,6 +144,10 @@ bool TableModel::setData(const QModelIndex &index, const QVariant &value, int ro
 
             case 5:
                 channel->setTxCtcss(value.toUInt());
+                break;
+
+            case 6:
+                channel->setPower(value.toUInt());
                 break;
 
             default:

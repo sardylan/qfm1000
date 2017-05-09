@@ -26,6 +26,9 @@ Channel::Channel() {
     txFreq = 144000000;
     rxCtcss = 0;
     txCtcss = 0;
+    power = 5;
+    selectiveCalling = false;
+    cpuOffset = false;
 }
 
 unsigned int Channel::getRxFreq() const {
@@ -58,4 +61,28 @@ unsigned int Channel::getTxCtcss() const {
 
 void Channel::setTxCtcss(unsigned int txCtcss) {
     Channel::txCtcss = txCtcss;
+}
+
+unsigned int Channel::getPower() const {
+    return power;
+}
+
+void Channel::setPower(unsigned int power) {
+    Channel::power = power;
+}
+
+bool Channel::isSelectiveCalling() const {
+    return selectiveCalling;
+}
+
+void Channel::setSelectiveCalling(bool selectiveCalling) {
+    Channel::selectiveCalling = selectiveCalling;
+}
+
+bool Channel::isCpuOffset() const {
+    return cpuOffset;
+}
+
+void Channel::setCpuOffset(bool cpuOffset) {
+    Channel::cpuOffset = cpuOffset;
 }

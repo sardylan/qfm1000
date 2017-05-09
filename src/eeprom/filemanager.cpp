@@ -51,6 +51,33 @@ void FileManager::loadFromFile(EEPROM *eeprom, QString filename) {
 
         uint8_t txCtcssBit = (uint8_t) data.at(0x2b + (i * 8));
         eeprom->channels[i]->setTxCtcss(txCtcssBit);
+
+        uint8_t txPowerBit = (uint8_t) data.at(0x2c + (i * 8));
+        switch (txPowerBit) {
+            case 0xe8:
+                eeprom->channels[i]->setPower(5);
+                break;
+            case 0xe0:
+                eeprom->channels[i]->setPower(4);
+                break;
+            case 0xd8:
+                eeprom->channels[i]->setPower(3);
+                break;
+            case 0xd0:
+                eeprom->channels[i]->setPower(2);
+                break;
+            case 0xc8:
+                eeprom->channels[i]->setPower(1);
+                break;
+            case 0xc0:
+            default:
+                eeprom->channels[i]->setPower(0);
+        }
+
+        uint8_t configBit = (uint8_t) data.at(0x2d + (i * 8));
+
+        eeprom->channels[i]->setSelectiveCalling((bool) (configBit & 0b00000010));
+        eeprom->channels[i]->setCpuOffset((bool) (configBit & 0b00000001));
     }
 
     eeprom->defaultChannel = (uint8_t) data.at(0x1);
@@ -73,11 +100,37 @@ void FileManager::saveToFile(EEPROM *eeprom, QString filename) {
         data[0x28 + (i * 8)] = (uint8_t) (txValue >> 8);
         data[0x29 + (i * 8)] = (uint8_t) (txValue & 0xff);
 
-        uint8_t rxCtcss = (uint8_t) eeprom->channels[i]->getRxCtcss();
-        data[0x2a + (i * 8)] = rxCtcss;
+        data[0x2a + (i * 8)] = (uint8_t) eeprom->channels[i]->getRxCtcss();
+        data[0x2b + (i * 8)] = (uint8_t) eeprom->channels[i]->getRxCtcss();
 
-        uint8_t txCtcss = (uint8_t) eeprom->channels[i]->getRxCtcss();
-        data[0x2b + (i * 8)] = txCtcss;
+        switch (eeprom->channels[i]->getPower()) {
+            case 5:
+                data[0x2c + (i * 8)] = 0xe8;
+                break;
+            case 4:
+                data[0x2c + (i * 8)] = 0xe0;
+                break;
+            case 3:
+                data[0x2c + (i * 8)] = 0xd8;
+                break;
+            case 2:
+                data[0x2c + (i * 8)] = 0xd0;
+                break;
+            case 1:
+                data[0x2c + (i * 8)] = 0xc8;
+                break;
+            case 0:
+            default:
+                data[0x2c + (i * 8)] = 0xc0;
+        }
+
+        uint8_t configBit = 0b00101000;
+        if (eeprom->channels[i]->isSelectiveCalling())
+            configBit |= 0b00000010;
+        if (eeprom->channels[i]->isCpuOffset())
+            configBit |= 0b00000001;
+
+        data[0x2d + (i * 8)] = configBit;
     }
 
     data[0x719] = eeprom->tot;

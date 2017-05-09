@@ -21,15 +21,15 @@
 
 #include <QLineEdit>
 
-#include "ctcssdelegate.hpp"
+#include "powerdelegate.hpp"
 #include "helper.hpp"
 
-CtcssDelegate::CtcssDelegate(QObject *parent) : QStyledItemDelegate(parent) {
+PowerDelegate::PowerDelegate(QObject *parent) : QStyledItemDelegate(parent) {
 }
 
 QWidget *
-CtcssDelegate::createEditor(QWidget *parent, const QStyleOptionViewItem &option, const QModelIndex &index) const {
-    QComboBox *comboBox = createCtcssComboBox(parent);
+PowerDelegate::createEditor(QWidget *parent, const QStyleOptionViewItem &option, const QModelIndex &index) const {
+    QComboBox *comboBox = createPowerComboBox(parent);
 
     int value = index.model()->data(index).toInt();
     int comboIndex = comboBox->findData(value);
@@ -41,7 +41,7 @@ CtcssDelegate::createEditor(QWidget *parent, const QStyleOptionViewItem &option,
     return comboBox;
 }
 
-void CtcssDelegate::setEditorData(QWidget *editor, const QModelIndex &index) const {
+void PowerDelegate::setEditorData(QWidget *editor, const QModelIndex &index) const {
     QComboBox *comboBox = static_cast<QComboBox *>(editor);
     int value = index.model()->data(index).toInt();
     int comboIndex = comboBox->findData(value);
@@ -51,26 +51,26 @@ void CtcssDelegate::setEditorData(QWidget *editor, const QModelIndex &index) con
         comboBox->setCurrentIndex(0);
 }
 
-void CtcssDelegate::setModelData(QWidget *editor, QAbstractItemModel *model, const QModelIndex &index) const {
+void PowerDelegate::setModelData(QWidget *editor, QAbstractItemModel *model, const QModelIndex &index) const {
     QComboBox *comboBox = static_cast<QComboBox *>(editor);
     int data = comboBox->currentData().toInt();
     model->setData(index, data);
 }
 
-void CtcssDelegate::updateEditorGeometry(QWidget *editor, const QStyleOptionViewItem &option,
+void PowerDelegate::updateEditorGeometry(QWidget *editor, const QStyleOptionViewItem &option,
                                          const QModelIndex &index) const {
     editor->setGeometry(option.rect);
 }
 
-QComboBox *CtcssDelegate::createCtcssComboBox(QWidget *parent) {
+QComboBox *PowerDelegate::createPowerComboBox(QWidget *parent) {
     QComboBox *comboBox = new QComboBox(parent);
 
     comboBox->setEditable(true);
     comboBox->lineEdit()->setReadOnly(true);
     comboBox->lineEdit()->setAlignment(Qt::AlignCenter);
 
-    for (int i = 0; i < ctcssValues.size(); i++) {
-        comboBox->addItem(ctcssValues[i], i);
+    for (int i = 0; i < powerValues.size(); i++) {
+        comboBox->addItem(powerValues[i], i);
         comboBox->setItemData(i, Qt::AlignCenter, Qt::TextAlignmentRole);
     }
 

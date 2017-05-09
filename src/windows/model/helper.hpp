@@ -65,4 +65,13 @@ const std::vector<QString> ctcssValues = {
         "241.8",
         "250.3"
 };
+
+const std::vector<QString> powerValues = {
+        "0",
+        "1",
+        "6",
+        "10",
+        "15",
+        "25"
+};
 #endif

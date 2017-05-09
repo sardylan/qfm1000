@@ -6,12 +6,14 @@ set(QFM1000_WINDOWS_WIDGET_HEADERS
 
 set(QFM1000_WINDOWS_MODEL_SOURCES
         model/tablemodel.cpp
-        model/ctcssdelegate.cpp)
+        model/ctcssdelegate.cpp
+        model/powerdelegate.cpp)
 
 set(QFM1000_WINDOWS_MODEL_HEADERS
-        model/ctcss.hpp
+        model/helper.hpp
         model/tablemodel.hpp
-        model/ctcssdelegate.hpp)
+        model/ctcssdelegate.hpp
+        model/powerdelegate.hpp)
 
 set(QFM1000_WINDOWS_MAIN
         mainwindow.cpp

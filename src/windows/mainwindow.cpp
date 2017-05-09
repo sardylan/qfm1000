@@ -40,6 +40,7 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
 
     rxCtcssDelegate = new CtcssDelegate(this);
     txCtcssDelegate = new CtcssDelegate(this);
+    powerDelegate = new PowerDelegate(this);
 
     signalConnect();
     initUi();
@@ -65,6 +66,7 @@ void MainWindow::initUi() {
     ui->tableView->setModel(tableModel);
     ui->tableView->setItemDelegateForColumn(4, rxCtcssDelegate);
     ui->tableView->setItemDelegateForColumn(5, txCtcssDelegate);
+    ui->tableView->setItemDelegateForColumn(6, powerDelegate);
 
     ui->defaultChannelComboBox->clear();
     for (int i = 0; i < CHANNELS_COUNT; i++)

@@ -31,6 +31,7 @@
 #include "widgets/statusbar.hpp"
 #include "model/tablemodel.hpp"
 #include "model/ctcssdelegate.hpp"
+#include "model/powerdelegate.hpp"
 
 namespace Ui {
     class MainWindow;
@@ -62,6 +63,7 @@ private:
 
     CtcssDelegate *rxCtcssDelegate;
     CtcssDelegate *txCtcssDelegate;
+    PowerDelegate *powerDelegate;
 
     void signalConnect();
 
