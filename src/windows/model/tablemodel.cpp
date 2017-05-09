@@ -65,9 +65,9 @@ QVariant TableModel::data(const QModelIndex &index, int role) const {
             case 6:
                 return powerValues[channel->getPower()];
             case 7:
-                return channel->isSelectiveCalling();
+                return boolToStr(channel->isSelectiveCalling());
             case 8:
-                return channel->isCpuOffset();
+                return boolToStr(channel->isCpuOffset());
             default:
                 return QVariant();
         }
@@ -150,6 +150,14 @@ bool TableModel::setData(const QModelIndex &index, const QVariant &value, int ro
                 channel->setPower(value.toUInt());
                 break;
 
+            case 7:
+                channel->setSelectiveCalling(value.toBool());
+                break;
+
+            case 8:
+                channel->setCpuOffset(value.toBool());
+                break;
+
             default:
                 return false;
         }
@@ -209,4 +217,8 @@ QString TableModel::shiftToStr(unsigned int txFreq, unsigned int rxFreq) {
         value.insert(0, "-");
 
     return value;
+}
+
+QString TableModel::boolToStr(bool value) {
+    return value ? "enabled" : "disabled";
 }

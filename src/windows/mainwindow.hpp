@@ -32,6 +32,7 @@
 #include "model/tablemodel.hpp"
 #include "model/ctcssdelegate.hpp"
 #include "model/powerdelegate.hpp"
+#include "model/flagdelegate.hpp"
 
 namespace Ui {
     class MainWindow;
@@ -64,6 +65,8 @@ private:
     CtcssDelegate *rxCtcssDelegate;
     CtcssDelegate *txCtcssDelegate;
     PowerDelegate *powerDelegate;
+    FlagDelegate *selCalFlagDelegate;
+    FlagDelegate *cpuOffsetFlagDelegate;
 
     void signalConnect();
 

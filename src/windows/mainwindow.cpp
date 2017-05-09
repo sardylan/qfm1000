@@ -41,6 +41,8 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
     rxCtcssDelegate = new CtcssDelegate(this);
     txCtcssDelegate = new CtcssDelegate(this);
     powerDelegate = new PowerDelegate(this);
+    selCalFlagDelegate = new FlagDelegate(this);
+    cpuOffsetFlagDelegate = new FlagDelegate(this);
 
     signalConnect();
     initUi();
@@ -67,6 +69,8 @@ void MainWindow::initUi() {
     ui->tableView->setItemDelegateForColumn(4, rxCtcssDelegate);
     ui->tableView->setItemDelegateForColumn(5, txCtcssDelegate);
     ui->tableView->setItemDelegateForColumn(6, powerDelegate);
+    ui->tableView->setItemDelegateForColumn(6, selCalFlagDelegate);
+    ui->tableView->setItemDelegateForColumn(7, cpuOffsetFlagDelegate);
 
     ui->defaultChannelComboBox->clear();
     for (int i = 0; i < CHANNELS_COUNT; i++)

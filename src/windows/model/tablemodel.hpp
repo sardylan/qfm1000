@@ -41,6 +41,8 @@ private:
 
     static QString shiftToStr(unsigned int txFreq, unsigned int rxFreq);
 
+    static QString boolToStr(bool value);
+
 public:
     TableModel(QObject *parent = 0);
 
