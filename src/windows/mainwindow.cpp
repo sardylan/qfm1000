@@ -70,8 +70,6 @@ void MainWindow::initUi() {
     for (int i = 0; i < CHANNELS_COUNT; i++)
         ui->defaultChannelComboBox->addItem(QString("%1").arg(i), i);
 
-    ui->defaultChannelComboBox->scr
-
     setDefaultChannelValue(0);
     updateTotValue(0);
 }
