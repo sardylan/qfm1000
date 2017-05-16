@@ -32,14 +32,6 @@ private:
     unsigned int power;
     bool selectiveCalling;
     bool cpuOffset;
-public:
-    bool isSelectiveCalling() const;
-
-    void setSelectiveCalling(bool selectiveCalling);
-
-    bool isCpuOffset() const;
-
-    void setCpuOffset(bool cpuOffset);
 
 public:
     Channel();
@@ -63,6 +55,14 @@ public:
     unsigned int getPower() const;
 
     void setPower(unsigned int power);
+
+    bool isSelectiveCalling() const;
+
+    void setSelectiveCalling(bool selectiveCalling);
+
+    bool isCpuOffset() const;
+
+    void setCpuOffset(bool cpuOffset);
 };
 
 #endif
