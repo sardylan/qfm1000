@@ -76,11 +76,17 @@ private:
 
     void showStatusBarMessage(QString message);
 
-    void setDefaultChannelValue(uint8_t newValue);
+    void setDefaultChannelValue(int newValue);
+
+    void updateWindowFileName();
+
+    void widgetEnabled(bool status);
 
 private slots:
 
     void applicationClose();
+
+    void closeFile();
 
     void openFile();
 
@@ -99,6 +105,8 @@ signals:
     void actionConfig();
 
     void actionAbout();
+
+    void actionCloseFile();
 
     void actionLoadFile(QString filename);
 

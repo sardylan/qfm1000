@@ -47,7 +47,7 @@ QVariant TableModel::data(const QModelIndex &index, int role) const {
         return QVariant();
 
     if (role == Qt::DisplayRole) {
-        Channel *channel = eeprom->channels[index.row()];
+        Channel *channel = eeprom->getChannel(index.row());
 
         switch (index.column()) {
             case 0:
@@ -115,7 +115,7 @@ bool TableModel::setData(const QModelIndex &index, const QVariant &value, int ro
     if (index.isValid() && role == Qt::EditRole) {
         int row = index.row();
 
-        Channel *channel = eeprom->channels[row];
+        Channel *channel = eeprom->getChannel(row);
         unsigned int newValue = 0;
         switch (index.column()) {
             case 0:

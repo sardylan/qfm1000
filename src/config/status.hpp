@@ -22,6 +22,8 @@
 #ifndef __QFM1000_CONFIG_STATUS_H
 #define __QFM1000_CONFIG_STATUS_H
 
+#include <QString>
+
 class Status {
 
 private:
@@ -29,10 +31,20 @@ private:
 
     static Status *instance;
 
+    QString currentFileName;
+    bool dirty;
     bool serialOpened;
 
 public:
     static Status *getInstance();
+
+    const QString &getCurrentFileName() const;
+
+    void setCurrentFileName(const QString &currentFileName);
+
+    bool isDirty() const;
+
+    void setDirty(bool dirty);
 
     bool isSerialOpened() const;
 

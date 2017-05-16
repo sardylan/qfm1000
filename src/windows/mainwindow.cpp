@@ -47,6 +47,8 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
     signalConnect();
     initUi();
     initStatusBar();
+
+    eepromUpdated();
 }
 
 MainWindow::~MainWindow() {
@@ -54,6 +56,7 @@ MainWindow::~MainWindow() {
 }
 
 void MainWindow::signalConnect() {
+    connect(ui->actionFileClose, SIGNAL(triggered()), this, SLOT(closeFile()));
     connect(ui->actionFileOpen, SIGNAL(triggered()), this, SLOT(openFile()));
     connect(ui->actionFileSave, SIGNAL(triggered()), this, SLOT(saveFile()));
     connect(ui->actionFileQuit, SIGNAL(triggered()), this, SLOT(applicationClose()));
@@ -73,6 +76,7 @@ void MainWindow::initUi() {
     ui->tableView->setItemDelegateForColumn(8, cpuOffsetFlagDelegate);
 
     ui->defaultChannelComboBox->clear();
+    ui->defaultChannelComboBox->addItem("Last used", -1);
     for (int i = 0; i < CHANNELS_COUNT; i++)
         ui->defaultChannelComboBox->addItem(QString("%1").arg(i), i);
 
@@ -86,6 +90,10 @@ void MainWindow::initStatusBar() {
 
 void MainWindow::applicationClose() {
     QApplication::quit();
+}
+
+void MainWindow::closeFile() {
+    emit actionCloseFile();
 }
 
 void MainWindow::openFile() {
@@ -129,19 +137,47 @@ void MainWindow::updateTotValue(int newValue) {
     else
         ui->totText->setText(QString("%1 s").arg(newValue));
 
-    eeprom->tot = (uint8_t) ui->totSlider->value();
+    eeprom->setTot(ui->totSlider->value());
 }
 
 void MainWindow::updateDefaultChannelValue(int newValue) {
-    eeprom->defaultChannel = (uint8_t) ui->defaultChannelComboBox->itemData(newValue).toUInt();
+    eeprom->setDefaultChannel(ui->defaultChannelComboBox->itemData(newValue).toInt());
 }
 
-void MainWindow::setDefaultChannelValue(uint8_t newValue) {
+void MainWindow::setDefaultChannelValue(int newValue) {
     ui->defaultChannelComboBox->setCurrentIndex(ui->defaultChannelComboBox->findData(newValue));
 }
 
 void MainWindow::eepromUpdated() {
+    updateWindowFileName();
+
+    if (status->getCurrentFileName().length() == 0) {
+        widgetEnabled(false);
+        return;
+    }
+
+    widgetEnabled(true);
+
     ui->tableView->update();
-    updateTotValue(eeprom->tot);
-    setDefaultChannelValue(eeprom->defaultChannel);
+    updateTotValue(eeprom->getTot());
+    setDefaultChannelValue(eeprom->getDefaultChannel());
+}
+
+void MainWindow::updateWindowFileName() {
+    QString title = "app";
+
+    if (status->getCurrentFileName().length() > 0) {
+        QString fileName = status->getCurrentFileName();
+        title.append(QString(" - %1").arg(fileName));
+
+        if (status->isDirty())
+            title.append("*");
+    }
+
+    setWindowTitle(title);
+}
+
+void MainWindow::widgetEnabled(bool status) {
+    ui->generalConfGroupBox->setEnabled(status);
+    ui->channelsGroupBox->setEnabled(status);
 }

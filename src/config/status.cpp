@@ -19,6 +19,7 @@
  *
  */
 
+#include <QtCore/QString>
 #include "status.hpp"
 
 Status *Status::instance = nullptr;
@@ -32,6 +33,24 @@ Status *Status::getInstance() {
 
 Status::Status() {
     serialOpened = false;
+    currentFileName = "";
+    dirty = false;
+}
+
+const QString &Status::getCurrentFileName() const {
+    return currentFileName;
+}
+
+void Status::setCurrentFileName(const QString &currentFileName) {
+    Status::currentFileName = currentFileName;
+}
+
+bool Status::isDirty() const {
+    return dirty;
+}
+
+void Status::setDirty(bool dirty) {
+    Status::dirty = dirty;
 }
 
 bool Status::isSerialOpened() const {
