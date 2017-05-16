@@ -69,8 +69,8 @@ void MainWindow::initUi() {
     ui->tableView->setItemDelegateForColumn(4, rxCtcssDelegate);
     ui->tableView->setItemDelegateForColumn(5, txCtcssDelegate);
     ui->tableView->setItemDelegateForColumn(6, powerDelegate);
-    ui->tableView->setItemDelegateForColumn(6, selCalFlagDelegate);
-    ui->tableView->setItemDelegateForColumn(7, cpuOffsetFlagDelegate);
+    ui->tableView->setItemDelegateForColumn(7, selCalFlagDelegate);
+    ui->tableView->setItemDelegateForColumn(8, cpuOffsetFlagDelegate);
 
     ui->defaultChannelComboBox->clear();
     for (int i = 0; i < CHANNELS_COUNT; i++)
