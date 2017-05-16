@@ -36,6 +36,10 @@ private:
 
     static EEPROM *instance;
 
+    void updateRawData();
+
+    void updateParams();
+
     QByteArray data;
 
     Channel *channels[CHANNELS_COUNT];
@@ -45,7 +49,7 @@ private:
 public:
     static EEPROM *getInstance();
 
-    const QByteArray &getData() const;
+    const QByteArray &getData();
 
     void setData(const QByteArray &data);
 

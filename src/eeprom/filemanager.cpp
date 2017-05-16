@@ -35,112 +35,14 @@ void FileManager::loadFromFile(EEPROM *eeprom, QString filename) {
     file.close();
 
     eeprom->setData(data);
-
-    for (int i = 0; i < 96; i++) {
-        uint16_t rxFreqBits = ((uint8_t) data.at(0x26 + (i * 8)) << 8) | ((uint8_t) data.at(0x27 + (i * 8)));
-        unsigned int rxFreq = (unsigned int) (rxFreqBits * 6250);
-        eeprom->getChannel(i)->setRxFreq(rxFreq);
-
-        uint16_t txFreqBits = ((uint8_t) data.at(0x28 + (i * 8)) << 8) | ((uint8_t) data.at(0x29 + (i * 8)));
-        unsigned int txFreq = (unsigned int) (txFreqBits * 6250);
-        eeprom->getChannel(i)->setTxFreq(txFreq);
-
-        uint8_t rxCtcssBit = (uint8_t) data.at(0x2a + (i * 8));
-        eeprom->getChannel(i)->setRxCtcss(rxCtcssBit);
-
-        uint8_t txCtcssBit = (uint8_t) data.at(0x2b + (i * 8));
-        eeprom->getChannel(i)->setTxCtcss(txCtcssBit);
-
-        uint8_t txPowerBit = (uint8_t) data.at(0x2c + (i * 8));
-        switch (txPowerBit) {
-            case 0xe8:
-                eeprom->getChannel(i)->setPower(5);
-                break;
-            case 0xe0:
-                eeprom->getChannel(i)->setPower(4);
-                break;
-            case 0xd8:
-                eeprom->getChannel(i)->setPower(3);
-                break;
-            case 0xd0:
-                eeprom->getChannel(i)->setPower(2);
-                break;
-            case 0xc8:
-                eeprom->getChannel(i)->setPower(1);
-                break;
-            case 0xc0:
-            default:
-                eeprom->getChannel(i)->setPower(0);
-        }
-
-        uint8_t configBit = (uint8_t) data.at(0x2d + (i * 8));
-
-        eeprom->getChannel(i)->setSelectiveCalling((bool) (configBit & 0b00000010));
-        eeprom->getChannel(i)->setCpuOffset((bool) (configBit & 0b00000001));
-    }
-
-    eeprom->setDefaultChannel(data.at(0x1) >= 0 && data.at(0x1) < CHANNELS_COUNT ? data.at(0x1) : -1);
-    eeprom->setTot(data.at(0x719));
 }
 
 void FileManager::saveToFile(EEPROM *eeprom, QString filename) {
-    QByteArray data = eeprom->getData();
-
-    for (int i = 0; i < 96; i++) {
-        unsigned int rxFreq = eeprom->getChannel(i)->getRxFreq();
-        uint16_t rxValue = (uint16_t) (rxFreq / 6250);
-        data[0x26 + (i * 8)] = (uint8_t) (rxValue >> 8);
-        data[0x27 + (i * 8)] = (uint8_t) (rxValue & 0xff);
-
-        unsigned int txFreq = eeprom->getChannel(i)->getTxFreq();
-        uint16_t txValue = (uint16_t) (txFreq / 6250);
-        data[0x28 + (i * 8)] = (uint8_t) (txValue >> 8);
-        data[0x29 + (i * 8)] = (uint8_t) (txValue & 0xff);
-
-        data[0x2a + (i * 8)] = (uint8_t) eeprom->getChannel(i)->getRxCtcss();
-        data[0x2b + (i * 8)] = (uint8_t) eeprom->getChannel(i)->getRxCtcss();
-
-        switch (eeprom->getChannel(i)->getPower()) {
-            case 5:
-                data[0x2c + (i * 8)] = 0xe8;
-                break;
-            case 4:
-                data[0x2c + (i * 8)] = 0xe0;
-                break;
-            case 3:
-                data[0x2c + (i * 8)] = 0xd8;
-                break;
-            case 2:
-                data[0x2c + (i * 8)] = 0xd0;
-                break;
-            case 1:
-                data[0x2c + (i * 8)] = 0xc8;
-                break;
-            case 0:
-            default:
-                data[0x2c + (i * 8)] = 0xc0;
-        }
-
-        uint8_t configBit = 0b00101000;
-        if (eeprom->getChannel(i)->isSelectiveCalling())
-            configBit |= 0b00000010;
-        if (eeprom->getChannel(i)->isCpuOffset())
-            configBit |= 0b00000001;
-
-        data[0x2d + (i * 8)] = configBit;
-    }
-
-    data[0x719] = (uint8_t) eeprom->getTot();
-    data[0x1] = (uint8_t) (eeprom->getDefaultChannel() >= 0 && eeprom->getDefaultChannel() < CHANNELS_COUNT
-                           ? eeprom->getDefaultChannel()
-                           : 0xff);
-
-    eeprom->setData(data);
-
     QFile file(filename);
     if (!file.open(QIODevice::ReadWrite))
         return;
 
+    QByteArray data = eeprom->getData();
     file.write(data);
     file.close();
 }

@@ -78,11 +78,13 @@ private:
 
     void showStatusBarMessage(QString message);
 
-    void setDefaultChannelValue(int newValue);
+    void setDefaultChannelValue();
 
     void updateWindowFileName();
 
     void widgetEnabled(bool status);
+
+    void updateTotValueString();
 
 private slots:
 
@@ -98,7 +100,7 @@ private slots:
 
     void showAboutWindow();
 
-    void updateTotValue(int newValue);
+    void updateTotValue();
 
     void updateDefaultChannelValue(int newValue);
 

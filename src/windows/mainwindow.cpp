@@ -64,7 +64,7 @@ void MainWindow::signalConnect() {
 
     connect(ui->actionHelpAbout, SIGNAL(triggered()), this, SLOT(showAboutWindow()));
 
-    connect(ui->totSlider, SIGNAL(valueChanged(int)), this, SLOT(updateTotValue(int)));
+    connect(ui->totSlider, SIGNAL(valueChanged(int)), this, SLOT(updateTotValue()));
     connect(ui->defaultChannelComboBox, SIGNAL(currentIndexChanged(int)), this, SLOT(updateDefaultChannelValue(int)));
 }
 
@@ -84,8 +84,8 @@ void MainWindow::initUi() {
 
     ui->tableView->resizeColumnsToContents();
 
-    setDefaultChannelValue(0);
-    updateTotValue(0);
+    setDefaultChannelValue();
+    updateTotValueString();
 }
 
 void MainWindow::initStatusBar() {
@@ -135,21 +135,24 @@ void MainWindow::showAboutWindow() {
     emit actionAbout();
 }
 
-void MainWindow::updateTotValue(int newValue) {
-    if (newValue == 0)
+void MainWindow::updateTotValue() {
+    eeprom->setTot(ui->totSlider->value());
+    updateTotValueString();
+}
+
+void MainWindow::updateTotValueString() {
+    if (eeprom->getTot() == 0)
         ui->totText->setText("DISABLED");
     else
-        ui->totText->setText(QString("%1 s").arg(newValue));
-
-    eeprom->setTot(ui->totSlider->value());
+        ui->totText->setText(QString("%1 s").arg(eeprom->getTot()));
 }
 
 void MainWindow::updateDefaultChannelValue(int newValue) {
     eeprom->setDefaultChannel(ui->defaultChannelComboBox->itemData(newValue).toInt());
 }
 
-void MainWindow::setDefaultChannelValue(int newValue) {
-    ui->defaultChannelComboBox->setCurrentIndex(ui->defaultChannelComboBox->findData(newValue));
+void MainWindow::setDefaultChannelValue() {
+    ui->defaultChannelComboBox->setCurrentIndex(ui->defaultChannelComboBox->findData(eeprom->getDefaultChannel()));
 }
 
 void MainWindow::eepromUpdated() {
@@ -163,8 +166,8 @@ void MainWindow::eepromUpdated() {
     widgetEnabled(true);
 
     ui->tableView->update();
-    updateTotValue(eeprom->getTot());
-    setDefaultChannelValue(eeprom->getDefaultChannel());
+    updateTotValueString();
+    setDefaultChannelValue();
 }
 
 void MainWindow::updateWindowFileName() {
