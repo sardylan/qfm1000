@@ -36,7 +36,7 @@ int TableModel::rowCount(const QModelIndex &parent) const {
 
 int TableModel::columnCount(const QModelIndex &parent) const {
     Q_UNUSED(parent);
-    return 9;
+    return 8;
 }
 
 QVariant TableModel::data(const QModelIndex &index, int role) const {
@@ -51,29 +51,26 @@ QVariant TableModel::data(const QModelIndex &index, int role) const {
 
         switch (index.column()) {
             case 0:
-                return index.row();
-            case 1:
                 return intFreqToStr(channel->getRxFreq());
-            case 2:
+            case 1:
                 return intFreqToStr(channel->getTxFreq());
-            case 3:
+            case 2:
                 return shiftToStr(channel->getTxFreq(), channel->getRxFreq());
-            case 4:
+            case 3:
                 return ctcssValues[channel->getRxCtcss()];
-            case 5:
+            case 4:
                 return ctcssValues[channel->getTxCtcss()];
-            case 6:
+            case 5:
                 return powerValues[channel->getPower()];
-            case 7:
+            case 6:
                 return boolToStr(channel->isSelectiveCalling());
-            case 8:
+            case 7:
                 return boolToStr(channel->isCpuOffset());
             default:
                 return QVariant();
         }
     } else if (role == Qt::TextAlignmentRole) {
         return Qt::AlignCenter;
-
     }
 
     return QVariant();
@@ -86,26 +83,26 @@ QVariant TableModel::headerData(int section, Qt::Orientation orientation, int ro
     if (orientation == Qt::Horizontal) {
         switch (section) {
             case 0:
-                return tr("Channel");
-            case 1:
                 return tr("RX Freq (kHz)");
-            case 2:
+            case 1:
                 return tr("TX Freq (kHz)");
-            case 3:
+            case 2:
                 return tr("Shift (kHz)");
-            case 4:
+            case 3:
                 return tr("RX CTCSS");
-            case 5:
+            case 4:
                 return tr("TX CTCSS");
-            case 6:
+            case 5:
                 return tr("Power");
-            case 7:
+            case 6:
                 return tr("Selective Calling");
-            case 8:
+            case 7:
                 return tr("CPU Offset");
             default:
                 return QVariant();
         }
+    } else if (orientation == Qt::Vertical) {
+        return section;
     }
 
     return QVariant();
@@ -119,16 +116,13 @@ bool TableModel::setData(const QModelIndex &index, const QVariant &value, int ro
         unsigned int newValue = 0;
         switch (index.column()) {
             case 0:
-                return false;
-
-            case 1:
                 newValue = strFreqToInt(value.toString());
                 if (newValue == 0)
                     return false;
                 channel->setRxFreq(newValue);
                 break;
 
-            case 2:
+            case 1:
                 newValue = strFreqToInt(value.toString());
                 if (newValue == 0)
                     return false;
@@ -136,25 +130,22 @@ bool TableModel::setData(const QModelIndex &index, const QVariant &value, int ro
                 break;
 
             case 3:
-                return false;
-
-            case 4:
                 channel->setRxCtcss(value.toUInt());
                 break;
 
-            case 5:
+            case 4:
                 channel->setTxCtcss(value.toUInt());
                 break;
 
-            case 6:
+            case 5:
                 channel->setPower(value.toUInt());
                 break;
 
-            case 7:
+            case 6:
                 channel->setSelectiveCalling(value.toBool());
                 break;
 
-            case 8:
+            case 7:
                 channel->setCpuOffset(value.toBool());
                 break;
 
@@ -173,7 +164,8 @@ Qt::ItemFlags TableModel::flags(const QModelIndex &index) const {
     if (!index.isValid())
         return Qt::ItemIsEnabled;
 
-    return QAbstractTableModel::flags(index) | Qt::ItemIsEditable;
+    Qt::ItemFlags itemFlags = QAbstractTableModel::flags(index) | Qt::ItemIsEditable;
+    return itemFlags;
 }
 
 unsigned int TableModel::strFreqToInt(QString input) {

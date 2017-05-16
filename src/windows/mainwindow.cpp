@@ -38,6 +38,7 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
 
     tableModel = new TableModel(this);
 
+    offsetDelegate = new ReadOnlyDelegate(this);
     rxCtcssDelegate = new CtcssDelegate(this);
     txCtcssDelegate = new CtcssDelegate(this);
     powerDelegate = new PowerDelegate(this);
@@ -69,16 +70,19 @@ void MainWindow::signalConnect() {
 
 void MainWindow::initUi() {
     ui->tableView->setModel(tableModel);
-    ui->tableView->setItemDelegateForColumn(4, rxCtcssDelegate);
-    ui->tableView->setItemDelegateForColumn(5, txCtcssDelegate);
-    ui->tableView->setItemDelegateForColumn(6, powerDelegate);
-    ui->tableView->setItemDelegateForColumn(7, selCalFlagDelegate);
-    ui->tableView->setItemDelegateForColumn(8, cpuOffsetFlagDelegate);
+    ui->tableView->setItemDelegateForColumn(2, offsetDelegate);
+    ui->tableView->setItemDelegateForColumn(3, rxCtcssDelegate);
+    ui->tableView->setItemDelegateForColumn(4, txCtcssDelegate);
+    ui->tableView->setItemDelegateForColumn(5, powerDelegate);
+    ui->tableView->setItemDelegateForColumn(6, selCalFlagDelegate);
+    ui->tableView->setItemDelegateForColumn(7, cpuOffsetFlagDelegate);
 
     ui->defaultChannelComboBox->clear();
     ui->defaultChannelComboBox->addItem("Last used", -1);
     for (int i = 0; i < CHANNELS_COUNT; i++)
         ui->defaultChannelComboBox->addItem(QString("%1").arg(i), i);
+
+    ui->tableView->resizeColumnsToContents();
 
     setDefaultChannelValue(0);
     updateTotValue(0);
@@ -164,7 +168,9 @@ void MainWindow::eepromUpdated() {
 }
 
 void MainWindow::updateWindowFileName() {
-    QString title = "app";
+    QString title = QString("%1\n%2")
+            .arg(QCoreApplication::applicationName())
+            .arg(QCoreApplication::applicationVersion());
 
     if (status->getCurrentFileName().length() > 0) {
         QString fileName = status->getCurrentFileName();

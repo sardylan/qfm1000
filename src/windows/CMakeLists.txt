@@ -6,6 +6,7 @@ set(QFM1000_WINDOWS_WIDGET_HEADERS
 
 set(QFM1000_WINDOWS_MODEL_SOURCES
         model/tablemodel.cpp
+        model/readonlydelegate.cpp
         model/ctcssdelegate.cpp
         model/powerdelegate.cpp
         model/flagdelegate.cpp)
@@ -13,6 +14,7 @@ set(QFM1000_WINDOWS_MODEL_SOURCES
 set(QFM1000_WINDOWS_MODEL_HEADERS
         model/helper.hpp
         model/tablemodel.hpp
+        model/readonlydelegate.hpp
         model/ctcssdelegate.hpp
         model/powerdelegate.hpp
         model/flagdelegate.hpp)

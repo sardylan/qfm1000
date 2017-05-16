@@ -30,6 +30,7 @@
 
 #include "widgets/statusbar.hpp"
 #include "model/tablemodel.hpp"
+#include "model/readonlydelegate.hpp"
 #include "model/ctcssdelegate.hpp"
 #include "model/powerdelegate.hpp"
 #include "model/flagdelegate.hpp"
@@ -62,6 +63,7 @@ private:
     StatusBarWidgets *statusBarWidgets;
     TableModel *tableModel;
 
+    ReadOnlyDelegate *offsetDelegate;
     CtcssDelegate *rxCtcssDelegate;
     CtcssDelegate *txCtcssDelegate;
     PowerDelegate *powerDelegate;
