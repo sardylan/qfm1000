@@ -29,14 +29,13 @@ FlagDelegate::FlagDelegate(QObject *parent) : QStyledItemDelegate(parent) {
 QWidget *
 FlagDelegate::createEditor(QWidget *parent, const QStyleOptionViewItem &option, const QModelIndex &index) const {
     QCheckBox *checkBox = createCtcssComboBox(parent);
-    bool value = index.model()->data(index).toBool();
-    checkBox->setChecked(value);
     return checkBox;
 }
 
 void FlagDelegate::setEditorData(QWidget *editor, const QModelIndex &index) const {
     QCheckBox *checkBox = static_cast<QCheckBox *>(editor);
-    bool value = index.model()->data(index).toBool();
+    QString stringValue = index.model()->data(index).toString();
+    bool value = stringValue == "enabled";
     checkBox->setChecked(value);
 }
 
@@ -49,10 +48,10 @@ void FlagDelegate::setModelData(QWidget *editor, QAbstractItemModel *model, cons
 void FlagDelegate::updateEditorGeometry(QWidget *editor, const QStyleOptionViewItem &option,
                                         const QModelIndex &index) const {
     editor->setGeometry(option.rect);
-    editor->setBaseSize(option.rect.size());
 }
 
 QCheckBox *FlagDelegate::createCtcssComboBox(QWidget *parent) {
     QCheckBox *checkBox = new QCheckBox(parent);
+    checkBox->setStyleSheet("padding: 5px;");
     return checkBox;
 }

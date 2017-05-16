@@ -30,25 +30,20 @@ PowerDelegate::PowerDelegate(QObject *parent) : QStyledItemDelegate(parent) {
 QWidget *
 PowerDelegate::createEditor(QWidget *parent, const QStyleOptionViewItem &option, const QModelIndex &index) const {
     QComboBox *comboBox = createPowerComboBox(parent);
-
-    int value = index.model()->data(index).toInt();
-    int comboIndex = comboBox->findData(value);
-    if (comboIndex != -1)
-        comboBox->setCurrentIndex(value);
-    else
-        comboBox->setCurrentIndex(0);
-
     return comboBox;
 }
 
 void PowerDelegate::setEditorData(QWidget *editor, const QModelIndex &index) const {
     QComboBox *comboBox = static_cast<QComboBox *>(editor);
-    int value = index.model()->data(index).toInt();
-    int comboIndex = comboBox->findData(value);
-    if (comboIndex != -1)
-        comboBox->setCurrentIndex(value);
-    else
-        comboBox->setCurrentIndex(0);
+    QString stringValue = index.model()->data(index).toString();
+
+    for (int i = 0; i < powerValues.size(); i++)
+        if (stringValue == powerValues[i]) {
+            comboBox->setCurrentIndex(i);
+            return;
+        }
+
+    comboBox->setCurrentIndex(0);
 }
 
 void PowerDelegate::setModelData(QWidget *editor, QAbstractItemModel *model, const QModelIndex &index) const {
