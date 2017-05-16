@@ -25,6 +25,7 @@
 #define CHANNELS_COUNT 96
 
 #include <QVector>
+#include <QByteArray>
 
 #include "channel.hpp"
 
@@ -35,14 +36,28 @@ private:
 
     static EEPROM *instance;
 
+    QByteArray data;
+
+    Channel *channels[CHANNELS_COUNT];
+    int defaultChannel;
+    int tot;
+
 public:
     static EEPROM *getInstance();
 
-    QByteArray rawData;
+    const QByteArray &getData() const;
 
-    Channel *channels[CHANNELS_COUNT];
-    uint8_t defaultChannel;
-    uint8_t tot;
+    void setData(const QByteArray &data);
+
+    Channel *getChannel(int index) const;
+
+    int getDefaultChannel() const;
+
+    void setDefaultChannel(int defaultChannel);
+
+    int getTot() const;
+
+    void setTot(int tot);
 
 };
 

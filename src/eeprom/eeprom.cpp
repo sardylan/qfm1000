@@ -32,12 +32,38 @@ EEPROM *EEPROM::getInstance() {
 
 
 EEPROM::EEPROM() {
-    rawData.clear();
-
     for (int i = 0; i < CHANNELS_COUNT; i++) {
         channels[i] = new Channel();
     }
 
-    defaultChannel = 0;
+    defaultChannel = -1;
     tot = 0;
+}
+
+const QByteArray &EEPROM::getData() const {
+    return data;
+}
+
+void EEPROM::setData(const QByteArray &data) {
+    EEPROM::data = data;
+}
+
+Channel *EEPROM::getChannel(int index) const {
+    return channels[index];
+}
+
+int EEPROM::getDefaultChannel() const {
+    return defaultChannel;
+}
+
+void EEPROM::setDefaultChannel(int defaultChannel) {
+    EEPROM::defaultChannel = defaultChannel;
+}
+
+int EEPROM::getTot() const {
+    return tot;
+}
+
+void EEPROM::setTot(int tot) {
+    EEPROM::tot = tot;
 }
