@@ -250,6 +250,9 @@
    <property name="text">
     <string>&amp;About</string>
    </property>
+   <property name="shortcut">
+    <string>F1</string>
+   </property>
   </action>
   <action name="actionEditCut">
    <property name="icon">

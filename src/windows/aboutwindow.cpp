@@ -47,9 +47,6 @@ void AboutWindow::initUi() {
     ui->titleLabel->setText(QString("%1\n%2")
                                     .arg(QCoreApplication::applicationName())
                                     .arg(QCoreApplication::applicationVersion()));
-
-    ui->textLabel->setAlignment(Qt::AlignCenter);
-    ui->textLabel->setText("Created by Luca Cireddu (IS0GVH)\nsardylan@gmail.com\nhttp://www.lucacireddu.it");
 }
 
 void AboutWindow::handleClose() {
