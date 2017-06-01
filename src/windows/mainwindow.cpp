@@ -66,6 +66,7 @@ void MainWindow::signalConnect() {
 
     connect(ui->totSlider, SIGNAL(valueChanged(int)), this, SLOT(updateTotValue()));
     connect(ui->defaultChannelComboBox, SIGNAL(currentIndexChanged(int)), this, SLOT(updateDefaultChannelValue(int)));
+    connect(ui->lowPowerComboBox, SIGNAL(currentIndexChanged(int)), this, SLOT(updateLowPowerValue(int)));
 }
 
 void MainWindow::initUi() {
@@ -76,15 +77,21 @@ void MainWindow::initUi() {
     ui->tableView->setItemDelegateForColumn(5, powerDelegate);
     ui->tableView->setItemDelegateForColumn(6, selCalFlagDelegate);
     ui->tableView->setItemDelegateForColumn(7, cpuOffsetFlagDelegate);
+    ui->tableView->resizeColumnsToContents();
 
     ui->defaultChannelComboBox->clear();
     ui->defaultChannelComboBox->addItem("Last used", -1);
     for (int i = 0; i < CHANNELS_COUNT; i++)
         ui->defaultChannelComboBox->addItem(QString("%1").arg(i), i);
 
-    ui->tableView->resizeColumnsToContents();
+    ui->lowPowerComboBox->clear();
+    ui->lowPowerComboBox->addItem("1 W", 1);
+    ui->lowPowerComboBox->addItem("6 W", 2);
+    ui->lowPowerComboBox->addItem("10 W", 3);
+    ui->lowPowerComboBox->addItem("15 W", 4);
 
     setDefaultChannelValue();
+    setLowPowerValue();
     updateTotValueString();
 }
 
@@ -151,8 +158,16 @@ void MainWindow::updateDefaultChannelValue(int newValue) {
     eeprom->setDefaultChannel(ui->defaultChannelComboBox->itemData(newValue).toInt());
 }
 
+void MainWindow::updateLowPowerValue(int newValue) {
+    eeprom->setLowPower(ui->lowPowerComboBox->itemData(newValue).toInt());
+}
+
 void MainWindow::setDefaultChannelValue() {
     ui->defaultChannelComboBox->setCurrentIndex(ui->defaultChannelComboBox->findData(eeprom->getDefaultChannel()));
+}
+
+void MainWindow::setLowPowerValue() {
+    ui->lowPowerComboBox->setCurrentIndex(ui->lowPowerComboBox->findData(eeprom->getLowPower()));
 }
 
 void MainWindow::eepromUpdated() {
@@ -166,8 +181,12 @@ void MainWindow::eepromUpdated() {
     widgetEnabled(true);
 
     ui->tableView->update();
+
+    ui->totSlider->setValue(eeprom->getTot());
     updateTotValueString();
+
     setDefaultChannelValue();
+    setLowPowerValue();
 }
 
 void MainWindow::updateWindowFileName() {

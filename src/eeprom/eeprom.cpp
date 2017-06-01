@@ -180,7 +180,7 @@ void EEPROM::updateParams() {
         channels[i]->setCpuOffset((bool) (configBit & 0b00000001));
     }
 
-    tot = (unsigned int) data[OFFSET_TOT];
+    tot = (uint8_t) data[OFFSET_TOT];
 
     defaultChannel = (int) data[OFFSET_STARTUP_CHANNEL] >= 0 && (int) data[OFFSET_STARTUP_CHANNEL] < CHANNELS_COUNT
                      ? (int) data[OFFSET_STARTUP_CHANNEL]

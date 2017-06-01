@@ -80,6 +80,8 @@ private:
 
     void setDefaultChannelValue();
 
+    void setLowPowerValue();
+
     void updateWindowFileName();
 
     void widgetEnabled(bool status);
@@ -103,6 +105,8 @@ private slots:
     void updateTotValue();
 
     void updateDefaultChannelValue(int newValue);
+
+    void updateLowPowerValue(int newValue);
 
 signals:
 

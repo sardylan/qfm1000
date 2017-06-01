@@ -22,13 +22,40 @@
       </property>
       <layout class="QGridLayout" name="gridLayout" columnstretch="0,0,0,1">
        <item row="0" column="0">
+        <widget class="QLabel" name="defaultChannelLabel">
+         <property name="text">
+          <string>Default channel</string>
+         </property>
+        </widget>
+       </item>
+       <item row="0" column="3">
+        <spacer name="horizontalSpacer">
+         <property name="orientation">
+          <enum>Qt::Horizontal</enum>
+         </property>
+         <property name="sizeHint" stdset="0">
+          <size>
+           <width>40</width>
+           <height>20</height>
+          </size>
+         </property>
+        </spacer>
+       </item>
+       <item row="1" column="0">
+        <widget class="QLabel" name="lowPowerLabel">
+         <property name="text">
+          <string>Low Power</string>
+         </property>
+        </widget>
+       </item>
+       <item row="2" column="0">
         <widget class="QLabel" name="totLabel">
          <property name="text">
           <string>TOT</string>
          </property>
         </widget>
        </item>
-       <item row="0" column="1">
+       <item row="2" column="1">
         <widget class="QSlider" name="totSlider">
          <property name="minimumSize">
           <size>
@@ -50,34 +77,17 @@
          </property>
         </widget>
        </item>
-       <item row="0" column="2">
+       <item row="2" column="2">
         <widget class="QLineEdit" name="totText">
          <property name="readOnly">
           <bool>true</bool>
          </property>
         </widget>
        </item>
-       <item row="0" column="3">
-        <spacer name="horizontalSpacer">
-         <property name="orientation">
-          <enum>Qt::Horizontal</enum>
-         </property>
-         <property name="sizeHint" stdset="0">
-          <size>
-           <width>40</width>
-           <height>20</height>
-          </size>
-         </property>
-        </spacer>
+       <item row="1" column="1" colspan="2">
+        <widget class="QComboBox" name="lowPowerComboBox"/>
        </item>
-       <item row="1" column="0">
-        <widget class="QLabel" name="defaultChannelLabel">
-         <property name="text">
-          <string>Default channel</string>
-         </property>
-        </widget>
-       </item>
-       <item row="1" column="1">
+       <item row="0" column="1" colspan="2">
         <widget class="QComboBox" name="defaultChannelComboBox">
          <property name="sizeAdjustPolicy">
           <enum>QComboBox::AdjustToMinimumContentsLength</enum>
