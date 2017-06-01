@@ -24,6 +24,12 @@
 
 #define CHANNELS_COUNT 96
 
+#define OFFSET_CHANNEL_FIRST 0x26
+#define OFFSET_TOT 0x719
+#define OFFSET_STARTUP_CHANNEL 0x6D7 // 0x1
+#define OFFSET_BUTTONS 0x729
+#define OFFSET_LOW_POWER 0x71E
+
 #include <QVector>
 #include <QByteArray>
 
@@ -45,6 +51,7 @@ private:
     Channel *channels[CHANNELS_COUNT];
     int defaultChannel;
     int tot;
+    int lowPower;
 
 public:
     static EEPROM *getInstance();
@@ -63,6 +70,9 @@ public:
 
     void setTot(int tot);
 
+    int getLowPower() const;
+
+    void setLowPower(int lowPower);
 };
 
 #endif
