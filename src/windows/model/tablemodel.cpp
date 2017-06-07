@@ -47,25 +47,25 @@ QVariant TableModel::data(const QModelIndex &index, int role) const {
         return QVariant();
 
     if (role == Qt::DisplayRole) {
-        Channel *channel = eeprom->getChannel(index.row());
+        int channel = index.row();
 
         switch (index.column()) {
             case 0:
-                return intFreqToStr(channel->getRxFreq());
+                return intFreqToStr(eeprom->getChannelRxFreq(channel));
             case 1:
-                return intFreqToStr(channel->getTxFreq());
+                return intFreqToStr(eeprom->getChannelTxFreq(channel));
             case 2:
-                return shiftToStr(channel->getTxFreq(), channel->getRxFreq());
+                return shiftToStr(eeprom->getChannelTxFreq(channel), eeprom->getChannelRxFreq(channel));
             case 3:
-                return ctcssValues[channel->getRxCtcss()];
+                return ctcssValues[eeprom->getChannelRxCtcss(channel)];
             case 4:
-                return ctcssValues[channel->getTxCtcss()];
+                return ctcssValues[eeprom->getChannelTxCtcss(channel)];
             case 5:
-                return powerValues[channel->getPower()];
+                return powerValues[eeprom->getChannelPower(channel)];
             case 6:
-                return boolToStr(channel->isSelectiveCalling());
+                return boolToStr(eeprom->getChannelSelectiveCalling(channel));
             case 7:
-                return boolToStr(channel->isCpuOffset());
+                return boolToStr(eeprom->getChannelCpuOffset(channel));
             default:
                 return QVariant();
         }
@@ -110,43 +110,41 @@ QVariant TableModel::headerData(int section, Qt::Orientation orientation, int ro
 
 bool TableModel::setData(const QModelIndex &index, const QVariant &value, int role) {
     if (index.isValid() && role == Qt::EditRole) {
-        int row = index.row();
-
-        Channel *channel = eeprom->getChannel(row);
+        int channel = index.row();
         unsigned int newValue = 0;
         switch (index.column()) {
             case 0:
                 newValue = strFreqToInt(value.toString());
                 if (newValue == 0)
                     return false;
-                channel->setRxFreq(newValue);
+                eeprom->setChannelRxFreq(channel, newValue);
                 break;
 
             case 1:
                 newValue = strFreqToInt(value.toString());
                 if (newValue == 0)
                     return false;
-                channel->setTxFreq(newValue);
+                eeprom->setChannelTxFreq(channel, newValue);
                 break;
 
             case 3:
-                channel->setRxCtcss(value.toUInt());
+                eeprom->setChannelRxCtcss(channel, value.toUInt());
                 break;
 
             case 4:
-                channel->setTxCtcss(value.toUInt());
+                eeprom->setChannelTxCtcss(channel, value.toUInt());
                 break;
 
             case 5:
-                channel->setPower(value.toUInt());
+                eeprom->setChannelPower(channel, value.toUInt());
                 break;
 
             case 6:
-                channel->setSelectiveCalling(value.toBool());
+                eeprom->setChannelSelectiveCalling(channel, value.toBool());
                 break;
 
             case 7:
-                channel->setCpuOffset(value.toBool());
+                eeprom->setChannelCpuOffset(channel, value.toBool());
                 break;
 
             default:
@@ -190,18 +188,14 @@ unsigned int TableModel::strFreqToInt(QString input) {
 }
 
 QString TableModel::intFreqToStr(unsigned int input) {
-    QString value = QString::number(input);
-    value.insert(3, '.');
-    value.insert(7, ',');
-    value.chop(2);
-    return value;
+    double khz = (float) input / 1000;
+    return QString::number(khz, 'f', 1);
 }
 
 QString TableModel::shiftToStr(unsigned int txFreq, unsigned int rxFreq) {
     int shift = (int) qFabs((int) txFreq - (int) rxFreq);
-    QString value = QString::number(shift);
-    value.insert(3, '.');
-    value.chop(2);
+    double khz = (float) shift / 1000;
+    QString value = QString::number(khz, 'f', 1);
 
     if (txFreq > rxFreq)
         value.insert(0, "+");

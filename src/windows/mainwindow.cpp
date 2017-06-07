@@ -85,6 +85,7 @@ void MainWindow::initUi() {
         ui->defaultChannelComboBox->addItem(QString("%1").arg(i), i);
 
     ui->lowPowerComboBox->clear();
+    ui->lowPowerComboBox->addItem("Disabled", 0);
     ui->lowPowerComboBox->addItem("1 W", 1);
     ui->lowPowerComboBox->addItem("6 W", 2);
     ui->lowPowerComboBox->addItem("10 W", 3);
@@ -159,7 +160,7 @@ void MainWindow::updateDefaultChannelValue(int newValue) {
 }
 
 void MainWindow::updateLowPowerValue(int newValue) {
-    eeprom->setLowPower(ui->lowPowerComboBox->itemData(newValue).toInt());
+    eeprom->setLowPower(ui->lowPowerComboBox->itemData(newValue).toUInt());
 }
 
 void MainWindow::setDefaultChannelValue() {
@@ -167,7 +168,9 @@ void MainWindow::setDefaultChannelValue() {
 }
 
 void MainWindow::setLowPowerValue() {
-    ui->lowPowerComboBox->setCurrentIndex(ui->lowPowerComboBox->findData(eeprom->getLowPower()));
+    int lowPower = eeprom->getLowPower();
+    int index = ui->lowPowerComboBox->findData(lowPower);
+    ui->lowPowerComboBox->setCurrentIndex(index);
 }
 
 void MainWindow::eepromUpdated() {

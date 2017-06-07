@@ -22,6 +22,8 @@
 #ifndef __QFM1000_EEPROM_CONFIG_H
 #define __QFM1000_EEPROM_CONFIG_H
 
+#define EEPROM_SIZE 2048
+
 #define CHANNELS_COUNT 96
 
 #define OFFSET_CHANNEL_FIRST 0x26
@@ -33,8 +35,6 @@
 #include <QVector>
 #include <QByteArray>
 
-#include "channel.hpp"
-
 class EEPROM {
 
 private:
@@ -42,16 +42,9 @@ private:
 
     static EEPROM *instance;
 
-    void updateRawData();
-
-    void updateParams();
-
     QByteArray data;
 
-    Channel *channels[CHANNELS_COUNT];
-    int defaultChannel;
-    int tot;
-    int lowPower;
+    bool isValidChannelNumber(int channel);
 
 public:
     static EEPROM *getInstance();
@@ -60,17 +53,43 @@ public:
 
     void setData(const QByteArray &data);
 
-    Channel *getChannel(int index) const;
+    unsigned int getChannelRxFreq(int channel);
 
-    int getDefaultChannel() const;
+    void setChannelRxFreq(int channel, unsigned int freq);
+
+    unsigned int getChannelTxFreq(int channel);
+
+    void setChannelTxFreq(int channel, unsigned int freq);
+
+    uint8_t getChannelRxCtcss(int channel);
+
+    void setChannelRxCtcss(int channel, int ctcss);
+
+    uint8_t getChannelTxCtcss(int channel);
+
+    void setChannelTxCtcss(int channel, int ctcss);
+
+    unsigned int getChannelPower(int channel);
+
+    void setChannelPower(int channel, unsigned int power);
+
+    bool getChannelSelectiveCalling(int channel);
+
+    void setChannelSelectiveCalling(int channel, bool selectiveCalling);
+
+    bool getChannelCpuOffset(int channel);
+
+    void setChannelCpuOffset(int channel, bool cpuOffset);
+
+    int getDefaultChannel();
 
     void setDefaultChannel(int defaultChannel);
 
-    int getTot() const;
+    uint8_t getTot();
 
     void setTot(int tot);
 
-    int getLowPower() const;
+    int getLowPower();
 
     void setLowPower(int lowPower);
 };

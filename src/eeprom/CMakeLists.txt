@@ -1,11 +1,9 @@
 set(QFM1000_EEPROM_SOURCES
         eeprom.cpp
-        channel.cpp
         filemanager.cpp)
 
 set(QFM1000_EEPROM_HEADERS
         eeprom.hpp
-        channel.hpp
         filemanager.hpp)
 
 find_package(Qt5 REQUIRED COMPONENTS

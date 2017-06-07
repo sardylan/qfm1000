@@ -30,161 +30,222 @@ EEPROM *EEPROM::getInstance() {
     return instance;
 }
 
-
 EEPROM::EEPROM() {
-    for (int i = 0; i < CHANNELS_COUNT; i++) {
-        channels[i] = new Channel();
-    }
-
-    defaultChannel = -1;
-    tot = 0;
+    data.clear();
+    for (int i = 0; i < EEPROM_SIZE; i++)
+        data.append((char) '\0');
 }
 
 const QByteArray &EEPROM::getData() {
-    updateRawData();
     return data;
 }
 
 void EEPROM::setData(const QByteArray &data) {
     EEPROM::data = data;
-    updateParams();
 }
 
-Channel *EEPROM::getChannel(int index) const {
-    return channels[index];
+bool EEPROM::isValidChannelNumber(int channel) {
+    return channel >= 0 && channel < CHANNELS_COUNT;
 }
 
-int EEPROM::getDefaultChannel() const {
-    return defaultChannel;
+unsigned int EEPROM::getChannelRxFreq(int channel) {
+    if (!isValidChannelNumber(channel))
+        return 0;
+
+    int offset = OFFSET_CHANNEL_FIRST + (channel * 8);
+    uint16_t rxFreqBits = ((uint8_t) data[offset] << 8) | ((uint8_t) data[offset + 1]);
+    return (unsigned int) (rxFreqBits * 6250);
+}
+
+void EEPROM::setChannelRxFreq(int channel, unsigned int freq) {
+    if (!isValidChannelNumber(channel))
+        return;
+
+    int offset = OFFSET_CHANNEL_FIRST + (channel * 8);
+    uint16_t rxValue = (uint16_t) (freq / 6250);
+    data[offset + 0] = (uint8_t) (rxValue >> 8);
+    data[offset + 1] = (uint8_t) (rxValue & 0xff);
+}
+
+unsigned int EEPROM::getChannelTxFreq(int channel) {
+    if (!isValidChannelNumber(channel))
+        return 0;
+
+    int offset = OFFSET_CHANNEL_FIRST + (channel * 8);
+    uint16_t rxFreqBits = ((uint8_t) data[offset + 2] << 8) | ((uint8_t) data[offset + 3]);
+    return (unsigned int) (rxFreqBits * 6250);
+}
+
+void EEPROM::setChannelTxFreq(int channel, unsigned int freq) {
+    if (!isValidChannelNumber(channel))
+        return;
+
+    int offset = OFFSET_CHANNEL_FIRST + (channel * 8);
+    uint16_t rxValue = (uint16_t) (freq / 6250);
+    data[offset + 2] = (uint8_t) (rxValue >> 8);
+    data[offset + 3] = (uint8_t) (rxValue & 0xff);
+}
+
+uint8_t EEPROM::getChannelRxCtcss(int channel) {
+    if (!isValidChannelNumber(channel))
+        return 0;
+
+    int offset = OFFSET_CHANNEL_FIRST + (channel * 8);
+    return (uint8_t) data[offset + 4];
+}
+
+void EEPROM::setChannelRxCtcss(int channel, int ctcss) {
+    if (!isValidChannelNumber(channel))
+        return;
+
+    int offset = OFFSET_CHANNEL_FIRST + (channel * 8);
+    data[offset + 4] = (uint8_t) ctcss;
+}
+
+uint8_t EEPROM::getChannelTxCtcss(int channel) {
+    if (!isValidChannelNumber(channel))
+        return 0;
+
+    int offset = OFFSET_CHANNEL_FIRST + (channel * 8);
+    return (uint8_t) data[offset + 5];
+}
+
+void EEPROM::setChannelTxCtcss(int channel, int ctcss) {
+    if (!isValidChannelNumber(channel))
+        return;
+
+    int offset = OFFSET_CHANNEL_FIRST + (channel * 8);
+    data[offset + 5] = (uint8_t) ctcss;
+}
+
+unsigned int EEPROM::getChannelPower(int channel) {
+    if (!isValidChannelNumber(channel))
+        return 0;
+
+    int offset = OFFSET_CHANNEL_FIRST + (channel * 8);
+    uint8_t txPowerByte = (uint8_t) data[offset + 6];
+    switch (txPowerByte) {
+        case 0xe8:
+            return 5;
+        case 0xe0:
+            return 4;
+        case 0xd8:
+            return 3;
+        case 0xd0:
+            return 2;
+        case 0xc8:
+            return 1;
+        case 0xc0:
+        default:
+            return 0;
+    }
+}
+
+void EEPROM::setChannelPower(int channel, unsigned int power) {
+    if (!isValidChannelNumber(channel))
+        return;
+
+    int offset = OFFSET_CHANNEL_FIRST + (channel * 8);
+    uint8_t byte;
+    switch (power) {
+        case 5:
+            byte = 0xe8;
+            break;
+        case 4:
+            byte = 0xe0;
+            break;
+        case 3:
+            byte = 0xd8;
+            break;
+        case 2:
+            byte = 0xd0;
+            break;
+        case 1:
+            byte = 0xc8;
+            break;
+        case 0:
+        default:
+            byte = 0xc0;
+    }
+
+    data[offset + 6] = byte;
+}
+
+bool EEPROM::getChannelSelectiveCalling(int channel) {
+    if (!isValidChannelNumber(channel))
+        return false;
+
+    int offset = OFFSET_CHANNEL_FIRST + (channel * 8);
+    uint8_t configBit = (uint8_t) data[offset + 7];
+    return (bool) (configBit & 0b00000010);
+}
+
+void EEPROM::setChannelSelectiveCalling(int channel, bool selectiveCalling) {
+    if (!isValidChannelNumber(channel))
+        return;
+
+    int offset = OFFSET_CHANNEL_FIRST + (channel * 8);
+    uint8_t configBit = (uint8_t) data[offset + 7];
+    configBit |= 0b00101000;
+    if (selectiveCalling)
+        configBit |= 0b00000010;
+    data[offset + 7] = configBit;
+}
+
+bool EEPROM::getChannelCpuOffset(int channel) {
+    if (!isValidChannelNumber(channel))
+        return false;
+
+    int offset = OFFSET_CHANNEL_FIRST + (channel * 8);
+    uint8_t configBit = (uint8_t) data[offset + 7];
+    return (bool) (configBit & 0b00000001);
+}
+
+void EEPROM::setChannelCpuOffset(int channel, bool cpuOffset) {
+    if (!isValidChannelNumber(channel))
+        return;
+
+    int offset = OFFSET_CHANNEL_FIRST + (channel * 8);
+    uint8_t configBit = (uint8_t) data[offset + 7];
+    configBit |= 0b00101000;
+    if (cpuOffset)
+        configBit |= 0b00000001;
+    data[offset + 7] = configBit;
+}
+
+int EEPROM::getDefaultChannel() {
+    return (int) data[OFFSET_STARTUP_CHANNEL] >= 0 && (int) data[OFFSET_STARTUP_CHANNEL] < CHANNELS_COUNT
+           ? (int) data[OFFSET_STARTUP_CHANNEL]
+           : -1;
 }
 
 void EEPROM::setDefaultChannel(int defaultChannel) {
-    EEPROM::defaultChannel = defaultChannel;
-}
-
-int EEPROM::getTot() const {
-    return tot;
-}
-
-void EEPROM::setTot(int tot) {
-    EEPROM::tot = tot;
-}
-
-int EEPROM::getLowPower() const {
-    return lowPower;
-}
-
-void EEPROM::setLowPower(int lowPower) {
-    EEPROM::lowPower = lowPower;
-}
-
-void EEPROM::updateRawData() {
-    for (int i = 0; i < 96; i++) {
-        int offset = OFFSET_CHANNEL_FIRST + (i * 8);
-
-        unsigned int rxFreq = channels[i]->getRxFreq();
-        uint16_t rxValue = (uint16_t) (rxFreq / 6250);
-        data[offset + 0] = (uint8_t) (rxValue >> 8);
-        data[offset + 1] = (uint8_t) (rxValue & 0xff);
-
-        unsigned int txFreq = channels[i]->getTxFreq();
-        uint16_t txValue = (uint16_t) (txFreq / 6250);
-        data[offset + 2] = (uint8_t) (txValue >> 8);
-        data[offset + 3] = (uint8_t) (txValue & 0xff);
-
-        data[offset + 4] = (uint8_t) channels[i]->getRxCtcss();
-        data[offset + 5] = (uint8_t) channels[i]->getRxCtcss();
-
-        switch (channels[i]->getPower()) {
-            case 5:
-                data[offset + 6] = 0xe8;
-                break;
-            case 4:
-                data[offset + 6] = 0xe0;
-                break;
-            case 3:
-                data[offset + 6] = 0xd8;
-                break;
-            case 2:
-                data[offset + 6] = 0xd0;
-                break;
-            case 1:
-                data[offset + 6] = 0xc8;
-                break;
-            case 0:
-            default:
-                data[offset + 6] = 0xc0;
-        }
-
-        uint8_t configBit = 0b00101000;
-        if (channels[i]->isSelectiveCalling())
-            configBit |= 0b00000010;
-        if (channels[i]->isCpuOffset())
-            configBit |= 0b00000001;
-
-        data[offset + 7] = configBit;
-    }
-
-    data[OFFSET_TOT] = (uint8_t) tot;
+    if (!isValidChannelNumber(defaultChannel))
+        return;
 
     data[OFFSET_STARTUP_CHANNEL] = (uint8_t) (defaultChannel >= 0 && defaultChannel < CHANNELS_COUNT
                                               ? defaultChannel
                                               : 0xff);
-
-    data[OFFSET_LOW_POWER] = (uint8_t) lowPower;
 }
 
-void EEPROM::updateParams() {
-    for (int i = 0; i < 96; i++) {
-        int offset = OFFSET_CHANNEL_FIRST + (i * 8);
+uint8_t EEPROM::getTot() {
+    return (uint8_t) data[OFFSET_TOT];
+}
 
-        uint16_t rxFreqBits = ((uint8_t) data[offset] << 8) | ((uint8_t) data[offset + 1]);
-        unsigned int rxFreq = (unsigned int) (rxFreqBits * 6250);
-        channels[i]->setRxFreq(rxFreq);
+void EEPROM::setTot(int tot) {
+    if (tot < 0 || tot > 255)
+        return;
 
-        uint16_t txFreqBits = ((uint8_t) data[offset + 2] << 8) | ((uint8_t) data[offset + 3]);
-        unsigned int txFreq = (unsigned int) (txFreqBits * 6250);
-        channels[i]->setTxFreq(txFreq);
+    data[OFFSET_TOT] = (uint8_t) tot;
+}
 
-        uint8_t rxCtcssBit = (uint8_t) data[offset + 4];
-        channels[i]->setRxCtcss(rxCtcssBit);
+int EEPROM::getLowPower() {
+    return (int) data[OFFSET_LOW_POWER];
+}
 
-        uint8_t txCtcssBit = (uint8_t) data[offset + 5];
-        channels[i]->setTxCtcss(txCtcssBit);
+void EEPROM::setLowPower(int lowPower) {
+    if (lowPower <= 0 || lowPower >= 5)
+        return;
 
-        uint8_t txPowerBit = (uint8_t) data[offset + 6];
-        switch (txPowerBit) {
-            case 0xe8:
-                channels[i]->setPower(5);
-                break;
-            case 0xe0:
-                channels[i]->setPower(4);
-                break;
-            case 0xd8:
-                channels[i]->setPower(3);
-                break;
-            case 0xd0:
-                channels[i]->setPower(2);
-                break;
-            case 0xc8:
-                channels[i]->setPower(1);
-                break;
-            case 0xc0:
-            default:
-                channels[i]->setPower(0);
-        }
-
-        uint8_t configBit = (uint8_t) data[offset + 7];
-
-        channels[i]->setSelectiveCalling((bool) (configBit & 0b00000010));
-        channels[i]->setCpuOffset((bool) (configBit & 0b00000001));
-    }
-
-    tot = (uint8_t) data[OFFSET_TOT];
-
-    defaultChannel = (int) data[OFFSET_STARTUP_CHANNEL] >= 0 && (int) data[OFFSET_STARTUP_CHANNEL] < CHANNELS_COUNT
-                     ? (int) data[OFFSET_STARTUP_CHANNEL]
-                     : -1;
-
-    lowPower = (unsigned int) data[OFFSET_LOW_POWER];
+    data[OFFSET_LOW_POWER] = (uint8_t) lowPower;
 }
