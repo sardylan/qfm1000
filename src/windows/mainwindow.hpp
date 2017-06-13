@@ -82,7 +82,7 @@ private:
 
     void valueReadLowPower();
 
-    void updateWidgetEnableStatus(bool status);
+    void updateWidgetEnableStatus();
 
     void updateTotValueString();
 

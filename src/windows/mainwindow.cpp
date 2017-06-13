@@ -182,13 +182,12 @@ void MainWindow::valueReadLowPower() {
 }
 
 void MainWindow::eepromUpdated() {
-    if (status->getCurrentFileName().length() == 0) {
-        updateWidgetEnableStatus(false);
-        return;
-    }
-
-    updateWidgetEnableStatus(true);
     updateUiStatus();
+    updateWidgetEnableStatus();
+
+    bool fileOpened = status->getCurrentFileName().length() > 0;
+    if (!fileOpened)
+        return;
 
     ui->tableView->update();
 
@@ -199,9 +198,10 @@ void MainWindow::eepromUpdated() {
     valueReadLowPower();
 }
 
-void MainWindow::updateWidgetEnableStatus(bool status) {
-    ui->generalConfGroupBox->setEnabled(status);
-    ui->channelsGroupBox->setEnabled(status);
+void MainWindow::updateWidgetEnableStatus() {
+    bool fileOpened = status->getCurrentFileName().length() > 0;
+    ui->generalConfGroupBox->setEnabled(fileOpened);
+    ui->channelsGroupBox->setEnabled(fileOpened);
 }
 
 void MainWindow::updateUiStatus() {
@@ -210,7 +210,7 @@ void MainWindow::updateUiStatus() {
 
     ui->actionFileClose->setEnabled(fileOpened);
     ui->actionFileSave->setEnabled(fileOpened && eepromDirty);
-    ui->actionFileSaveas->setEnabled(fileOpened && eepromDirty);
+    ui->actionFileSaveas->setEnabled(fileOpened);
 
     QString title = QString("%1\n%2")
             .arg(QCoreApplication::applicationName())

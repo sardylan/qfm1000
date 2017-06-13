@@ -20,6 +20,8 @@
  */
 
 #include <QDebug>
+#include <QMessageBox>
+
 #include <config/manager.hpp>
 #include <windows/configwindow.hpp>
 #include <windows/aboutwindow.hpp>
@@ -78,6 +80,20 @@ void QFM1000::showAboutWindow() {
 }
 
 void QFM1000::closeEepromFile() {
+    if (status->isDataDirty(eeprom->getData())) {
+        QMessageBox messageBox;
+        messageBox.setText("Are you sure to close file without saving changes?");
+        messageBox.setStandardButtons(QMessageBox::Yes | QMessageBox::No);
+        int reply = messageBox.exec();
+
+        switch (reply) {
+            case QMessageBox::No:
+                return;
+            default:
+                break;
+        }
+    }
+
     status->setCurrentFileName("");
     status->clearOriginalData();
     mainWindow->eepromUpdated();
