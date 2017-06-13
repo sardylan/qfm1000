@@ -1,6 +1,7 @@
 # qFm1000
 
-[![Build Status](https://travis-ci.org/sardylan/qfm1000.svg?branch=master)](https://travis-ci.org/sardylan/qfm1000)
+[![Build Status Travis (Linux)](https://travis-ci.org/sardylan/qfm1000.svg?branch=master)](https://travis-ci.org/sardylan/qfm1000)
+[![Build status AppVeyor (Windows)](https://ci.appveyor.com/api/projects/status/hysni857ux6k3wyg?svg=true)](https://ci.appveyor.com/project/sardylan/qfm1000)
 
 qFm1000 is a simple tool for editing channels configuration saved into a 24C16 EEPROM inside a Philips FM1000 radio.
 
