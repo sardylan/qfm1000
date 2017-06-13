@@ -108,6 +108,7 @@ void QFM1000::loadEepromFile(QString fileName) {
 
 void QFM1000::saveEepromFile(QString fileName) {
     FileManager::saveToFile(eeprom, fileName);
+    status->setCurrentFileName(fileName);
     status->setOriginalData(eeprom->getData());
     mainWindow->eepromUpdated();
 }
