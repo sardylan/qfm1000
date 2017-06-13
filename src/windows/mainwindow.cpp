@@ -60,13 +60,16 @@ void MainWindow::signalConnect() {
     connect(ui->actionFileClose, SIGNAL(triggered()), this, SLOT(closeFile()));
     connect(ui->actionFileOpen, SIGNAL(triggered()), this, SLOT(openFile()));
     connect(ui->actionFileSave, SIGNAL(triggered()), this, SLOT(saveFile()));
+    connect(ui->actionFileSaveas, SIGNAL(triggered()), this, SLOT(saveFileAs()));
     connect(ui->actionFileQuit, SIGNAL(triggered()), this, SLOT(applicationClose()));
 
     connect(ui->actionHelpAbout, SIGNAL(triggered()), this, SLOT(showAboutWindow()));
 
-    connect(ui->totSlider, SIGNAL(valueChanged(int)), this, SLOT(updateTotValue()));
-    connect(ui->defaultChannelComboBox, SIGNAL(currentIndexChanged(int)), this, SLOT(updateDefaultChannelValue(int)));
-    connect(ui->lowPowerComboBox, SIGNAL(currentIndexChanged(int)), this, SLOT(updateLowPowerValue(int)));
+    connect(tableModel, SIGNAL(dataChanged(QModelIndex, QModelIndex)), this, SLOT(updateActionEnableStatus()));
+
+    connect(ui->totSlider, SIGNAL(valueChanged(int)), this, SLOT(valueWriteTot()));
+    connect(ui->defaultChannelComboBox, SIGNAL(currentIndexChanged(int)), this, SLOT(valueWriteDefaultChannel(int)));
+    connect(ui->lowPowerComboBox, SIGNAL(currentIndexChanged(int)), this, SLOT(valueWriteLowPower(int)));
 }
 
 void MainWindow::initUi() {
@@ -91,8 +94,8 @@ void MainWindow::initUi() {
     ui->lowPowerComboBox->addItem("10 W", 3);
     ui->lowPowerComboBox->addItem("15 W", 4);
 
-    setDefaultChannelValue();
-    setLowPowerValue();
+    valueReadDefaultChannel();
+    valueReadLowPower();
     updateTotValueString();
 }
 
@@ -121,6 +124,10 @@ void MainWindow::openFile() {
 }
 
 void MainWindow::saveFile() {
+    emit actionSaveFile(status->getCurrentFileName());
+}
+
+void MainWindow::saveFileAs() {
     QFileDialog fileDialog;
     fileDialog.setAcceptMode(QFileDialog::AcceptSave);
     fileDialog.setFileMode(QFileDialog::AnyFile);
@@ -143,11 +150,6 @@ void MainWindow::showAboutWindow() {
     emit actionAbout();
 }
 
-void MainWindow::updateTotValue() {
-    eeprom->setTot(ui->totSlider->value());
-    updateTotValueString();
-}
-
 void MainWindow::updateTotValueString() {
     if (eeprom->getTot() == 0)
         ui->totText->setText("DISABLED");
@@ -155,41 +157,49 @@ void MainWindow::updateTotValueString() {
         ui->totText->setText(QString("%1 s").arg(eeprom->getTot()));
 }
 
-void MainWindow::updateDefaultChannelValue(int newValue) {
+void MainWindow::valueWriteTot() {
+    eeprom->setTot(ui->totSlider->value());
+    updateTotValueString();
+    updateActionEnableStatus();
+}
+
+void MainWindow::valueWriteDefaultChannel(int newValue) {
     eeprom->setDefaultChannel(ui->defaultChannelComboBox->itemData(newValue).toInt());
+    updateActionEnableStatus();
 }
 
-void MainWindow::updateLowPowerValue(int newValue) {
+void MainWindow::valueWriteLowPower(int newValue) {
     eeprom->setLowPower(ui->lowPowerComboBox->itemData(newValue).toUInt());
+    updateActionEnableStatus();
 }
 
-void MainWindow::setDefaultChannelValue() {
+void MainWindow::valueReadDefaultChannel() {
     ui->defaultChannelComboBox->setCurrentIndex(ui->defaultChannelComboBox->findData(eeprom->getDefaultChannel()));
 }
 
-void MainWindow::setLowPowerValue() {
-    int lowPower = eeprom->getLowPower();
-    int index = ui->lowPowerComboBox->findData(lowPower);
-    ui->lowPowerComboBox->setCurrentIndex(index);
+void MainWindow::valueReadLowPower() {
+    ui->lowPowerComboBox->setCurrentIndex(ui->lowPowerComboBox->findData(eeprom->getLowPower()));
 }
 
 void MainWindow::eepromUpdated() {
     updateWindowFileName();
 
     if (status->getCurrentFileName().length() == 0) {
-        widgetEnabled(false);
+        updateWidgetEnableStatus(false);
         return;
     }
 
-    widgetEnabled(true);
+    updateWidgetEnableStatus(true);
+    updateActionEnableStatus();
+    updateWindowFileName();
 
     ui->tableView->update();
 
     ui->totSlider->setValue(eeprom->getTot());
     updateTotValueString();
 
-    setDefaultChannelValue();
-    setLowPowerValue();
+    valueReadDefaultChannel();
+    valueReadLowPower();
 }
 
 void MainWindow::updateWindowFileName() {
@@ -201,14 +211,23 @@ void MainWindow::updateWindowFileName() {
         QString fileName = status->getCurrentFileName();
         title.append(QString(" - %1").arg(fileName));
 
-        if (status->isDirty())
+        if (status->isDataDirty(eeprom->getData()))
             title.append("*");
     }
 
     setWindowTitle(title);
 }
 
-void MainWindow::widgetEnabled(bool status) {
+void MainWindow::updateWidgetEnableStatus(bool status) {
     ui->generalConfGroupBox->setEnabled(status);
     ui->channelsGroupBox->setEnabled(status);
+}
+
+void MainWindow::updateActionEnableStatus() {
+    bool fileOpened = status->getCurrentFileName().length() > 0;
+    bool eepromDirty = status->isDataDirty(eeprom->getData());
+
+    ui->actionFileClose->setEnabled(fileOpened);
+    ui->actionFileSave->setEnabled(fileOpened && eepromDirty);
+    ui->actionFileSaveas->setEnabled(fileOpened && eepromDirty);
 }

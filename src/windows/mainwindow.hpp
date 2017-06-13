@@ -78,13 +78,13 @@ private:
 
     void showStatusBarMessage(QString message);
 
-    void setDefaultChannelValue();
+    void valueReadDefaultChannel();
 
-    void setLowPowerValue();
+    void valueReadLowPower();
 
     void updateWindowFileName();
 
-    void widgetEnabled(bool status);
+    void updateWidgetEnableStatus(bool status);
 
     void updateTotValueString();
 
@@ -98,15 +98,19 @@ private slots:
 
     void saveFile();
 
+    void saveFileAs();
+
     void showConfigWindow();
 
     void showAboutWindow();
 
-    void updateTotValue();
+    void updateActionEnableStatus();
 
-    void updateDefaultChannelValue(int newValue);
+    void valueWriteTot();
 
-    void updateLowPowerValue(int newValue);
+    void valueWriteDefaultChannel(int newValue);
+
+    void valueWriteLowPower(int newValue);
 
 signals:
 
