@@ -1,0 +1,16 @@
+version: '{branch}-{build}'
+image: Visual Studio 2015
+configuration: Release
+environment:
+  QTDIR: C:\Qt\5.9\msvc2015
+  matrix:
+  - {}
+before_build:
+- cmd: cmake .
+build:
+  project: qfm1000.sln
+  parallel: true
+  verbosity: minimal
+artifacts:
+- path: src\Release\qfm1000.exe
+  name: qfm1000.exe
