@@ -34,7 +34,7 @@ Status *Status::getInstance() {
 Status::Status() {
     serialOpened = false;
     currentFileName = "";
-    dirty = false;
+    originalData.clear();
 }
 
 const QString &Status::getCurrentFileName() const {
@@ -45,12 +45,12 @@ void Status::setCurrentFileName(const QString &currentFileName) {
     Status::currentFileName = currentFileName;
 }
 
-bool Status::isDirty() const {
-    return dirty;
+void Status::setOriginalData(const QByteArray &originalData) {
+    Status::originalData = originalData;
 }
 
-void Status::setDirty(bool dirty) {
-    Status::dirty = dirty;
+void Status::clearOriginalData() {
+    originalData.clear();
 }
 
 bool Status::isSerialOpened() const {
@@ -59,4 +59,15 @@ bool Status::isSerialOpened() const {
 
 void Status::setSerialOpened(bool serialOpen) {
     Status::serialOpened = serialOpen;
+}
+
+bool Status::isDataDirty(const QByteArray &eepromData) {
+    if (originalData.length() != eepromData.length())
+        return true;
+
+    for (int i = 0; i < originalData.length() && i < eepromData.length(); i++)
+        if (originalData[i] != eepromData[i])
+            return true;
+
+    return false;
 }

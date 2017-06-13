@@ -65,7 +65,7 @@ void MainWindow::signalConnect() {
 
     connect(ui->actionHelpAbout, SIGNAL(triggered()), this, SLOT(showAboutWindow()));
 
-    connect(tableModel, SIGNAL(dataChanged(QModelIndex, QModelIndex)), this, SLOT(updateActionEnableStatus()));
+    connect(tableModel, SIGNAL(dataChanged(QModelIndex, QModelIndex)), this, SLOT(updateUiStatus()));
 
     connect(ui->totSlider, SIGNAL(valueChanged(int)), this, SLOT(valueWriteTot()));
     connect(ui->defaultChannelComboBox, SIGNAL(currentIndexChanged(int)), this, SLOT(valueWriteDefaultChannel(int)));
@@ -160,17 +160,17 @@ void MainWindow::updateTotValueString() {
 void MainWindow::valueWriteTot() {
     eeprom->setTot(ui->totSlider->value());
     updateTotValueString();
-    updateActionEnableStatus();
+    updateUiStatus();
 }
 
 void MainWindow::valueWriteDefaultChannel(int newValue) {
     eeprom->setDefaultChannel(ui->defaultChannelComboBox->itemData(newValue).toInt());
-    updateActionEnableStatus();
+    updateUiStatus();
 }
 
 void MainWindow::valueWriteLowPower(int newValue) {
     eeprom->setLowPower(ui->lowPowerComboBox->itemData(newValue).toUInt());
-    updateActionEnableStatus();
+    updateUiStatus();
 }
 
 void MainWindow::valueReadDefaultChannel() {
@@ -182,16 +182,13 @@ void MainWindow::valueReadLowPower() {
 }
 
 void MainWindow::eepromUpdated() {
-    updateWindowFileName();
-
     if (status->getCurrentFileName().length() == 0) {
         updateWidgetEnableStatus(false);
         return;
     }
 
     updateWidgetEnableStatus(true);
-    updateActionEnableStatus();
-    updateWindowFileName();
+    updateUiStatus();
 
     ui->tableView->update();
 
@@ -202,32 +199,30 @@ void MainWindow::eepromUpdated() {
     valueReadLowPower();
 }
 
-void MainWindow::updateWindowFileName() {
-    QString title = QString("%1\n%2")
-            .arg(QCoreApplication::applicationName())
-            .arg(QCoreApplication::applicationVersion());
-
-    if (status->getCurrentFileName().length() > 0) {
-        QString fileName = status->getCurrentFileName();
-        title.append(QString(" - %1").arg(fileName));
-
-        if (status->isDataDirty(eeprom->getData()))
-            title.append("*");
-    }
-
-    setWindowTitle(title);
-}
-
 void MainWindow::updateWidgetEnableStatus(bool status) {
     ui->generalConfGroupBox->setEnabled(status);
     ui->channelsGroupBox->setEnabled(status);
 }
 
-void MainWindow::updateActionEnableStatus() {
+void MainWindow::updateUiStatus() {
     bool fileOpened = status->getCurrentFileName().length() > 0;
     bool eepromDirty = status->isDataDirty(eeprom->getData());
 
     ui->actionFileClose->setEnabled(fileOpened);
     ui->actionFileSave->setEnabled(fileOpened && eepromDirty);
     ui->actionFileSaveas->setEnabled(fileOpened && eepromDirty);
+
+    QString title = QString("%1\n%2")
+            .arg(QCoreApplication::applicationName())
+            .arg(QCoreApplication::applicationVersion());
+
+    if (fileOpened) {
+        QString fileName = status->getCurrentFileName();
+        title.append(QString(" - %1").arg(fileName));
+
+        if (eepromDirty)
+            title.append("*");
+    }
+
+    setWindowTitle(title);
 }

@@ -79,19 +79,19 @@ void QFM1000::showAboutWindow() {
 
 void QFM1000::closeEepromFile() {
     status->setCurrentFileName("");
-    status->setDirty(false);
+    status->clearOriginalData();
     mainWindow->eepromUpdated();
 }
 
 void QFM1000::loadEepromFile(QString fileName) {
     FileManager::loadFromFile(eeprom, fileName);
     status->setCurrentFileName(fileName);
-    status->setDirty(false);
+    status->setOriginalData(eeprom->getData());
     mainWindow->eepromUpdated();
 }
 
 void QFM1000::saveEepromFile(QString fileName) {
     FileManager::saveToFile(eeprom, fileName);
-    status->setDirty(false);
+    status->setOriginalData(eeprom->getData());
     mainWindow->eepromUpdated();
 }

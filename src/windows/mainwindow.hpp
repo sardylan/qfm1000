@@ -82,8 +82,6 @@ private:
 
     void valueReadLowPower();
 
-    void updateWindowFileName();
-
     void updateWidgetEnableStatus(bool status);
 
     void updateTotValueString();
@@ -104,7 +102,7 @@ private slots:
 
     void showAboutWindow();
 
-    void updateActionEnableStatus();
+    void updateUiStatus();
 
     void valueWriteTot();
 

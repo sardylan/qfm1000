@@ -23,6 +23,7 @@
 #define __QFM1000_CONFIG_STATUS_H
 
 #include <QString>
+#include <QByteArray>
 
 class Status {
 
@@ -32,7 +33,7 @@ private:
     static Status *instance;
 
     QString currentFileName;
-    bool dirty;
+    QByteArray originalData;
     bool serialOpened;
 
 public:
@@ -42,14 +43,15 @@ public:
 
     void setCurrentFileName(const QString &currentFileName);
 
-    bool isDirty() const;
+    void setOriginalData(const QByteArray &originalData);
 
-    void setDirty(bool dirty);
+    void clearOriginalData();
 
     bool isSerialOpened() const;
 
     void setSerialOpened(bool serialOpen);
 
+    bool isDataDirty(const QByteArray &eepromData);
 };
 
 #endif
