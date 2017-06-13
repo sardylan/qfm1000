@@ -10,15 +10,15 @@ addons:
       - pkg-config
       - cmake
 before_install:
-  - sudo apt-add-repository --yes ppa:beineri/opt-qt58-trusty
+  - sudo apt-add-repository --yes ppa:beineri/opt-qt59-trusty
   - sudo apt-get -qq update
 install:
   - sudo apt-get --yes install build-essential automake autoconf libtool pkg-config cmake
-  - sudo apt-get --yes install qt58-meta-full
+  - sudo apt-get --yes install qt59-meta-full
 before_script:
-  - QTDIR="/opt/qt58"
+  - QTDIR="/opt/qt59"
   - PATH="$QTDIR/bin:$PATH"
-  - source /opt/qt58/bin/qt58-env.sh
+  - source /opt/qt59/bin/qt59-env.sh
 script:
   - mkdir build
   - cd build
