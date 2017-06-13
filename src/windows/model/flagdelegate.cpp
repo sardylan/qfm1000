@@ -28,7 +28,8 @@ FlagDelegate::FlagDelegate(QObject *parent) : QStyledItemDelegate(parent) {
 
 QWidget *
 FlagDelegate::createEditor(QWidget *parent, const QStyleOptionViewItem &option, const QModelIndex &index) const {
-    QCheckBox *checkBox = createCtcssComboBox(parent);
+    QCheckBox *checkBox = new QCheckBox(parent);
+    checkBox->setStyleSheet("padding: 5px;");
     return checkBox;
 }
 
@@ -48,10 +49,4 @@ void FlagDelegate::setModelData(QWidget *editor, QAbstractItemModel *model, cons
 void FlagDelegate::updateEditorGeometry(QWidget *editor, const QStyleOptionViewItem &option,
                                         const QModelIndex &index) const {
     editor->setGeometry(option.rect);
-}
-
-QCheckBox *FlagDelegate::createCtcssComboBox(QWidget *parent) {
-    QCheckBox *checkBox = new QCheckBox(parent);
-    checkBox->setStyleSheet("padding: 5px;");
-    return checkBox;
 }
