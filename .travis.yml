@@ -26,4 +26,4 @@ script:
   - make
 after_script:
   - cd build
-  - src/eeprom/testeeprom
+  - src/eeprom/testeeprom || exit 1
