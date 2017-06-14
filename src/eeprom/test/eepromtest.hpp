@@ -55,6 +55,16 @@ private slots:
 
     void testChannelPower();
 
+    void testChannelSelectiveCalling();
+
+    void testChannelCpuOffset();
+
+    void testDefaultChannel();
+
+    void testTot();
+
+    void testLowPower();
+
 };
 
 #endif
