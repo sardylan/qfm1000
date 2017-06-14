@@ -44,6 +44,8 @@ private:
 
     QByteArray data;
 
+    void assign(int pos, uint8_t value);
+
     bool isValidChannelNumber(int channel);
 
 public:
