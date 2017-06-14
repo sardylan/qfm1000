@@ -31,6 +31,10 @@ EEPROM *EEPROM::getInstance() {
 }
 
 EEPROM::EEPROM() {
+    clear();
+}
+
+void EEPROM::clear() {
     data.clear();
     for (int i = 0; i < EEPROM_SIZE; i++)
         data.append((char) '\0');
@@ -168,7 +172,7 @@ void EEPROM::setChannelPower(int channel, unsigned int power) {
             byte = 0xc0;
     }
 
-    data[offset + 6] = byte;
+    data[offset + 6] = (char) byte;
 }
 
 bool EEPROM::getChannelSelectiveCalling(int channel) {

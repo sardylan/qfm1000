@@ -19,8 +19,8 @@
  *
  */
 
-#ifndef __QFM1000_EEPROM_CONFIG_H
-#define __QFM1000_EEPROM_CONFIG_H
+#ifndef __QFM1000_EEPROM_EEPROM_H
+#define __QFM1000_EEPROM_EEPROM_H
 
 #define EEPROM_SIZE 2048
 
@@ -48,6 +48,8 @@ private:
 
 public:
     static EEPROM *getInstance();
+
+    void clear();
 
     const QByteArray &getData();
 
