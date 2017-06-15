@@ -43,6 +43,10 @@ private slots:
 
     void cleanup();
 
+    void testSimpleQByteArray();
+
+    void testEepromQByteArray();
+
     void testClear();
 
     void testChannelRxFreq();
