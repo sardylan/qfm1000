@@ -19,14 +19,14 @@
  *
  */
 
-#ifndef __QFM1000_EEPROM_EEPROM_TEST_H
-#define __QFM1000_EEPROM_EEPROM_TEST_H
+#ifndef __QFM1000_EEPROM_EEPROM_BYTE_TEST_H
+#define __QFM1000_EEPROM_EEPROM_BYTE_TEST_H
 
 #include <QtTest>
 
 #include <eeprom.hpp>
 
-class EEPROMTest : public QObject {
+class EEPROMByteTest : public QObject {
 
 Q_OBJECT
 
@@ -42,6 +42,10 @@ private slots:
     void init();
 
     void cleanup();
+
+    void testSimpleQByteArray();
+
+    void testEepromQByteArray();
 
     void testClear();
 

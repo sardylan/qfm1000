@@ -47,30 +47,6 @@ void EEPROMTest::cleanup() {
 
 }
 
-void EEPROMTest::testSimpleQByteArray() {
-    QByteArray data;
-
-    data.clear();
-    for (int i = 0; i < EEPROM_SIZE; i++)
-        data.append((char) '\0');
-
-    char byte = data[10];
-    CUSTOM_QTRY_COMPARE_NO_TIMEOUT(byte, (char) 0x00);
-
-    data[10] = 0x30;
-    byte = data[10];
-    CUSTOM_QTRY_COMPARE_NO_TIMEOUT(byte, (char) 0x30);
-}
-
-void EEPROMTest::testEepromQByteArray() {
-    char byte = eeprom->getData()[10];
-    CUSTOM_QTRY_COMPARE_NO_TIMEOUT(byte, (char) 0x00);
-
-    eeprom->setTot(0x30);
-    byte = eeprom->getData()[OFFSET_TOT];
-    CUSTOM_QTRY_COMPARE_NO_TIMEOUT(byte, (char) 0x30);
-}
-
 void EEPROMTest::testClear() {
     CUSTOM_QTRY_COMPARE_NO_TIMEOUT(eeprom->getData().size(), EEPROM_SIZE);
     for (int i = 0; i < EEPROM_SIZE; i++)

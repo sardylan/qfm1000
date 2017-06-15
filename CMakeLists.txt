@@ -11,4 +11,6 @@ set(QT5_PREFIX "$ENV{QTDIR}" CACHE PATH "Qt5 prefix path")
 
 set(CMAKE_PREFIX_PATH "${QT5_PREFIX}/lib/cmake")
 
+enable_testing()
+
 add_subdirectory(src)

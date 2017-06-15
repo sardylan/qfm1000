@@ -21,8 +21,6 @@ target_include_directories(eeprom
         PUBLIC
         ${CMAKE_CURRENT_SOURCE_DIR})
 
-enable_testing()
-
 add_executable(testeeprom
         test/eepromtest.hpp
         test/eepromtest.cpp)
@@ -33,3 +31,14 @@ target_link_libraries(testeeprom
         eeprom)
 
 add_test(TestEEPROM testeeprom)
+
+add_executable(testeeprombyte
+        test/eeprombytetest.hpp
+        test/eeprombytetest.cpp)
+
+target_link_libraries(testeeprombyte
+        Qt5::Core
+        Qt5::Test
+        eeprom)
+
+add_test(TestEEPROMByte testeeprombyte)
