@@ -193,6 +193,8 @@ void EEPROM::setChannelSelectiveCalling(int channel, bool selectiveCalling) {
     byte |= 0b00101000;
     if (selectiveCalling)
         byte |= 0b00000010;
+    else
+        byte &= 0b11111101;
     assign(offset + 7, byte);
 }
 
@@ -214,6 +216,8 @@ void EEPROM::setChannelCpuOffset(int channel, bool cpuOffset) {
     byte |= 0b00101000;
     if (cpuOffset)
         byte |= 0b00000001;
+    else
+        byte &= 0b11111110;
     assign(offset + 7, byte);
 }
 

@@ -66,7 +66,7 @@ void EEPROMTest::testEepromQByteArray() {
     char byte = eeprom->getData()[10];
     CUSTOM_QTRY_COMPARE_NO_TIMEOUT(byte, (char) 0x00);
 
-    eeprom->setTot(30);
+    eeprom->setTot(0x30);
     byte = eeprom->getData()[OFFSET_TOT];
     CUSTOM_QTRY_COMPARE_NO_TIMEOUT(byte, (char) 0x30);
 }
