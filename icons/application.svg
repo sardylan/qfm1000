@@ -1,109 +1,35 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<!-- Created with Inkscape (http://www.inkscape.org/) -->
-
 <svg
    xmlns:dc="http://purl.org/dc/elements/1.1/"
    xmlns:cc="http://creativecommons.org/ns#"
    xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
    xmlns:svg="http://www.w3.org/2000/svg"
    xmlns="http://www.w3.org/2000/svg"
-   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
-   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
-   width="1066.6666"
-   height="1066.6666"
-   viewBox="0 0 1000 1000"
-   id="svg2"
+   id="svg8"
    version="1.1"
-   inkscape:version="0.92.1 r15371"
-   sodipodi:docname="application.svg"
-   inkscape:export-filename="/home/sardylan/develop/ham/qfm1000/icons/macos/icon-1024.png"
-   inkscape:export-xdpi="92.160004"
-   inkscape:export-ydpi="92.160004">
+   viewBox="0 0 270.93333 270.93334"
+   height="1024"
+   width="1024">
   <defs
-     id="defs4" />
-  <sodipodi:namedview
-     id="base"
-     pagecolor="#ffffff"
-     bordercolor="#666666"
-     borderopacity="1.0"
-     inkscape:pageopacity="0.0"
-     inkscape:pageshadow="2"
-     inkscape:zoom="0.35"
-     inkscape:cx="297.00846"
-     inkscape:cy="612.67405"
-     inkscape:document-units="px"
-     inkscape:current-layer="layer1"
-     showgrid="false"
-     units="px"
-     inkscape:window-width="1920"
-     inkscape:window-height="1152"
-     inkscape:window-x="1920"
-     inkscape:window-y="0"
-     inkscape:window-maximized="1" />
+     id="defs2" />
   <metadata
-     id="metadata7">
+     id="metadata5">
     <rdf:RDF>
       <cc:Work
          rdf:about="">
         <dc:format>image/svg+xml</dc:format>
         <dc:type
            rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
-        <dc:title />
+        <dc:title></dc:title>
       </cc:Work>
     </rdf:RDF>
   </metadata>
   <g
-     inkscape:label="Layer 1"
-     inkscape:groupmode="layer"
-     id="layer1"
-     transform="translate(0,-52.36218)">
-    <flowRoot
-       xml:space="preserve"
-       id="flowRoot4565-3"
-       style="font-style:normal;font-weight:normal;font-size:40px;line-height:125%;font-family:sans-serif;text-align:center;letter-spacing:0px;word-spacing:0px;text-anchor:middle;fill:#800000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
-       transform="matrix(15.097736,0,0,15.097736,-3042.0476,-2345.2054)"><flowRegion
-         id="flowRegion4567-0"
-         style="text-align:center;text-anchor:middle;fill:#800000;fill-opacity:1"><rect
-           id="rect4569-2"
-           width="85.714325"
-           height="51.4286"
-           x="175.71428"
-           y="179.52377"
-           style="text-align:center;text-anchor:middle;fill:#800000;fill-opacity:1" /></flowRegion><flowPara
-         id="flowPara4571-1"
-         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:'Arial Black';-inkscape-font-specification:'Arial Black, ';fill:#800000;fill-opacity:1">101010s</flowPara></flowRoot>    <g
-       id="g4711" />
-    <g
-       id="g4739"
-       transform="matrix(1.2313715,0,0,1.2313715,-178.87312,96.014348)">
-      <flowRoot
-         transform="matrix(15.097736,0,0,15.097736,-2627.384,-2661.4174)"
-         style="font-style:normal;font-weight:normal;font-size:40px;line-height:125%;font-family:sans-serif;text-align:center;letter-spacing:0px;word-spacing:0px;text-anchor:middle;fill:#800000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
-         id="flowRoot4565"
-         xml:space="preserve"><flowRegion
-           style="text-align:center;text-anchor:middle;fill:#800000;fill-opacity:1"
-           id="flowRegion4567"><rect
-             style="text-align:center;text-anchor:middle;fill:#800000;fill-opacity:1"
-             y="179.52377"
-             x="175.71428"
-             height="51.4286"
-             width="85.714325"
-             id="rect4569" /></flowRegion><flowPara
-           style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:'Arial Black';-inkscape-font-specification:'Arial Black, ';fill:#800000;fill-opacity:1"
-           id="flowPara4571">K</flowPara></flowRoot>      <flowRoot
-         xml:space="preserve"
-         id="flowRoot4729"
-         style="font-style:normal;font-weight:normal;font-size:40px;line-height:125%;font-family:sans-serif;text-align:center;letter-spacing:0px;word-spacing:0px;text-anchor:middle;fill:#800000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
-         transform="matrix(15.097736,0,0,15.097736,-2968.634,-2661.4174)"><flowRegion
-           id="flowRegion4725"
-           style="text-align:center;text-anchor:middle;fill:#800000;fill-opacity:1"><rect
-             id="rect4723"
-             width="85.714325"
-             height="51.4286"
-             x="175.71428"
-             y="179.52377"
-             style="text-align:center;text-anchor:middle;fill:#800000;fill-opacity:1" /></flowRegion><flowPara
-           id="flowPara4727"
-           style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:'Arial Black';-inkscape-font-specification:'Arial Black, ';fill:#800000;fill-opacity:1">1</flowPara></flowRoot>    </g>
+     transform="translate(0,-26.06665)"
+     id="layer1">
+    <path
+       id="rect4550"
+       d="m 10.408206,118.59452 v 85.8776 H 260.52513 v -85.8776 z m 51.901664,14.05306 h 188.10438 v 35.57783 H 62.30987 Z M 35.264773,135.69 A 14.746818,14.746818 0 0 1 50.012036,150.43729 14.746818,14.746818 0 0 1 35.264773,165.18299 14.746818,14.746818 0 0 1 20.517505,150.43729 14.746818,14.746818 0 0 1 35.264773,135.69 Z m -11.42178,43.1618 h 22.843561 v 11.56726 H 23.842993 Z m 42.737989,0 h 11.565675 v 11.56726 H 66.580982 Z m 20.999762,0 h 11.565675 v 11.56726 H 87.580744 Z m 20.998166,0 h 11.56728 v 11.56726 h -11.56728 z m 21.00134,0 h 11.56569 v 11.56726 h -11.56569 z m 20.99976,0 h 11.5657 v 11.56726 h -11.5657 z m 20.99975,0 h 11.56571 v 11.56726 h -11.56571 z m 20.99976,0 h 11.5657 v 11.56726 h -11.5657 z m 20.99977,0 h 11.56569 v 11.56726 h -11.56569 z m 20.99975,0 h 11.5657 v 11.56726 h -11.5657 z"
+       style="opacity:1;fill:#ff0000;fill-opacity:1;stroke:none;stroke-width:6.12003231;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
   </g>
 </svg>
