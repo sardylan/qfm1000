@@ -29,9 +29,9 @@
 class FileManager {
 
 public:
-    static void loadFromFile(EEPROM *eeprom, QString filename);
+    static bool loadFromFile(EEPROM *eeprom, QString filename);
 
-    static void saveToFile(EEPROM *eeprom, QString filename);
+    static bool saveToFile(EEPROM *eeprom, QString filename);
 };
 
 #endif

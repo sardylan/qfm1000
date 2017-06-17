@@ -100,14 +100,30 @@ void QFM1000::closeEepromFile() {
 }
 
 void QFM1000::loadEepromFile(QString fileName) {
-    FileManager::loadFromFile(eeprom, fileName);
+    bool result = FileManager::loadFromFile(eeprom, fileName);
+    if (!result) {
+        QMessageBox messageBox;
+        messageBox.setText("Error loading file");
+        messageBox.setStandardButtons(QMessageBox::Close);
+        messageBox.exec();
+        return;
+    }
+
     status->setCurrentFileName(fileName);
     status->setOriginalData(eeprom->getData());
     mainWindow->eepromUpdated();
 }
 
 void QFM1000::saveEepromFile(QString fileName) {
-    FileManager::saveToFile(eeprom, fileName);
+    bool result = FileManager::saveToFile(eeprom, fileName);
+    if (!result) {
+        QMessageBox messageBox;
+        messageBox.setText("Error saving file");
+        messageBox.setStandardButtons(QMessageBox::Close);
+        messageBox.exec();
+        return;
+    }
+
     status->setCurrentFileName(fileName);
     status->setOriginalData(eeprom->getData());
     mainWindow->eepromUpdated();

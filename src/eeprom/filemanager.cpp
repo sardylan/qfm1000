@@ -23,26 +23,30 @@
 
 #include "filemanager.hpp"
 
-void FileManager::loadFromFile(EEPROM *eeprom, QString filename) {
+bool FileManager::loadFromFile(EEPROM *eeprom, QString filename) {
     QFile file(filename);
     if (!file.exists() || file.size() != 2048)
-        return;
+        return false;
 
     if (!file.open(QIODevice::ReadOnly))
-        return;
+        return false;
 
     QByteArray data = file.readAll();
     file.close();
 
     eeprom->setData(data);
+
+    return true;
 }
 
-void FileManager::saveToFile(EEPROM *eeprom, QString filename) {
+bool FileManager::saveToFile(EEPROM *eeprom, QString filename) {
     QFile file(filename);
     if (!file.open(QIODevice::ReadWrite))
-        return;
+        return false;
 
     QByteArray data = eeprom->getData();
     file.write(data);
     file.close();
+
+    return true;
 }
