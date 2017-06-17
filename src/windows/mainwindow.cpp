@@ -120,11 +120,16 @@ void MainWindow::openFile() {
     fileDialog.setAcceptMode(QFileDialog::AcceptOpen);
     fileDialog.setFileMode(QFileDialog::ExistingFile);
     fileDialog.setOption(QFileDialog::ReadOnly, true);
-    fileDialog.exec();
 
-    QString fileName = fileDialog.selectedFiles().at(0);
+    int result = fileDialog.exec();
+    if (result != QDialog::Accepted)
+        return;
 
-    emit actionLoadFile(fileName);
+    QStringList selectedFiles = fileDialog.selectedFiles();
+    if (selectedFiles.size() != 1)
+        return;
+
+    emit actionLoadFile(selectedFiles[0]);
 }
 
 void MainWindow::saveFile() {
@@ -135,11 +140,16 @@ void MainWindow::saveFileAs() {
     QFileDialog fileDialog;
     fileDialog.setAcceptMode(QFileDialog::AcceptSave);
     fileDialog.setFileMode(QFileDialog::AnyFile);
-    fileDialog.exec();
 
-    QString fileName = fileDialog.selectedFiles().at(0);
+    int result = fileDialog.exec();
+    if (result != QDialog::Accepted)
+        return;
 
-    emit actionSaveFile(fileName);
+    QStringList selectedFiles = fileDialog.selectedFiles();
+    if (selectedFiles.size() != 1)
+        return;
+
+    emit actionSaveFile(selectedFiles[0]);
 }
 
 void MainWindow::showStatusBarMessage(QString message) {
