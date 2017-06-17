@@ -26,4 +26,4 @@ script:
   - make
 after_script:
   - cd build
-  - make test
+  - ctest
