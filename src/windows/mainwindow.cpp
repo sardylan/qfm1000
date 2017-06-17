@@ -73,6 +73,10 @@ void MainWindow::signalConnect() {
 }
 
 void MainWindow::initUi() {
+    ui->actionEditCut->setEnabled(false);
+    ui->actionEditCopy->setEnabled(false);
+    ui->actionEditPaste->setEnabled(false);
+
     ui->tableView->setModel(tableModel);
     ui->tableView->setItemDelegateForColumn(2, offsetDelegate);
     ui->tableView->setItemDelegateForColumn(3, rxCtcssDelegate);
@@ -212,7 +216,7 @@ void MainWindow::updateUiStatus() {
     ui->actionFileSave->setEnabled(fileOpened && eepromDirty);
     ui->actionFileSaveas->setEnabled(fileOpened);
 
-    QString title = QString("%1\n%2")
+    QString title = QString("%1 %2")
             .arg(QCoreApplication::applicationName())
             .arg(QCoreApplication::applicationVersion());
 
