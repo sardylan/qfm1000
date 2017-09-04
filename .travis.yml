@@ -1,8 +1,8 @@
 language: cpp
 os: linux
+dist: trusty
 compiler: gcc
 sudo: required
-dist: trusty
 addons:
   apt:
     packages:
@@ -10,7 +10,7 @@ addons:
       - pkg-config
       - cmake
 before_install:
-  - sudo apt-add-repository --yes ppa:beineri/opt-qt59-trusty
+  - sudo apt-add-repository --yes ppa:beineri/opt-qt591-trusty
   - sudo apt-get -qq update
 install:
   - sudo apt-get --yes install build-essential automake autoconf libtool pkg-config cmake
