@@ -24,7 +24,7 @@
 EEPROM *EEPROM::instance = nullptr;
 
 EEPROM *EEPROM::getInstance() {
-    if (instance == 0)
+    if (instance == nullptr)
         instance = new EEPROM();
 
     return instance;
@@ -41,11 +41,29 @@ void EEPROM::clear() {
 }
 
 const QByteArray &EEPROM::getData() {
+//    recompute();
     return data;
 }
 
 void EEPROM::setData(const QByteArray &data) {
     EEPROM::data = data;
+//    recompute();
+}
+
+void EEPROM::recompute() {
+    for (int i = 0; i < CHANNELS_COUNT; i++) {
+        setChannelRxFreq(i, getChannelRxFreq(i));
+        setChannelTxFreq(i, getChannelTxFreq(i));
+        setChannelRxCtcss(i, getChannelRxCtcss(i));
+        setChannelTxCtcss(i, getChannelTxCtcss(i));
+        setChannelPower(i, getChannelPower(i));
+        setChannelSelectiveCalling(i, getChannelSelectiveCalling(i));
+        setChannelCpuOffset(i, getChannelCpuOffset(i));
+    }
+
+    setDefaultChannel(getDefaultChannel());
+    setTot(getTot());
+    setLowPower(getLowPower());
 }
 
 bool EEPROM::isValidChannelNumber(int channel) {
@@ -66,7 +84,7 @@ void EEPROM::setChannelRxFreq(int channel, unsigned int freq) {
         return;
 
     int offset = OFFSET_CHANNEL_FIRST + (channel * 8);
-    uint16_t rxValue = (uint16_t) (freq / 6250);
+    auto rxValue = (uint16_t) (freq / 6250);
     assign(offset + 0, (uint8_t) (rxValue >> 8));
     assign(offset + 1, (uint8_t) (rxValue & 0xff));
 }
@@ -85,7 +103,7 @@ void EEPROM::setChannelTxFreq(int channel, unsigned int freq) {
         return;
 
     int offset = OFFSET_CHANNEL_FIRST + (channel * 8);
-    uint16_t txValue = (uint16_t) (freq / 6250);
+    auto txValue = (uint16_t) (freq / 6250);
     assign(offset + 2, (uint8_t) (txValue >> 8));
     assign(offset + 3, (uint8_t) (txValue & 0xff));
 }
@@ -127,7 +145,7 @@ unsigned int EEPROM::getChannelPower(int channel) {
         return 0;
 
     int offset = OFFSET_CHANNEL_FIRST + (channel * 8);
-    uint8_t txPowerByte = (uint8_t) data[offset + 6];
+    auto txPowerByte = (uint8_t) data[offset + 6];
     switch (txPowerByte) {
         case 0xe8:
             return 5;
@@ -180,7 +198,7 @@ bool EEPROM::getChannelSelectiveCalling(int channel) {
         return false;
 
     int offset = OFFSET_CHANNEL_FIRST + (channel * 8);
-    uint8_t configBit = (uint8_t) data[offset + 7];
+    auto configBit = (uint8_t) data[offset + 7];
     return (bool) (configBit & 0b00000010);
 }
 
@@ -189,8 +207,9 @@ void EEPROM::setChannelSelectiveCalling(int channel, bool selectiveCalling) {
         return;
 
     int offset = OFFSET_CHANNEL_FIRST + (channel * 8);
-    uint8_t byte = (uint8_t) data[offset + 7];
-    byte |= 0b00101000;
+    auto byte = (uint8_t) data[offset + 7];
+    byte &= 0b00000011;
+    byte |= 0b00100100;
     if (selectiveCalling)
         byte |= 0b00000010;
     else
@@ -203,7 +222,7 @@ bool EEPROM::getChannelCpuOffset(int channel) {
         return false;
 
     int offset = OFFSET_CHANNEL_FIRST + (channel * 8);
-    uint8_t configBit = (uint8_t) data[offset + 7];
+    auto configBit = (uint8_t) data[offset + 7];
     return (bool) (configBit & 0b00000001);
 }
 
@@ -212,8 +231,9 @@ void EEPROM::setChannelCpuOffset(int channel, bool cpuOffset) {
         return;
 
     int offset = OFFSET_CHANNEL_FIRST + (channel * 8);
-    uint8_t byte = (uint8_t) data[offset + 7];
-    byte |= 0b00101000;
+    auto byte = (uint8_t) data[offset + 7];
+    byte &= 0b00000011;
+    byte |= 0b00100100;
     if (cpuOffset)
         byte |= 0b00000001;
     else
@@ -231,9 +251,9 @@ void EEPROM::setDefaultChannel(int defaultChannel) {
     if (!isValidChannelNumber(defaultChannel))
         return;
 
-    uint8_t byte = (uint8_t) (defaultChannel >= 0 && defaultChannel < CHANNELS_COUNT
-                              ? defaultChannel
-                              : 0xff);
+    auto byte = (uint8_t) (defaultChannel >= 0 && defaultChannel < CHANNELS_COUNT
+                           ? defaultChannel
+                           : 0xff);
     assign(OFFSET_STARTUP_CHANNEL, byte);
 }
 

@@ -28,9 +28,12 @@
 
 #define OFFSET_CHANNEL_FIRST 0x26
 #define OFFSET_TOT 0x719
-#define OFFSET_STARTUP_CHANNEL 0x6D7 // 0x1
+#define OFFSET_STARTUP_CHANNEL 0x6D7
 #define OFFSET_BUTTONS 0x729
 #define OFFSET_LOW_POWER 0x71E
+
+#define OFFSET_LAST_USED_CHANNEL 0x1
+#define OFFSET_LAST_USED_CTCSS 0x2
 
 #include <QVector>
 #include <QByteArray>
@@ -56,6 +59,8 @@ public:
     const QByteArray &getData();
 
     void setData(const QByteArray &data);
+
+    void recompute();
 
     unsigned int getChannelRxFreq(int channel);
 
