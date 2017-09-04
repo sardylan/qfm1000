@@ -43,6 +43,8 @@ private slots:
 
     void cleanup();
 
+    void testSimpleBitwise();
+
     void testSimpleQByteArray();
 
     void testEepromQByteArray();

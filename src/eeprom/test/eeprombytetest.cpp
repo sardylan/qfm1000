@@ -50,6 +50,36 @@ void EEPROMByteTest::cleanup() {
 
 }
 
+void EEPROMByteTest::testSimpleBitwise() {
+    uint8_t input;
+    uint8_t expected;
+
+    input = 0b00000000;
+    expected = 0b001100111;
+    input |= 0b001100111;
+    CUSTOM_QTRY_COMPARE_NO_TIMEOUT(input, expected);
+
+    input = 0b11111111;
+    expected = 0b001100111;
+    input &= 0b001100111;
+    CUSTOM_QTRY_COMPARE_NO_TIMEOUT(input, expected);
+
+    input = 0b01010101;
+    expected = 0b01010111;
+    input |= 0b00000010;
+    CUSTOM_QTRY_COMPARE_NO_TIMEOUT(input, expected);
+
+    input = 0b01010111;
+    expected = 0b01010101;
+    input &= 0b11111101;
+    CUSTOM_QTRY_COMPARE_NO_TIMEOUT(input, expected);
+
+    input = 0b01010111;
+    expected = 0b01010111;
+    input &= 0b11111111;
+    CUSTOM_QTRY_COMPARE_NO_TIMEOUT(input, expected);
+}
+
 void EEPROMByteTest::testSimpleQByteArray() {
     QByteArray data;
 
