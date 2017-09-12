@@ -21,10 +21,12 @@
 
 #include "configwindow.hpp"
 #include "ui_configwindow.h"
+#include "manager.hpp"
 
 #include <QtWidgets>
 #include <QSerialPortInfo>
-#include <manager.hpp>
+
+Q_DECLARE_METATYPE(QSerialPort::BaudRate);
 
 ConfigWindow::ConfigWindow(QWidget *parent) : QDialog(parent), ui(new Ui::ConfigWindow) {
     ui->setupUi(this);

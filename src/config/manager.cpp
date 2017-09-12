@@ -20,10 +20,13 @@
  */
 
 #include <QtCore/QSettings>
+#include <QSerialPort>
 
 #include "manager.hpp"
 #include "config.hpp"
 #include "default.hpp"
+
+Q_DECLARE_METATYPE(QSerialPort::BaudRate);
 
 void ConfigManager::load() {
     Config *config = Config::getInstance();
