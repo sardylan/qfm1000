@@ -6,6 +6,7 @@
 #define EEPROM_ADDRESS 0x50
 #define BUFFER_SIZE 8
 
+#define PROTOCOL_READY 'L'
 #define PROTOCOL_OK 'K'
 #define PROTOCOL_ERROR 'E'
 #define PROTOCOL_READ 'R'
@@ -31,6 +32,8 @@ void setup() {
     buf_pos = 0;
     memset(buffer, '\0', BUFFER_SIZE);
     page = 0x00;
+
+    Serial.write(PROTOCOL_READY);
 }
 
 void loop() {
