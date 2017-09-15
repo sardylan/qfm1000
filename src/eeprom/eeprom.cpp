@@ -129,7 +129,8 @@ uint8_t EEPROM::getChannelTxCtcss(int channel) {
         return 0;
 
     int offset = OFFSET_CHANNEL_FIRST + (channel * 8);
-    return (uint8_t) data[offset + 5];
+    char b = data[offset + 5];
+    return (uint8_t) b;
 }
 
 void EEPROM::setChannelTxCtcss(int channel, int ctcss) {
