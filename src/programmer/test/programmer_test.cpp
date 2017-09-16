@@ -25,18 +25,42 @@ QTEST_MAIN(ArduinoProgrammerTest)
 
 #define CUSTOM_QTRY_COMPARE_NO_TIMEOUT(expr, expected) QTRY_COMPARE_WITH_TIMEOUT((expr), expected, 0)
 
-void ArduinoProgrammerTest::initTestCase() {
+#define ARDUINO_PROGRAMMER_TEST_SERIAL_PORT "/dev/ttyACM0"
+#define ARDUINO_PROGRAMMER_TEST_SERIAL_BAUD QSerialPort::Baud115200
 
+void ArduinoProgrammerTest::initTestCase() {
+    programmer = new ArduinoProgrammer();
+    programmer->init(ARDUINO_PROGRAMMER_TEST_SERIAL_PORT, ARDUINO_PROGRAMMER_TEST_SERIAL_BAUD);
 }
 
 void ArduinoProgrammerTest::cleanupTestCase() {
+    programmer->close();
 
+    delete programmer;
 }
 
 void ArduinoProgrammerTest::init() {
-
+    while (!programmer->isReady())
+        QThread::msleep(100);
 }
 
 void ArduinoProgrammerTest::cleanup() {
 
+}
+
+//void ArduinoProgrammerTest::testSinglePage() {
+//    QByteArray data;
+//    generateRandomData(&data, ARDUINO_PROGRAMMER_EEPROM_SIZE);
+//
+//    programmer->write(data);
+//    QByteArray dataRead = programmer->read();
+//
+//    QCOMPARE(dataRead, data);
+//}
+
+void ArduinoProgrammerTest::generateRandomData(QByteArray *data, size_t len) {
+    data->clear();
+
+    for (size_t i = 0; i < len; i++)
+        data->append((char) ((((double) qrand()) / RAND_MAX) * 0xff));
 }

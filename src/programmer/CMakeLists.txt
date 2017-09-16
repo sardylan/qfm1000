@@ -7,6 +7,7 @@ set(QFM1000_PROGRAMMER_HEADERS
 find_package(Qt5 REQUIRED COMPONENTS
         Core
         SerialPort
+        Concurrent
         Test)
 
 add_library(programmer
@@ -15,7 +16,8 @@ add_library(programmer
 
 target_link_libraries(programmer
         Qt5::Core
-        Qt5::SerialPort)
+        Qt5::SerialPort
+        Qt5::Concurrent)
 
 target_include_directories(programmer
         PUBLIC
@@ -28,5 +30,6 @@ add_executable(testprogrammer
 target_link_libraries(testprogrammer
         Qt5::Core
         Qt5::SerialPort
+        Qt5::Concurrent
         Qt5::Test
         programmer)

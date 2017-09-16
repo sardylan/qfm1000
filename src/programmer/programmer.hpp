@@ -26,7 +26,9 @@
 #include <QtSerialPort/QSerialPort>
 
 #define ARDUINO_PROGRAMMER_BUFFER_SIZE 8
+#define ARDUINO_PROGRAMMER_EEPROM_SIZE 2048
 
+#define ARDUINO_PROGRAMMER_PROTOCOL_READY 'L'
 #define ARDUINO_PROGRAMMER_PROTOCOL_OK 'K'
 #define ARDUINO_PROGRAMMER_PROTOCOL_ERROR 'E'
 #define ARDUINO_PROGRAMMER_PROTOCOL_READ 'R'
@@ -44,17 +46,43 @@ public:
 
     void close();
 
-    QByteArray read();
+    void read();
 
     void write(const QByteArray &data);
 
+    bool isReady() const;
+
 private:
     QSerialPort serialPort;
+    bool ready;
+
+    QByteArray data;
 
     QByteArray readPage(uint8_t page);
 
+    void readPages();
+
     void writePage(uint8_t page, const QByteArray &data);
 
+    void writePages();
+
+private slots:
+
+    void catchReadyCommand();
+
+    void eepromReadFinish();
+
+    void eepromWriteFinish();
+
+signals:
+
+    void eepromRead(QByteArray data);
+
+    void eepromWritten();
+
+    void pageRead(uint8_t page);
+
+    void pageWritten(uint8_t page, bool result);
 };
 
 #endif

@@ -19,13 +19,19 @@
  *
  */
 
+#include <QDebug>
+#include <QFuture>
+#include <QFutureWatcher>
+#include <QtConcurrent>
+
 #include "programmer.hpp"
 
 ArduinoProgrammer::ArduinoProgrammer(QObject *parent) {
-
+    ready = false;
 }
 
 ArduinoProgrammer::~ArduinoProgrammer() {
+
 }
 
 void ArduinoProgrammer::init(const QString &portName, QSerialPort::BaudRate baudRate) {
@@ -36,36 +42,38 @@ void ArduinoProgrammer::init(const QString &portName, QSerialPort::BaudRate baud
     serialPort.setParity(QSerialPort::NoParity);
     serialPort.setStopBits(QSerialPort::OneStop);
 
+    connect(&serialPort, SIGNAL(readyRead()), this, SLOT(catchReadyCommand()));
     serialPort.open(QIODevice::ReadWrite);
+    serialPort.waitForReadyRead(3000);
 }
 
 void ArduinoProgrammer::close() {
+    ready = false;
     serialPort.close();
 }
 
-QByteArray ArduinoProgrammer::read() {
-    if (!serialPort.isOpen())
-        return QByteArray();
+void ArduinoProgrammer::read() {
+    if (!ready || !serialPort.isOpen())
+        return;
 
     QByteArray data;
 
     data.clear();
 
-    for (uint8_t i = 0; i <= 0xff; i++)
-        data.append(readPage(i));
+    QFuture<void> future = QtConcurrent::run(this, &ArduinoProgrammer::readPages);
 
-    return data;
+    QFutureWatcher<void> futureWatcher;
+    futureWatcher.setFuture(future);
+    QObject::connect(&futureWatcher, SIGNAL(finished()), this, SLOT(eepromReadFinish()));
 }
 
-void ArduinoProgrammer::write(const QByteArray &data) {
-    if (!serialPort.isOpen())
-        return;
+void ArduinoProgrammer::eepromReadFinish() {
+    emit eepromRead(data);
+}
 
-    if (data.length() != ARDUINO_PROGRAMMER_BUFFER_SIZE * 256)
-        return;
-
-    for (uint8_t i = 0; i <= 0xff; i++)
-        writePage(i, data.mid(i * ARDUINO_PROGRAMMER_BUFFER_SIZE, ARDUINO_PROGRAMMER_BUFFER_SIZE));
+void ArduinoProgrammer::readPages() {
+    for (int i = 0; i <= 255; i++)
+        data.append(readPage(static_cast<uint8_t>(i)));
 }
 
 QByteArray ArduinoProgrammer::readPage(uint8_t page) {
@@ -73,6 +81,7 @@ QByteArray ArduinoProgrammer::readPage(uint8_t page) {
     cmd.append(ARDUINO_PROGRAMMER_PROTOCOL_READ);
     cmd.append((char) page);
     serialPort.write(cmd);
+    serialPort.waitForBytesWritten();
 
     while (serialPort.bytesAvailable() < ARDUINO_PROGRAMMER_BUFFER_SIZE)
         serialPort.waitForReadyRead(100);
@@ -82,7 +91,35 @@ QByteArray ArduinoProgrammer::readPage(uint8_t page) {
     if (data.length() != ARDUINO_PROGRAMMER_BUFFER_SIZE)
         return QByteArray();
 
+    emit pageRead(page);
+
     return data;
+}
+
+void ArduinoProgrammer::write(const QByteArray &data) {
+    if (!ready || !serialPort.isOpen())
+        return;
+
+    if (data.length() != ARDUINO_PROGRAMMER_BUFFER_SIZE * 256)
+        return;
+
+    this->data = data;
+
+    QFuture<void> future = QtConcurrent::run(this, &ArduinoProgrammer::writePages);
+
+    QFutureWatcher<void> futureWatcher;
+    futureWatcher.setFuture(future);
+    QObject::connect(&futureWatcher, SIGNAL(finished()), this, SLOT(eepromWriteFinish()));
+}
+
+void ArduinoProgrammer::eepromWriteFinish() {
+    emit eepromWritten();
+}
+
+void ArduinoProgrammer::writePages() {
+    for (int i = 0; i <= 255; i++)
+        writePage(static_cast<uint8_t>(i),
+                  data.mid(i * ARDUINO_PROGRAMMER_BUFFER_SIZE, ARDUINO_PROGRAMMER_BUFFER_SIZE));
 }
 
 void ArduinoProgrammer::writePage(uint8_t page, const QByteArray &data) {
@@ -94,4 +131,29 @@ void ArduinoProgrammer::writePage(uint8_t page, const QByteArray &data) {
     cmd.append((char) page);
     cmd.append(data);
     serialPort.write(cmd);
+    serialPort.waitForBytesWritten();
+
+    serialPort.waitForReadyRead(1000);
+    QByteArray response = serialPort.readAll();
+    if (response.length() != 1)
+        return;
+
+    bool result = false;
+    if (response.at(0) == ARDUINO_PROGRAMMER_PROTOCOL_OK)
+        result = true;
+
+    emit pageWritten(page, result);
+}
+
+void ArduinoProgrammer::catchReadyCommand() {
+    QByteArray data = serialPort.readAll();
+
+    if (data.length() == 1 && data.at(0) == ARDUINO_PROGRAMMER_PROTOCOL_READY) {
+        ready = true;
+        disconnect(&serialPort, SIGNAL(readyRead()), this, SLOT(catchReadyCommand()));
+    }
+}
+
+bool ArduinoProgrammer::isReady() const {
+    return ready;
 }

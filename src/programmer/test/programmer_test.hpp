@@ -26,9 +26,16 @@
 #include <QtSerialPort/QSerialPort>
 #include <QtTest>
 
+#include "programmer.hpp"
+
 class ArduinoProgrammerTest : public QObject {
 
 Q_OBJECT
+
+private:
+    ArduinoProgrammer *programmer;
+
+    static void generateRandomData(QByteArray *data, size_t len);
 
 private slots:
 
@@ -39,6 +46,8 @@ private slots:
     void init();
 
     void cleanup();
+
+//    void testSinglePage();
 };
 
 #endif
