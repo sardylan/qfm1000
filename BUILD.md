@@ -9,9 +9,9 @@ In order to build the source code you have to install some tools and libraries i
 ### GNU/Linux Debian-based (Debian, Ubuntu and derivates)
 
 All commands are intended to be executed using as ***root*** user, but can be issued with **sudo** in systems that
-provides that features.
+provides that feature.
 
-First of all, ensure to have latest versions:
+First of all, ensure to have latest versions (both repositories and installed software):
 
 ```bash
 apt-get update
