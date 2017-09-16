@@ -69,4 +69,4 @@ Luca Cireddu - [@sardylan](https://twitter.com/sardylan) - sardylan@gmail.com
 This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public
 License as published by the Free Software Foundation, either version 3 of the License.
 
-See `LICENSE.md` for more information.
+See [LICENSE.md](LICENSE.md) for more information.
