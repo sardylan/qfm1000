@@ -33,6 +33,8 @@ shipped with ZIP release (English language), or can be downloaded from the offic
 
 ## Changelog
 
+* 0.2.1
+    * FIX: Bitwise error on eeprom flags
 * 0.2.0
     * ADD: Simple error messages for invalid files
     * ADD: Tests for EEPROM methods
