@@ -1,6 +1,7 @@
 language: cpp
 
 matrix:
+
   include:
 
     - os: linux
@@ -31,9 +32,12 @@ matrix:
       before_install:
         - brew update
       install:
-        - brew install qt5 cmake
+        - brew install qt5
       before_script:
-        - QTDIR="$(brew --prefix)/opt/qt5"
+        - QTDIR="/usr/local/opt/qt"
+        - LDFLAGS="-L$QTDIR/lib:$LDFLAGS"
+        - CPPFLAGS="-I$QTDIR/include:$CPPFLAGS"
+        - PKG_CONFIG_PATH="$QTDIR/lib/pkgconfig:$PKG_CONFIG_PATH"
         - PATH="$QTDIR/bin:$PATH"
 
 
