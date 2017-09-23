@@ -20,17 +20,17 @@ sudo apt-get dist-upgrade
 After that, you have to install tools and packages for getting and building the source code:
 
 ```bash
-apt-get install git build-essential pkg-config cmake
+sudo apt-get install git build-essential pkg-config cmake
 ```
 
 Now you have to install Qt dependencies. You can build them by yourself or you can install a pre-compiled version taken from the official repositories of your distribution.
 
 Development is always focused on the last library version, though you can use any version of Qt 5.
  
-On both ***Ubuntu 16.04 (Xenial Xerus)*** and ***Debian 9 (Stretch)*** you can add them using this command:
+On both **Ubuntu 16.04 *(Xenial Xerus)*** and **Debian 9 *(Stretch)*** you can add them using this command:
 
 ```bash
-apt-get install qt5-default libqt5serialport5-dev libqt5svg5-dev
+sudo apt-get install qt5-default libqt5serialport5-dev libqt5svg5-dev
 ```
 
 After installing all the necessary dependencies, to obtain the source code you can clone the project from Github:
