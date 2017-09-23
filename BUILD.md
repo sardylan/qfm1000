@@ -8,14 +8,13 @@ In order to build the source code you have to install some tools and libraries i
 
 ### GNU/Linux Debian-based (Debian, Ubuntu and derivates)
 
-All commands are intended to be executed using as ***root*** user, but can be issued with **sudo** in systems that
-provides that feature.
+All commands which start with `sudo` require to be executed as **root** user. In Ubuntu, the standard way is to issue them using **sudo**. If your system doesn't provied that feature or your user is not in the *sudoers* group (sudo-enabled users) you can run these commands directly logging-in as root.
 
 First of all, ensure to have latest versions (both repositories and installed software):
 
 ```bash
-apt-get update
-apt-get dist-upgrade
+sudo apt-get update
+sudo apt-get dist-upgrade
 ```
 
 After that, you have to install tools and packages for getting and building the source code:
@@ -24,8 +23,7 @@ After that, you have to install tools and packages for getting and building the 
 apt-get install git build-essential pkg-config cmake
 ```
 
-Now you have to install Qt dependencies. You can build them by yourself or you can install a pre-compiled version
-taken from the official repositories of your distribution.
+Now you have to install Qt dependencies. You can build them by yourself or you can install a pre-compiled version taken from the official repositories of your distribution.
 
 Development is always focused on the last library version, though you can use any version of Qt 5.
  
@@ -62,8 +60,7 @@ Now you can compile to software:
 make 
 ```
 
-To speed-up the build you can add `-jn` option to make command, where `n` is the number of concurrent processes to run
-simultaneously, like this:
+To speed-up the build you can add `-jn` option to make command, where `n` is the number of concurrent processes to run simultaneously, like this:
 
 ```bash
 make -j8 
