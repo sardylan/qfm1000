@@ -178,29 +178,35 @@ void EEPROMByteTest::testChannelPower() {
         CUSTOM_QTRY_COMPARE_NO_TIMEOUT(byte, (char) 0x00);
 
         for (unsigned int p = 0; p <= 5; p++) {
+            char value = eeprom->getData()[offset + 6];
             eeprom->setChannelPower(i, p);
+
             byte = eeprom->getData()[offset + 6];
 
-            char value;
             switch (p) {
                 case 5:
-                    value = (char) 0xe8;
+                    value &= 0b11000111;
+                    value |= 0b00101000;
                     break;
                 case 4:
-                    value = (char) 0xe0;
+                    value &= 0b11000111;
+                    value |= 0b00100000;
                     break;
                 case 3:
-                    value = (char) 0xd8;
+                    value &= 0b11000111;
+                    value |= 0b00011000;
                     break;
                 case 2:
-                    value = (char) 0xd0;
+                    value &= 0b11000111;
+                    value |= 0b00010000;
                     break;
                 case 1:
-                    value = (char) 0xc8;
+                    value &= 0b11000111;
+                    value |= 0b00001000;
                     break;
                 case 0:
                 default:
-                    value = (char) 0xc0;
+                    value &= 0b11000111;
             }
 
             CUSTOM_QTRY_COMPARE_NO_TIMEOUT(byte, value);
@@ -208,6 +214,54 @@ void EEPROMByteTest::testChannelPower() {
 
         eeprom->setChannelPower(i, 6);
         byte = eeprom->getData()[offset + 6];
+        CUSTOM_QTRY_COMPARE_NO_TIMEOUT(byte, (char) 0xc0);
+    }
+}
+
+void EEPROMByteTest::testChannelSquelch() {
+    for (int i = 0; i < CHANNELS_COUNT; i++) {
+        int offset = OFFSET_CHANNEL_FIRST + (i * 8);
+
+        char byte = eeprom->getData()[offset + 7];
+        CUSTOM_QTRY_COMPARE_NO_TIMEOUT(byte, (char) 0x00);
+
+        for (unsigned int p = 0; p <= 5; p++) {
+            char value = eeprom->getData()[offset + 7];
+            eeprom->setChannelSquelch(i, p);
+
+            byte = eeprom->getData()[offset + 7];
+
+            switch (p) {
+                case 5:
+                    value &= 0b11100011;
+                    value |= 0b00001010;
+                    break;
+                case 4:
+                    value &= 0b11100011;
+                    value |= 0b00010000;
+                    break;
+                case 3:
+                    value &= 0b11100011;
+                    value |= 0b00001100;
+                    break;
+                case 2:
+                    value &= 0b11100011;
+                    value |= 0b00001000;
+                    break;
+                case 1:
+                    value &= 0b11100011;
+                    value |= 0b00000100;
+                    break;
+                case 0:
+                default:
+                    value &= 0b11100011;
+            }
+
+            CUSTOM_QTRY_COMPARE_NO_TIMEOUT(byte, value);
+        }
+
+        eeprom->setChannelSquelch(i, 6);
+        byte = eeprom->getData()[offset + 7];
         CUSTOM_QTRY_COMPARE_NO_TIMEOUT(byte, (char) 0xc0);
     }
 }

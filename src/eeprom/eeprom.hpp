@@ -82,6 +82,10 @@ public:
 
     void setChannelPower(int channel, unsigned int power);
 
+    unsigned int getChannelSquelch(int channel);
+
+    void setChannelSquelch(int channel, unsigned int squelch);
+
     bool getChannelSelectiveCalling(int channel);
 
     void setChannelSelectiveCalling(int channel, bool selectiveCalling);

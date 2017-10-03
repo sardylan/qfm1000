@@ -99,6 +99,20 @@ void EEPROMTest::testChannelPower() {
     }
 }
 
+void EEPROMTest::testChannelSquelch() {
+    for (int i = 0; i < CHANNELS_COUNT; i++) {
+        CUSTOM_QTRY_COMPARE_NO_TIMEOUT(eeprom->getChannelSquelch(i), (unsigned int) 0);
+
+        for (unsigned int p = 0; p <= 5; p++) {
+            eeprom->setChannelSquelch(i, p);
+            CUSTOM_QTRY_COMPARE_NO_TIMEOUT(eeprom->getChannelSquelch(i), p);
+        }
+
+        eeprom->setChannelSquelch(i, 6);
+        CUSTOM_QTRY_COMPARE_NO_TIMEOUT(eeprom->getChannelSquelch(i), (unsigned int) 0);
+    }
+}
+
 void EEPROMTest::testChannelSelectiveCalling() {
     for (int i = 0; i < CHANNELS_COUNT; i++) {
         CUSTOM_QTRY_COMPARE_NO_TIMEOUT(eeprom->getChannelSelectiveCalling(i), false);

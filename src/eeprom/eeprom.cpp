@@ -147,21 +147,9 @@ unsigned int EEPROM::getChannelPower(int channel) {
 
     int offset = OFFSET_CHANNEL_FIRST + (channel * 8);
     auto txPowerByte = (uint8_t) data[offset + 6];
-    switch (txPowerByte) {
-        case 0xe8:
-            return 5;
-        case 0xe0:
-            return 4;
-        case 0xd8:
-            return 3;
-        case 0xd0:
-            return 2;
-        case 0xc8:
-            return 1;
-        case 0xc0:
-        default:
-            return 0;
-    }
+    auto value = static_cast<unsigned int>((txPowerByte & 0b00111000) >> 3);
+
+    return value;
 }
 
 void EEPROM::setChannelPower(int channel, unsigned int power) {
@@ -169,29 +157,80 @@ void EEPROM::setChannelPower(int channel, unsigned int power) {
         return;
 
     int offset = OFFSET_CHANNEL_FIRST + (channel * 8);
-    uint8_t byte;
+    auto byte = (uint8_t) data[offset + 6];
     switch (power) {
-        case 5:
-            byte = 0xe8;
+        case 5:  // 0b11101000 - 0xe8
+            byte &= 0b11000111;
+            byte |= 0b00101000;
             break;
-        case 4:
-            byte = 0xe0;
+        case 4:  // 0b11100000 - 0xe0
+            byte &= 0b11000111;
+            byte |= 0b00100000;
             break;
-        case 3:
-            byte = 0xd8;
+        case 3:  // 0b11011000 - 0xd8
+            byte &= 0b11000111;
+            byte |= 0b00011000;
             break;
-        case 2:
-            byte = 0xd0;
+        case 2:  // 0b11010000 - 0xd0
+            byte &= 0b11000111;
+            byte |= 0b00010000;
             break;
-        case 1:
-            byte = 0xc8;
+        case 1:  // 0b11001000 - 0xc8
+            byte &= 0b11000111;
+            byte |= 0b00001000;
             break;
         case 0:
-        default:
-            byte = 0xc0;
+        default: // 0b11000000 - 0xc0
+            byte &= 0b11000111;
     }
 
     assign(offset + 6, byte);
+}
+
+unsigned int EEPROM::getChannelSquelch(int channel) {
+    if (!isValidChannelNumber(channel))
+        return 0;
+
+    int offset = OFFSET_CHANNEL_FIRST + (channel * 8);
+    auto txPowerByte = (uint8_t) data[offset + 7];
+    auto value = static_cast<unsigned int>((txPowerByte & 0b00011100) >> 2);
+
+    return value;
+}
+
+void EEPROM::setChannelSquelch(int channel, unsigned int power) {
+    if (!isValidChannelNumber(channel))
+        return;
+
+    int offset = OFFSET_CHANNEL_FIRST + (channel * 8);
+    auto byte = (uint8_t) data[offset + 7];
+    switch (power) {
+        case 5:
+            byte &= 0b11100011;
+            byte |= 0b00001010;
+            break;
+        case 4:
+            byte &= 0b11100011;
+            byte |= 0b00010000;
+            break;
+        case 3:
+            byte &= 0b11100011;
+            byte |= 0b00001100;
+            break;
+        case 2:
+            byte &= 0b11100011;
+            byte |= 0b00001000;
+            break;
+        case 1:
+            byte &= 0b11100011;
+            byte |= 0b00000100;
+            break;
+        case 0:
+        default:
+            byte &= 0b11100011;
+    }
+
+    assign(offset + 7, byte);
 }
 
 bool EEPROM::getChannelSelectiveCalling(int channel) {

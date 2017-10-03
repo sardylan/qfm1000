@@ -61,6 +61,8 @@ private slots:
 
     void testChannelPower();
 
+    void testChannelSquelch();
+
     void testChannelSelectiveCalling();
 
     void testChannelCpuOffset();
