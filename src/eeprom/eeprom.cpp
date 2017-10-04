@@ -207,6 +207,10 @@ void EEPROM::setChannelSquelch(int channel, unsigned int power) {
     int offset = OFFSET_CHANNEL_FIRST + (channel * 8);
     auto byte = (uint8_t) data[offset + 7];
     switch (power) {
+        case 6:
+            byte &= 0b11100011;
+            byte |= 0b00011000;
+            break;
         case 5:
             byte &= 0b11100011;
             byte |= 0b00010100;

@@ -237,6 +237,10 @@ void EEPROMByteTest::testChannelSquelch() {
             byte = eeprom->getData()[offset + 7];
 
             switch (p) {
+                case 6:
+                    value &= 0b11100011;
+                    value |= 0b00011000;
+                    break;
                 case 5:
                     value &= 0b11100011;
                     value |= 0b00010100;
@@ -268,7 +272,7 @@ void EEPROMByteTest::testChannelSquelch() {
         value = eeprom->getData()[offset + 7];
         value &= 0b11100011;
 
-        eeprom->setChannelSquelch(i, 6);
+        eeprom->setChannelSquelch(i, 7);
         byte = eeprom->getData()[offset + 7];
         CUSTOM_QTRY_COMPARE_NO_TIMEOUT(byte, value);
     }

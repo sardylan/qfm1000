@@ -104,13 +104,13 @@ void EEPROMTest::testChannelSquelch() {
     for (int i = 0; i < CHANNELS_COUNT; i++) {
         CUSTOM_QTRY_COMPARE_NO_TIMEOUT(eeprom->getChannelSquelch(i), (unsigned int) 0);
 
-        for (unsigned int p = 0; p <= 5; p++) {
+        for (unsigned int p = 0; p <= 6; p++) {
             eeprom->setChannelSquelch(i, p);
             unsigned int squelch = eeprom->getChannelSquelch(i);
             CUSTOM_QTRY_COMPARE_NO_TIMEOUT(squelch, p);
         }
 
-        eeprom->setChannelSquelch(i, 6);
+        eeprom->setChannelSquelch(i, 7);
         CUSTOM_QTRY_COMPARE_NO_TIMEOUT(eeprom->getChannelSquelch(i), (unsigned int) 0);
     }
 }
