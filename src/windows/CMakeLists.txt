@@ -9,6 +9,7 @@ set(QFM1000_WINDOWS_MODEL_SOURCES
         model/readonlydelegate.cpp
         model/ctcssdelegate.cpp
         model/powerdelegate.cpp
+        model/squelchdelegate.cpp
         model/flagdelegate.cpp)
 
 set(QFM1000_WINDOWS_MODEL_HEADERS
@@ -17,6 +18,7 @@ set(QFM1000_WINDOWS_MODEL_HEADERS
         model/readonlydelegate.hpp
         model/ctcssdelegate.hpp
         model/powerdelegate.hpp
+        model/squelchdelegate.hpp
         model/flagdelegate.hpp)
 
 set(QFM1000_WINDOWS_MAIN

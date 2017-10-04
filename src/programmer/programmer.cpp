@@ -81,7 +81,7 @@ QByteArray ArduinoProgrammer::readPage(uint8_t page) {
     cmd.append(ARDUINO_PROGRAMMER_PROTOCOL_READ);
     cmd.append((char) page);
     serialPort.write(cmd);
-    serialPort.waitForBytesWritten();
+    serialPort.waitForBytesWritten(1000);
 
     while (serialPort.bytesAvailable() < ARDUINO_PROGRAMMER_BUFFER_SIZE)
         serialPort.waitForReadyRead(100);
@@ -131,7 +131,7 @@ void ArduinoProgrammer::writePage(uint8_t page, const QByteArray &data) {
     cmd.append((char) page);
     cmd.append(data);
     serialPort.write(cmd);
-    serialPort.waitForBytesWritten();
+    serialPort.waitForBytesWritten(1000);
 
     serialPort.waitForReadyRead(1000);
     QByteArray response = serialPort.readAll();

@@ -41,6 +41,7 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
     offsetDelegate = new ReadOnlyDelegate(this);
     rxCtcssDelegate = new CtcssDelegate(this);
     txCtcssDelegate = new CtcssDelegate(this);
+    squelchDelegate = new SquelchDelegate(this);
     powerDelegate = new PowerDelegate(this);
     selCalFlagDelegate = new FlagDelegate(this);
     cpuOffsetFlagDelegate = new FlagDelegate(this);
@@ -81,9 +82,10 @@ void MainWindow::initUi() {
     ui->tableView->setItemDelegateForColumn(2, offsetDelegate);
     ui->tableView->setItemDelegateForColumn(3, rxCtcssDelegate);
     ui->tableView->setItemDelegateForColumn(4, txCtcssDelegate);
-    ui->tableView->setItemDelegateForColumn(5, powerDelegate);
-    ui->tableView->setItemDelegateForColumn(6, selCalFlagDelegate);
-    ui->tableView->setItemDelegateForColumn(7, cpuOffsetFlagDelegate);
+    ui->tableView->setItemDelegateForColumn(5, squelchDelegate);
+    ui->tableView->setItemDelegateForColumn(6, powerDelegate);
+    ui->tableView->setItemDelegateForColumn(7, selCalFlagDelegate);
+    ui->tableView->setItemDelegateForColumn(8, cpuOffsetFlagDelegate);
     ui->tableView->resizeColumnsToContents();
 
     ui->defaultChannelComboBox->clear();

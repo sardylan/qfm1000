@@ -36,7 +36,7 @@ int TableModel::rowCount(const QModelIndex &parent) const {
 
 int TableModel::columnCount(const QModelIndex &parent) const {
     Q_UNUSED(parent);
-    return 8;
+    return 9;
 }
 
 QVariant TableModel::data(const QModelIndex &index, int role) const {
@@ -61,10 +61,12 @@ QVariant TableModel::data(const QModelIndex &index, int role) const {
             case 4:
                 return ctcssValues[eeprom->getChannelTxCtcss(channel)];
             case 5:
-                return powerValues[eeprom->getChannelPower(channel)];
+                return squelchValues[eeprom->getChannelSquelch(channel)];
             case 6:
-                return boolToStr(eeprom->getChannelSelectiveCalling(channel));
+                return powerValues[eeprom->getChannelPower(channel)];
             case 7:
+                return boolToStr(eeprom->getChannelSelectiveCalling(channel));
+            case 8:
                 return boolToStr(eeprom->getChannelCpuOffset(channel));
             default:
                 return QVariant();
@@ -93,10 +95,12 @@ QVariant TableModel::headerData(int section, Qt::Orientation orientation, int ro
             case 4:
                 return tr("TX CTCSS");
             case 5:
-                return tr("Power");
+                return tr("Squelch");
             case 6:
-                return tr("Selective Calling");
+                return tr("Power");
             case 7:
+                return tr("Selective Calling");
+            case 8:
                 return tr("CPU Offset");
             default:
                 return QVariant();
@@ -136,14 +140,18 @@ bool TableModel::setData(const QModelIndex &index, const QVariant &value, int ro
                 break;
 
             case 5:
-                eeprom->setChannelPower(channel, value.toUInt());
+                eeprom->setChannelSquelch(channel, value.toUInt());
                 break;
 
             case 6:
-                eeprom->setChannelSelectiveCalling(channel, value.toBool());
+                eeprom->setChannelPower(channel, value.toUInt());
                 break;
 
             case 7:
+                eeprom->setChannelSelectiveCalling(channel, value.toBool());
+                break;
+
+            case 8:
                 eeprom->setChannelCpuOffset(channel, value.toBool());
                 break;
 
@@ -167,17 +175,17 @@ Qt::ItemFlags TableModel::flags(const QModelIndex &index) const {
 }
 
 unsigned int TableModel::strFreqToInt(QString input) {
-    if (input.contains(QRegExp("^\\d{3}\\.{0,1}$"))) {
-        QRegExp regExp("^(\\d{3})\\.{0,1}$");
+    if (input.contains(QRegExp(R"(^\d{3}\.{0,1}$)"))) {
+        QRegExp regExp(R"(^(\d{3})\.{0,1}$)");
         regExp.indexIn(input);
         return regExp.cap(1).leftJustified(3, '0').toUInt() * 1000000;
-    } else if (input.contains(QRegExp("^\\d{3}\\.{0,1}\\d{0,3}$"))) {
-        QRegExp regExp("^(\\d{3})\\.{0,1}(\\d{0,3})$");
+    } else if (input.contains(QRegExp(R"(^\d{3}\.{0,1}\d{0,3}$)"))) {
+        QRegExp regExp(R"(^(\d{3})\.{0,1}(\d{0,3})$)");
         regExp.indexIn(input);
         return regExp.cap(1).toUInt() * 1000000
                + regExp.cap(2).leftJustified(3, '0').toUInt() * 1000;
-    } else if (input.contains(QRegExp("^\\d{3}\\.{0,1}\\d{0,3}\\.{0,1}\\d{0,3}$"))) {
-        QRegExp regExp("^(\\d{3})\\.{0,1}(\\d{0,3})\\.{0,1}(\\d{0,3})$");
+    } else if (input.contains(QRegExp(R"(^\d{3}\.{0,1}\d{0,3}\.{0,1}\d{0,3}$)"))) {
+        QRegExp regExp(R"(^(\d{3})\.{0,1}(\d{0,3})\.{0,1}(\d{0,3})$)");
         regExp.indexIn(input);
         return regExp.cap(1).toUInt() * 1000000
                + regExp.cap(2).leftJustified(3, '0').toUInt() * 1000
@@ -193,7 +201,7 @@ QString TableModel::intFreqToStr(unsigned int input) {
 }
 
 QString TableModel::shiftToStr(unsigned int txFreq, unsigned int rxFreq) {
-    int shift = (int) qFabs((int) txFreq - (int) rxFreq);
+    auto shift = (int) qFabs((int) txFreq - (int) rxFreq);
     double khz = (float) shift / 1000;
     QString value = QString::number(khz, 'f', 1);
 

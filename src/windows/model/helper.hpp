@@ -74,4 +74,14 @@ const std::vector<QString> powerValues = {
         "15",
         "25"
 };
+
+const std::vector<QString> squelchValues = {
+        "Always open",
+        "9dB SINAD",
+        "12dB SINAD",
+        "15dB SINAD",
+        "18dB SINAD",
+        "21dB SINAD",
+        "24dB SINAD"
+};
 #endif

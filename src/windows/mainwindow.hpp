@@ -32,6 +32,7 @@
 #include "model/tablemodel.hpp"
 #include "model/readonlydelegate.hpp"
 #include "model/ctcssdelegate.hpp"
+#include "model/squelchdelegate.hpp"
 #include "model/powerdelegate.hpp"
 #include "model/flagdelegate.hpp"
 
@@ -66,6 +67,7 @@ private:
     ReadOnlyDelegate *offsetDelegate;
     CtcssDelegate *rxCtcssDelegate;
     CtcssDelegate *txCtcssDelegate;
+    SquelchDelegate *squelchDelegate;
     PowerDelegate *powerDelegate;
     FlagDelegate *selCalFlagDelegate;
     FlagDelegate *cpuOffsetFlagDelegate;
