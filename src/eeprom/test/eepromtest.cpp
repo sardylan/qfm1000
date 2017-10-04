@@ -91,7 +91,8 @@ void EEPROMTest::testChannelPower() {
 
         for (unsigned int p = 0; p <= 5; p++) {
             eeprom->setChannelPower(i, p);
-            CUSTOM_QTRY_COMPARE_NO_TIMEOUT(eeprom->getChannelPower(i), p);
+            unsigned int power = eeprom->getChannelPower(i);
+            CUSTOM_QTRY_COMPARE_NO_TIMEOUT(power, p);
         }
 
         eeprom->setChannelPower(i, 6);
@@ -105,7 +106,8 @@ void EEPROMTest::testChannelSquelch() {
 
         for (unsigned int p = 0; p <= 5; p++) {
             eeprom->setChannelSquelch(i, p);
-            CUSTOM_QTRY_COMPARE_NO_TIMEOUT(eeprom->getChannelSquelch(i), p);
+            unsigned int squelch = eeprom->getChannelSquelch(i);
+            CUSTOM_QTRY_COMPARE_NO_TIMEOUT(squelch, p);
         }
 
         eeprom->setChannelSquelch(i, 6);

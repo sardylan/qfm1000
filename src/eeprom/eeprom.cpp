@@ -193,7 +193,9 @@ unsigned int EEPROM::getChannelSquelch(int channel) {
 
     int offset = OFFSET_CHANNEL_FIRST + (channel * 8);
     auto txPowerByte = (uint8_t) data[offset + 7];
-    auto value = static_cast<unsigned int>((txPowerByte & 0b00011100) >> 2);
+    int extractValue = txPowerByte & 0b00011100;
+    int shiftedValue = extractValue >> 2;
+    auto value = static_cast<unsigned int>(shiftedValue);
 
     return value;
 }
@@ -207,7 +209,7 @@ void EEPROM::setChannelSquelch(int channel, unsigned int power) {
     switch (power) {
         case 5:
             byte &= 0b11100011;
-            byte |= 0b00001010;
+            byte |= 0b00010100;
             break;
         case 4:
             byte &= 0b11100011;

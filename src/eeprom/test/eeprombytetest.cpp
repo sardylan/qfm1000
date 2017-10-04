@@ -177,8 +177,9 @@ void EEPROMByteTest::testChannelPower() {
         char byte = eeprom->getData()[offset + 6];
         CUSTOM_QTRY_COMPARE_NO_TIMEOUT(byte, (char) 0x00);
 
+        char value;
         for (unsigned int p = 0; p <= 5; p++) {
-            char value = eeprom->getData()[offset + 6];
+            value = eeprom->getData()[offset + 6];
             eeprom->setChannelPower(i, p);
 
             byte = eeprom->getData()[offset + 6];
@@ -212,9 +213,12 @@ void EEPROMByteTest::testChannelPower() {
             CUSTOM_QTRY_COMPARE_NO_TIMEOUT(byte, value);
         }
 
+        value = eeprom->getData()[offset + 6];
+        value &= 0b11000111;
+
         eeprom->setChannelPower(i, 6);
         byte = eeprom->getData()[offset + 6];
-        CUSTOM_QTRY_COMPARE_NO_TIMEOUT(byte, (char) 0xc0);
+        CUSTOM_QTRY_COMPARE_NO_TIMEOUT(byte, value);
     }
 }
 
@@ -225,8 +229,9 @@ void EEPROMByteTest::testChannelSquelch() {
         char byte = eeprom->getData()[offset + 7];
         CUSTOM_QTRY_COMPARE_NO_TIMEOUT(byte, (char) 0x00);
 
+        char value;
         for (unsigned int p = 0; p <= 5; p++) {
-            char value = eeprom->getData()[offset + 7];
+            value = eeprom->getData()[offset + 7];
             eeprom->setChannelSquelch(i, p);
 
             byte = eeprom->getData()[offset + 7];
@@ -234,7 +239,7 @@ void EEPROMByteTest::testChannelSquelch() {
             switch (p) {
                 case 5:
                     value &= 0b11100011;
-                    value |= 0b00001010;
+                    value |= 0b00010100;
                     break;
                 case 4:
                     value &= 0b11100011;
@@ -260,9 +265,12 @@ void EEPROMByteTest::testChannelSquelch() {
             CUSTOM_QTRY_COMPARE_NO_TIMEOUT(byte, value);
         }
 
+        value = eeprom->getData()[offset + 7];
+        value &= 0b11100011;
+
         eeprom->setChannelSquelch(i, 6);
         byte = eeprom->getData()[offset + 7];
-        CUSTOM_QTRY_COMPARE_NO_TIMEOUT(byte, (char) 0xc0);
+        CUSTOM_QTRY_COMPARE_NO_TIMEOUT(byte, value);
     }
 }
 
