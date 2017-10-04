@@ -5,11 +5,9 @@
 [![Build status AppVeyor (Windows)](https://ci.appveyor.com/api/projects/status/hysni857ux6k3wyg?svg=true)](https://ci.appveyor.com/project/sardylan/qfm1000)
 [![Coverity Scan Build Status](https://scan.coverity.com/projects/13866/badge.svg)](https://scan.coverity.com/projects/sardylan-qfm1000)
 
-qFm1000 is a simple tool for editing channels and configuration parameters saved into the 24C16 EEPROM mounted inside
-any Philips FM1000 radio.
+qFm1000 is a simple tool for editing channels and configuration parameters saved into the 24C16 EEPROM mounted inside any Philips FM1000 radio.
 
-It's based on the Qt/C++ cross-platform framework and can be built using cmake in Linux, Mac and Windows with gcc,
-clang or Visual Studio.
+It's based on the Qt/C++ cross-platform framework and can be built using cmake in Linux, Mac and Windows with gcc, clang or Visual Studio.
 
 ![qFm1000](doc/img/window_main_00.png)
 
@@ -25,15 +23,15 @@ There is no pre-compiled version for MAC. Still working to produce a official DM
 
 ### Windows
 
-Windows build are created using the official releases of Qt 5.9.0 for VS 2017 (64bit only) and
-Visual Studio Community 2017 edition on Windows 10 Professional.
+Windows build are created using the official releases of Qt 5.9.1 for VS 2017 (64bit only) and Visual Studio Community 2017 edition on Windows 10 Professional.
 
-Windows users must install **Visual C++ Redistributable for Visual Studio 2017** of the same architecture
-to use this software. The correct installation package can be installed using the one which is already
-shipped with ZIP release (English language), or can be downloaded from the official Microsoft website.
+Windows users must install **Visual C++ Redistributable x64 for Visual Studio 2017** of the same architecture to use this software. The correct installation package can be installed using the one which is already shipped with ZIP release (English language), or can be downloaded from the official Microsoft website.
 
 ## Changelog
 
+* 0.3.0
+    * ADD: Support for squelch values
+    * TOOL: Add Coverity Scan support
 * 0.2.1
     * FIX: Bitwise error on eeprom flags
 * 0.2.0
