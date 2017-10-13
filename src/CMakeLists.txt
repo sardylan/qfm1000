@@ -22,6 +22,10 @@ find_package(Qt5 REQUIRED COMPONENTS
         SerialPort
         OpenGL)
 
+configure_file(version.hpp.in version.hpp @ONLY)
+
+include_directories(${CMAKE_CURRENT_BINARY_DIR})
+
 set(QFM1000_MAC_ICON_NAME icon.icns)
 set(QFM1000_MAC_ICON_PATH ../icons/macos/icon.icns)
 
