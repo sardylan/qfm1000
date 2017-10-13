@@ -53,7 +53,40 @@ target_link_libraries(qfm1000
         Qt5::SerialPort
         Qt5::OpenGL)
 
-set_target_properties(qfm1000
-        PROPERTIES
-        MACOSX_BUNDLE_ICON_FILE
-        ${QFM1000_MAC_ICON_NAME})
+file(MAKE_DIRECTORY ${PROJECT_BINARY_DIR}/windeployqt)
+
+if (CMAKE_BUILD_TYPE STREQUAL "Debug")
+    set(QFM1000_DEPLOYQT_TYPE "--debug")
+else ()
+    set(QFM1000_DEPLOYQT_TYPE "--release")
+endif ()
+
+if (WIN32)
+    add_custom_command(TARGET qfm1000
+            POST_BUILD
+            COMMAND windeployqt $<TARGET_FILE:qfm1000> ${QFM1000_DEPLOYQT_TYPE} --dir ${PROJECT_BINARY_DIR}/windeployqt)
+elseif (APPLE)
+    set_target_properties(qfm1000
+            PROPERTIES
+            MACOSX_BUNDLE_ICON_FILE ${QFM1000_MAC_ICON_NAME})
+    add_custom_command(TARGET qfm1000
+            POST_BUILD
+            COMMAND macdeployqt $<TARGET_FILE:qfm1000> ${QFM1000_DEPLOYQT_TYPE} --dir ${PROJECT_BINARY_DIR}/windeployqt)
+endif ()
+
+if (UNIX)
+    set(QFM1000_TARGET_INSTALL_DIR ${CMAKE_INSTALL_BINDIR})
+else ()
+    set(QFM1000_TARGET_INSTALL_DIR ".")
+endif ()
+
+install(TARGETS qfm1000
+        RUNTIME
+        DESTINATION ${QFM1000_TARGET_INSTALL_DIR}
+        COMPONENT qfm1000)
+
+if (WIN32 OR APPLE)
+    install(DIRECTORY ${PROJECT_BINARY_DIR}/windeployqt/
+            DESTINATION ${QFM1000_TARGET_INSTALL_DIR}
+            COMPONENT qtlibs)
+endif ()
