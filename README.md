@@ -13,9 +13,11 @@ It's based on the Qt/C++ cross-platform framework and can be built using cmake i
 
 ## Releases
 
+All releases are created using CPack extension of CMake builder.
+
 ### Linux
 
-There is no pre-compiled version for Linux. Still working in a DEB release for Debian/Ubuntu distros.
+There are some deb packages preapred for different Debian-based Linux distribution. Just pick up the one for your OS and install it using `dpkg -i <file>.deb`. 
 
 ### MAC
 
@@ -23,9 +25,7 @@ There is no pre-compiled version for MAC. Still working to produce a official DM
 
 ### Windows
 
-Windows build are created using the official releases of Qt 5.9.1 for VS 2017 (64bit only) and Visual Studio Community 2017 edition on Windows 10 Professional.
-
-Windows users must install **Visual C++ Redistributable x64 for Visual Studio 2017** of the same architecture to use this software. The correct installation package can be installed using the one which is already shipped with ZIP release (English language), or can be downloaded from the official Microsoft website.
+Windows build are created using the official releases of Qt 5.9.2. Just download the MSI package and install it.
 
 ## Changelog
 
