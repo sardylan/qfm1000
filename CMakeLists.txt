@@ -1,8 +1,15 @@
-cmake_minimum_required(VERSION 3.0)
+cmake_minimum_required(VERSION 3.1)
 project(qfm1000)
+
+if (UNIX)
+    include(GNUInstallDirs)
+endif ()
 
 set(CMAKE_CXX_STANDARD 14)
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
+
+set_property(GLOBAL PROPERTY USE_FOLDERS ON)
+
 set(CMAKE_AUTOMOC ON)
 set(CMAKE_AUTOUIC ON)
 set(CMAKE_AUTORCC ON)
@@ -11,6 +18,20 @@ set(QT5_PREFIX "$ENV{QTDIR}" CACHE PATH "Qt5 prefix path")
 
 set(CMAKE_PREFIX_PATH "${QT5_PREFIX}/lib/cmake")
 
+set(QFM1000_APPLICATION_NAME "qFM1000")
+set(QFM1000_APPLICATION_VERSION_MAJOR "0")
+set(QFM1000_APPLICATION_VERSION_MINOR "3")
+set(QFM1000_APPLICATION_VERSION_PATCH "0")
+
+set(QFM1000_ORGANIZATION_NAME "The HellNet.org")
+set(QFM1000_ORGANIZATION_DOMAIN "thehellnet.org")
+
+set(QFM1000_APPLICATION_VERSION "${QFM1000_APPLICATION_VERSION_MAJOR}.${QFM1000_APPLICATION_VERSION_MINOR}.${QFM1000_APPLICATION_VERSION_PATCH}")
+
 enable_testing()
 
 add_subdirectory(src)
+
+add_subdirectory(desktop)
+
+include(cmake/packaging.cmake)
