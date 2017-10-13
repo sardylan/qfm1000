@@ -1,0 +1,6 @@
+[Desktop Entry]
+Name=@QFM1000_APPLICATION_NAME@
+Exec=qfm1000
+Icon=qfm1000
+Type=Application
+Categories=HamRadio
