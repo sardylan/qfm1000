@@ -30,6 +30,8 @@ render 16x16 icon-16.png
 echo
 echo " ### Assembling icons for MacOS"
 
+mkdir -p macos
+
 png2icns \
     macos/icon.icns \
     icon-1024.png \
@@ -42,6 +44,8 @@ png2icns \
 
 echo
 echo " ### Converting icons for Windows"
+
+mkdir -p windows
 
 echo "icon-256.ico"
 icotool --create --output=windows/icon-256.ico icon-256.png
