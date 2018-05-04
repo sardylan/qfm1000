@@ -72,7 +72,8 @@ const std::vector<QString> powerValues = {
         "6",
         "10",
         "15",
-        "25"
+        "25",
+        "30"
 };
 
 const std::vector<QString> squelchValues = {

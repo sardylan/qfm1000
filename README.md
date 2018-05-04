@@ -29,6 +29,9 @@ Windows build are created using the official releases of Qt 5.9.2. Just download
 
 ## Changelog
 
+
+* 0.3.1
+    * FIX: Power values and channel numbers
 * 0.3.0
     * ADD: Support for squelch values
     * TOOL: Add Coverity Scan support

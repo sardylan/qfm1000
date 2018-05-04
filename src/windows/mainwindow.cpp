@@ -99,6 +99,7 @@ void MainWindow::initUi() {
     ui->lowPowerComboBox->addItem("6 W", 2);
     ui->lowPowerComboBox->addItem("10 W", 3);
     ui->lowPowerComboBox->addItem("15 W", 4);
+    ui->lowPowerComboBox->addItem("25 W", 5);
 
     valueReadDefaultChannel();
     valueReadLowPower();
