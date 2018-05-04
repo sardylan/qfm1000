@@ -53,7 +53,7 @@ void ArduinoProgrammer::close() {
 }
 
 void ArduinoProgrammer::read() {
-    if (!ready || !serialPort.isOpen())
+    if (!serialPort.isOpen() || !ready)
         return;
 
     QByteArray data;

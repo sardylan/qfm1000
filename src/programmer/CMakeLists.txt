@@ -7,8 +7,7 @@ set(QFM1000_PROGRAMMER_HEADERS
 find_package(Qt5 REQUIRED COMPONENTS
         Core
         SerialPort
-        Concurrent
-        Test)
+        Concurrent)
 
 add_library(programmer
         ${QFM1000_PROGRAMMER_SOURCES}
@@ -22,14 +21,3 @@ target_link_libraries(programmer
 target_include_directories(programmer
         PUBLIC
         ${CMAKE_CURRENT_SOURCE_DIR})
-
-add_executable(testprogrammer
-        test/programmer_test.hpp
-        test/programmer_test.cpp)
-
-target_link_libraries(testprogrammer
-        Qt5::Core
-        Qt5::SerialPort
-        Qt5::Concurrent
-        Qt5::Test
-        programmer)
