@@ -67,13 +67,13 @@ const std::vector<QString> ctcssValues = {
 };
 
 const std::vector<QString> powerValues = {
-        "0",
-        "1",
-        "6",
-        "10",
-        "15",
-        "25",
-        "30"
+        "Disabled",
+        "1 W",
+        "6 W",
+        "10 W",
+        "15 W",
+        "25 W",
+        "30 W"
 };
 
 const std::vector<QString> squelchValues = {

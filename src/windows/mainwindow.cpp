@@ -25,6 +25,7 @@
 
 #include "mainwindow.hpp"
 #include "ui_mainwindow.h"
+#include "model/helper.hpp"
 
 MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWindow) {
     ui->setupUi(this);
@@ -96,12 +97,8 @@ void MainWindow::initUi() {
         ui->defaultChannelComboBox->addItem(QString("%1").arg(i), i);
 
     ui->lowPowerComboBox->clear();
-    ui->lowPowerComboBox->addItem("Disabled", 0);
-    ui->lowPowerComboBox->addItem("1 W", 1);
-    ui->lowPowerComboBox->addItem("6 W", 2);
-    ui->lowPowerComboBox->addItem("10 W", 3);
-    ui->lowPowerComboBox->addItem("15 W", 4);
-    ui->lowPowerComboBox->addItem("25 W", 5);
+    for (int i = 0; i < powerValues.size(); i++)
+        ui->lowPowerComboBox->addItem(powerValues[i], i);
 
     valueReadDefaultChannel();
     valueReadLowPower();
