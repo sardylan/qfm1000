@@ -59,13 +59,13 @@ target_link_libraries(qfm1000
 
 file(MAKE_DIRECTORY ${PROJECT_BINARY_DIR}/windeployqt)
 
-if (CMAKE_BUILD_TYPE STREQUAL "Debug")
-    set(QFM1000_DEPLOYQT_TYPE "--debug")
-else ()
-    set(QFM1000_DEPLOYQT_TYPE "--release")
-endif ()
-
 if (WIN32)
+    if (CMAKE_BUILD_TYPE STREQUAL "Debug")
+        set(QFM1000_DEPLOYQT_TYPE "--debug")
+    else ()
+        set(QFM1000_DEPLOYQT_TYPE "--release")
+    endif ()
+
     add_custom_command(TARGET qfm1000
             POST_BUILD
             COMMAND windeployqt $<TARGET_FILE:qfm1000> ${QFM1000_DEPLOYQT_TYPE} --dir ${PROJECT_BINARY_DIR}/windeployqt)
