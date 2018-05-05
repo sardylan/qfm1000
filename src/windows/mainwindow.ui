@@ -136,7 +136,7 @@
             </widget>
             <widget class="QMenu" name="menuHelp">
                 <property name="title">
-                    <string>Help</string>
+                    <string>&amp;Help</string>
                 </property>
                 <addaction name="actionHelpAbout"/>
             </widget>
@@ -147,6 +147,8 @@
                 <addaction name="actionEditCut"/>
                 <addaction name="actionEditCopy"/>
                 <addaction name="actionEditPaste"/>
+                <addaction name="separator"/>
+                <addaction name="actionEditConfiguration"/>
             </widget>
             <addaction name="menuFile"/>
             <addaction name="menuEdit"/>
@@ -183,6 +185,8 @@
             <addaction name="actionFileSave"/>
             <addaction name="actionFileSaveas"/>
             <addaction name="actionFileClose"/>
+            <addaction name="separator"/>
+            <addaction name="actionEditConfiguration"/>
             <addaction name="separator"/>
             <addaction name="actionEditCut"/>
             <addaction name="actionEditCopy"/>
@@ -289,6 +293,19 @@
             </property>
             <property name="text">
                 <string>&amp;Paste</string>
+            </property>
+        </action>
+        <action name="actionEditConfiguration">
+            <property name="icon">
+                <iconset resource="../resources.qrc">
+                    <normaloff>:/action/application/configure</normaloff>:/action/application/configure
+                </iconset>
+            </property>
+            <property name="text">
+                <string>&amp;Configuration</string>
+            </property>
+            <property name="shortcut">
+                <string>F6</string>
             </property>
         </action>
     </widget>

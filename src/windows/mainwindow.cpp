@@ -64,6 +64,8 @@ void MainWindow::signalConnect() {
     connect(ui->actionFileSaveas, SIGNAL(triggered()), this, SLOT(saveFileAs()));
     connect(ui->actionFileQuit, SIGNAL(triggered()), this, SLOT(applicationClose()));
 
+    connect(ui->actionEditConfiguration, SIGNAL(triggered()), this, SLOT(showConfigWindow()));
+
     connect(ui->actionHelpAbout, SIGNAL(triggered()), this, SLOT(showAboutWindow()));
 
     connect(tableModel, SIGNAL(dataChanged(QModelIndex, QModelIndex)), this, SLOT(updateUiStatus()));
