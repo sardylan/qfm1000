@@ -26,26 +26,41 @@
 #include "arduino.hpp"
 
 ArduinoProgrammer::ArduinoProgrammer(QObject *parent) {
+    status = Status::getInstance();
+    config = Config::getInstance();
+
     reset();
 }
 
 ArduinoProgrammer::~ArduinoProgrammer() = default;
 
-void ArduinoProgrammer::init(const QString &portName, QSerialPort::BaudRate baudRate) {
-    serialPort.setPortName(portName);
-    serialPort.setBaudRate(baudRate);
+void ArduinoProgrammer::init() {
+    serialPort.setPortName(config->getArduinoPortName());
+    serialPort.setBaudRate(config->getArduinoPortSpeed());
 
     serialPort.setDataBits(QSerialPort::Data8);
     serialPort.setParity(QSerialPort::NoParity);
     serialPort.setStopBits(QSerialPort::OneStop);
 
-    connect(&serialPort, SIGNAL(readyRead()), this, SLOT(readReadyResponse()));
     serialPort.open(QIODevice::ReadWrite);
+    serialPort.clear();
+    connect(&serialPort, SIGNAL(readyRead()), this, SLOT(readReadyResponse()));
+
 }
 
 void ArduinoProgrammer::close() {
-    serialPort.close();
+    if (serialPort.isOpen()) {
+        serialPort.clear();
+        serialPort.close();
+    }
+
     reset();
+
+    emit disconnected();
+}
+
+bool ArduinoProgrammer::isReady() const {
+    return ready;
 }
 
 void ArduinoProgrammer::read() {
@@ -119,6 +134,8 @@ void ArduinoProgrammer::writePage(uint8_t num, QByteArray data) {
 void ArduinoProgrammer::reset() {
     ready = false;
     memset(&eepromData[0], '\0', sizeof(eepromData));
+
+    status->setSerialEepromOpened(false);
 }
 
 void ArduinoProgrammer::readReadyResponse() {
@@ -128,9 +145,16 @@ void ArduinoProgrammer::readReadyResponse() {
         if (serialPort.read(&c, 1) != 1)
             break;
 
+        qDebug() << c;
+
         if (c == ARDUINO_PROGRAMMER_PROTOCOL_READY) {
-            ready = true;
             disconnect(&serialPort, SIGNAL(readyRead()), this, SLOT(readReadyResponse()));
+            serialPort.clear();
+
+            ready = true;
+
+            status->setSerialEepromOpened(true);
+            emit connected();
         }
     }
 }

@@ -75,8 +75,8 @@ void ConfigWindow::initUi() {
 }
 
 void ConfigWindow::initEnableStatus() {
-    ui->arduinoSerialPortCombo->setEnabled(!status->isSerialOpened());
-    ui->arduinoSerialSpeedCombo->setEnabled(!status->isSerialOpened());
+    ui->arduinoSerialPortCombo->setEnabled(!status->isSerialEepromOpened());
+    ui->arduinoSerialSpeedCombo->setEnabled(!status->isSerialEepromOpened());
 }
 
 void ConfigWindow::handleOK() {

@@ -52,6 +52,8 @@ public slots:
 
     void eepromUpdated();
 
+    void arduinoProgrammerUpdated();
+
 private:
 
     Ui::MainWindow *ui;

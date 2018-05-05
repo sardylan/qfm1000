@@ -25,6 +25,9 @@
 #include <QtCore/QObject>
 #include <QtSerialPort/QSerialPort>
 
+#include <config.hpp>
+#include <status.hpp>
+
 #define ARDUINO_PROGRAMMER_EEPROM_PAGE_SIZE 8
 #define ARDUINO_PROGRAMMER_EEPROM_PAGE_COUNT 256
 
@@ -42,9 +45,11 @@ public:
 
     ~ArduinoProgrammer() override;
 
-    void init(const QString &portName, QSerialPort::BaudRate baudRate);
+    void init();
 
     void close();
+
+    bool isReady() const;
 
 public slots:
 
@@ -53,6 +58,9 @@ public slots:
     void write(QByteArray data);
 
 private:
+    Status *status;
+    Config *config;
+
     QSerialPort serialPort;
     bool ready;
     char eepromData[ARDUINO_PROGRAMMER_EEPROM_PAGE_COUNT * ARDUINO_PROGRAMMER_EEPROM_PAGE_SIZE];
@@ -72,6 +80,10 @@ private slots:
     void readReadyResponse();
 
 signals:
+
+    void connected();
+
+    void disconnected();
 
     void pageRead(uint8_t num);
 

@@ -44,13 +44,14 @@ QFM1000::QFM1000(int &argc, char **argv) : QApplication(argc, argv) {
     status = Status::getInstance();
     config = Config::getInstance();
     eeprom = EEPROM::getInstance();
-    programmer = new ArduinoProgrammer();
+
+    arduinoProgrammer = new ArduinoProgrammer();
 
     mainWindow = new MainWindow();
 }
 
 QFM1000::~QFM1000() {
-    delete programmer;
+    delete arduinoProgrammer;
 
     delete mainWindow;
 }
@@ -59,11 +60,18 @@ void QFM1000::prepare() {
     ConfigManager::load();
     ConfigManager::save();
 
+    connect(arduinoProgrammer, SIGNAL(connected()), mainWindow, SLOT(arduinoProgrammerUpdated()));
+    connect(arduinoProgrammer, SIGNAL(disconnected()), mainWindow, SLOT(arduinoProgrammerUpdated()));
+
     connect(mainWindow, SIGNAL(actionConfig()), this, SLOT(showConfigWindow()));
     connect(mainWindow, SIGNAL(actionAbout()), this, SLOT(showAboutWindow()));
     connect(mainWindow, SIGNAL(actionCloseFile()), this, SLOT(closeEepromFile()));
     connect(mainWindow, SIGNAL(actionLoadFile(QString)), this, SLOT(loadEepromFile(QString)));
     connect(mainWindow, SIGNAL(actionSaveFile(QString)), this, SLOT(saveEepromFile(QString)));
+
+    connect(mainWindow, SIGNAL(actionEepromConnect()), this, SLOT(actionEepromConnect()));
+    connect(mainWindow, SIGNAL(actionEepromRead()), this, SLOT(actionEepromRead()));
+    connect(mainWindow, SIGNAL(actionEepromWrite()), this, SLOT(actionEepromWrite()));
 }
 
 int QFM1000::run() {
@@ -130,4 +138,20 @@ void QFM1000::saveEepromFile(QString fileName) {
     status->setCurrentFileName(fileName);
     status->setOriginalData(eeprom->getData());
     mainWindow->eepromUpdated();
+}
+
+void QFM1000::actionEepromConnect() {
+    if (!status->isSerialEepromOpened()) {
+        arduinoProgrammer->init();
+    } else {
+        arduinoProgrammer->close();
+    }
+}
+
+void QFM1000::actionEepromRead() {
+
+}
+
+void QFM1000::actionEepromWrite() {
+
 }

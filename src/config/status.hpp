@@ -34,7 +34,8 @@ private:
 
     QString currentFileName;
     QByteArray originalData;
-    bool serialOpened;
+    bool serialEepromOpened;
+    bool serialRadioOpened;
 
 public:
     static Status *getInstance();
@@ -47,11 +48,15 @@ public:
 
     void clearOriginalData();
 
-    bool isSerialOpened() const;
-
-    void setSerialOpened(bool serialOpen);
-
     bool isDataDirty(const QByteArray &eepromData);
+
+    bool isSerialEepromOpened() const;
+
+    void setSerialEepromOpened(bool serialEepromOpened);
+
+    bool isSerialRadioOpened() const;
+
+    void setSerialRadioOpened(bool serialRadioOpened);
 };
 
 #endif

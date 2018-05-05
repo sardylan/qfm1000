@@ -219,6 +219,10 @@ void MainWindow::eepromUpdated() {
     valueReadLowPower();
 }
 
+void MainWindow::arduinoProgrammerUpdated() {
+    statusBarWidgets->updateFromConfig();
+}
+
 void MainWindow::updateWidgetEnableStatus() {
     bool fileOpened = status->getCurrentFileName().length() > 0;
     ui->generalConfGroupBox->setEnabled(fileOpened);

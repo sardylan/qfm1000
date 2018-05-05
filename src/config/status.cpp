@@ -32,9 +32,10 @@ Status *Status::getInstance() {
 }
 
 Status::Status() {
-    serialOpened = false;
     currentFileName = "";
     originalData.clear();
+    serialEepromOpened = false;
+    serialRadioOpened = false;
 }
 
 const QString &Status::getCurrentFileName() const {
@@ -53,14 +54,6 @@ void Status::clearOriginalData() {
     originalData.clear();
 }
 
-bool Status::isSerialOpened() const {
-    return serialOpened;
-}
-
-void Status::setSerialOpened(bool serialOpen) {
-    Status::serialOpened = serialOpen;
-}
-
 bool Status::isDataDirty(const QByteArray &eepromData) {
     if (originalData.length() != eepromData.length())
         return true;
@@ -70,4 +63,20 @@ bool Status::isDataDirty(const QByteArray &eepromData) {
             return true;
 
     return false;
+}
+
+bool Status::isSerialEepromOpened() const {
+    return serialEepromOpened;
+}
+
+void Status::setSerialEepromOpened(bool serialEepromOpened) {
+    Status::serialEepromOpened = serialEepromOpened;
+}
+
+bool Status::isSerialRadioOpened() const {
+    return serialRadioOpened;
+}
+
+void Status::setSerialRadioOpened(bool serialRadioOpened) {
+    Status::serialRadioOpened = serialRadioOpened;
 }

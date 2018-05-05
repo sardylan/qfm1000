@@ -52,7 +52,7 @@ private:
     Config *config;
     MainWindow *mainWindow;
     EEPROM *eeprom;
-    ArduinoProgrammer *programmer;
+    ArduinoProgrammer *arduinoProgrammer;
 
 private slots:
 
@@ -65,6 +65,13 @@ private slots:
     void loadEepromFile(QString fileName);
 
     void saveEepromFile(QString fileName);
+
+    void actionEepromConnect();
+
+    void actionEepromRead();
+
+    void actionEepromWrite();
+
 };
 
 #endif
