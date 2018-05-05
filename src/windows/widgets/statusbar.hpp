@@ -33,9 +33,9 @@ class StatusBarWidgets : public QObject {
 Q_OBJECT
 
 public:
-    explicit StatusBarWidgets(QObject *parent = 0);
+    explicit StatusBarWidgets(QObject *parent = nullptr);
 
-    ~StatusBarWidgets();
+    ~StatusBarWidgets() override;
 
     QLabel *time;
     QLabel *habSerial;

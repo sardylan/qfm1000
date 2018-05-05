@@ -29,7 +29,7 @@ class FlagDelegate : public QStyledItemDelegate {
 Q_OBJECT
 
 public:
-    FlagDelegate(QObject *parent = 0);
+    explicit FlagDelegate(QObject *parent = nullptr);
 
     QWidget *createEditor(QWidget *parent, const QStyleOptionViewItem &option, const QModelIndex &index) const override;
 

@@ -28,20 +28,20 @@ FlagDelegate::FlagDelegate(QObject *parent) : QStyledItemDelegate(parent) {
 
 QWidget *
 FlagDelegate::createEditor(QWidget *parent, const QStyleOptionViewItem &option, const QModelIndex &index) const {
-    QCheckBox *checkBox = new QCheckBox(parent);
+    auto *checkBox = new QCheckBox(parent);
     checkBox->setStyleSheet("padding: 5px;");
     return checkBox;
 }
 
 void FlagDelegate::setEditorData(QWidget *editor, const QModelIndex &index) const {
-    QCheckBox *checkBox = static_cast<QCheckBox *>(editor);
+    auto *checkBox = dynamic_cast<QCheckBox *>(editor);
     QString stringValue = index.model()->data(index).toString();
     bool value = stringValue == "enabled";
     checkBox->setChecked(value);
 }
 
 void FlagDelegate::setModelData(QWidget *editor, QAbstractItemModel *model, const QModelIndex &index) const {
-    QCheckBox *checkBox = static_cast<QCheckBox *>(editor);
+    auto *checkBox = dynamic_cast<QCheckBox *>(editor);
     bool data = checkBox->isChecked();
     model->setData(index, data);
 }

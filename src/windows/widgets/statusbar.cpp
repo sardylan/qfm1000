@@ -40,8 +40,7 @@ StatusBarWidgets::StatusBarWidgets(QObject *parent) : QObject(parent) {
     updateFromConfig();
 }
 
-StatusBarWidgets::~StatusBarWidgets() {
-}
+StatusBarWidgets::~StatusBarWidgets() = default;
 
 void StatusBarWidgets::initLabelStyle(QLabel *label) {
     label->setFrameShape(QFrame::StyledPanel);

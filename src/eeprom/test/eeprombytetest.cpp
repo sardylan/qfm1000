@@ -281,7 +281,7 @@ void EEPROMByteTest::testChannelSquelch() {
 void EEPROMByteTest::testChannelSelectiveCalling() {
     for (int i = 0; i < CHANNELS_COUNT; i++) {
         int offset = OFFSET_CHANNEL_FIRST + (i * 8);
-        uint8_t byte = (uint8_t) eeprom->getData()[offset + 7];
+        auto byte = (uint8_t) eeprom->getData()[offset + 7];
         CUSTOM_QTRY_COMPARE_NO_TIMEOUT((bool) (byte & 0b00000010), false);
 
         eeprom->setChannelSelectiveCalling(i, true);
@@ -297,7 +297,7 @@ void EEPROMByteTest::testChannelSelectiveCalling() {
 void EEPROMByteTest::testChannelCpuOffset() {
     for (int i = 0; i < CHANNELS_COUNT; i++) {
         int offset = OFFSET_CHANNEL_FIRST + (i * 8);
-        uint8_t byte = (uint8_t) eeprom->getData()[offset + 7];
+        auto byte = (uint8_t) eeprom->getData()[offset + 7];
         CUSTOM_QTRY_COMPARE_NO_TIMEOUT((bool) (byte & 0b00000001), false);
 
         eeprom->setChannelCpuOffset(i, true);
@@ -311,7 +311,7 @@ void EEPROMByteTest::testChannelCpuOffset() {
 }
 
 void EEPROMByteTest::testDefaultChannel() {
-    uint8_t byte = (uint8_t) eeprom->getData()[OFFSET_STARTUP_CHANNEL];
+    auto byte = (uint8_t) eeprom->getData()[OFFSET_STARTUP_CHANNEL];
     CUSTOM_QTRY_COMPARE_NO_TIMEOUT(byte, (uint8_t) 0x00);
 
     eeprom->setDefaultChannel(TEST_DEFAULT_CHANNEL);
@@ -320,7 +320,7 @@ void EEPROMByteTest::testDefaultChannel() {
 }
 
 void EEPROMByteTest::testTot() {
-    uint8_t byte = (uint8_t) eeprom->getData()[OFFSET_TOT];
+    auto byte = (uint8_t) eeprom->getData()[OFFSET_TOT];
     CUSTOM_QTRY_COMPARE_NO_TIMEOUT(byte, (uint8_t) 0x00);
 
     eeprom->setTot(TEST_TOT);
@@ -329,7 +329,7 @@ void EEPROMByteTest::testTot() {
 }
 
 void EEPROMByteTest::testLowPower() {
-    uint8_t byte = (uint8_t) eeprom->getData()[OFFSET_LOW_POWER];
+    auto byte = (uint8_t) eeprom->getData()[OFFSET_LOW_POWER];
     CUSTOM_QTRY_COMPARE_NO_TIMEOUT(byte, (uint8_t) 0x00);
 
     eeprom->setLowPower(TEST_LOW_POWER);

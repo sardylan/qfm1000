@@ -60,8 +60,6 @@ public:
 
     void setData(const QByteArray &data);
 
-    void recompute();
-
     unsigned int getChannelRxFreq(int channel);
 
     void setChannelRxFreq(int channel, unsigned int freq);

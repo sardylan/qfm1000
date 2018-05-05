@@ -29,7 +29,7 @@ class SquelchDelegate : public QStyledItemDelegate {
 Q_OBJECT
 
 public:
-    SquelchDelegate(QObject *parent = 0);
+    explicit SquelchDelegate(QObject *parent = nullptr);
 
     QWidget *createEditor(QWidget *parent, const QStyleOptionViewItem &option, const QModelIndex &index) const override;
 

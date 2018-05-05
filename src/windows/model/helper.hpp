@@ -85,4 +85,5 @@ const std::vector<QString> squelchValues = {
         "21dB SINAD",
         "24dB SINAD"
 };
+
 #endif

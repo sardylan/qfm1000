@@ -29,7 +29,7 @@ class CtcssDelegate : public QStyledItemDelegate {
 Q_OBJECT
 
 public:
-    CtcssDelegate(QObject *parent = 0);
+    explicit CtcssDelegate(QObject *parent = nullptr);
 
     QWidget *createEditor(QWidget *parent, const QStyleOptionViewItem &option, const QModelIndex &index) const override;
 

@@ -25,7 +25,7 @@
 Status *Status::instance = nullptr;
 
 Status *Status::getInstance() {
-    if (instance == 0)
+    if (instance == nullptr)
         instance = new Status();
 
     return instance;

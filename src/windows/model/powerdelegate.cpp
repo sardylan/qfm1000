@@ -34,7 +34,7 @@ PowerDelegate::createEditor(QWidget *parent, const QStyleOptionViewItem &option,
 }
 
 void PowerDelegate::setEditorData(QWidget *editor, const QModelIndex &index) const {
-    QComboBox *comboBox = static_cast<QComboBox *>(editor);
+    auto comboBox = dynamic_cast<QComboBox *>(editor);
     QString stringValue = index.model()->data(index).toString();
 
     for (int i = 0; i < powerValues.size(); i++)
@@ -47,7 +47,7 @@ void PowerDelegate::setEditorData(QWidget *editor, const QModelIndex &index) con
 }
 
 void PowerDelegate::setModelData(QWidget *editor, QAbstractItemModel *model, const QModelIndex &index) const {
-    QComboBox *comboBox = static_cast<QComboBox *>(editor);
+    auto comboBox = dynamic_cast<QComboBox *>(editor);
     int data = comboBox->currentData().toInt();
     model->setData(index, data);
 }
@@ -58,7 +58,7 @@ void PowerDelegate::updateEditorGeometry(QWidget *editor, const QStyleOptionView
 }
 
 QComboBox *PowerDelegate::createPowerComboBox(QWidget *parent) {
-    QComboBox *comboBox = new QComboBox(parent);
+    auto *comboBox = new QComboBox(parent);
 
     comboBox->setEditable(true);
     comboBox->lineEdit()->setReadOnly(true);

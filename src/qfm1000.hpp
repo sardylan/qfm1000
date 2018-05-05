@@ -40,7 +40,7 @@ public:
 
     explicit QFM1000(int &argc, char **argv);
 
-    ~QFM1000();
+    ~QFM1000() override;
 
     void prepare();
 

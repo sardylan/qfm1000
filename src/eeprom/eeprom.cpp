@@ -41,29 +41,11 @@ void EEPROM::clear() {
 }
 
 const QByteArray &EEPROM::getData() {
-//    recompute();
     return data;
 }
 
 void EEPROM::setData(const QByteArray &data) {
     EEPROM::data = data;
-//    recompute();
-}
-
-void EEPROM::recompute() {
-    for (int i = 0; i < CHANNELS_COUNT; i++) {
-        setChannelRxFreq(i, getChannelRxFreq(i));
-        setChannelTxFreq(i, getChannelTxFreq(i));
-        setChannelRxCtcss(i, getChannelRxCtcss(i));
-        setChannelTxCtcss(i, getChannelTxCtcss(i));
-        setChannelPower(i, getChannelPower(i));
-        setChannelSelectiveCalling(i, getChannelSelectiveCalling(i));
-        setChannelCpuOffset(i, getChannelCpuOffset(i));
-    }
-
-    setDefaultChannel(getDefaultChannel());
-    setTot(getTot());
-    setLowPower(getLowPower());
 }
 
 bool EEPROM::isValidChannelNumber(int channel) {

@@ -29,7 +29,7 @@ class ReadOnlyDelegate : public QStyledItemDelegate {
 Q_OBJECT
 
 public:
-    ReadOnlyDelegate(QObject *parent = 0);
+    explicit ReadOnlyDelegate(QObject *parent = nullptr);
 
     QWidget *createEditor(QWidget *parent, const QStyleOptionViewItem &option, const QModelIndex &index) const override;
 

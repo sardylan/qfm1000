@@ -19,15 +19,15 @@ matrix:
             - pkg-config
             - cmake
       before_install:
-        - sudo apt-add-repository --yes ppa:beineri/opt-qt591-trusty
+        - sudo apt-add-repository --yes ppa:beineri/opt-qt5.10.1-trusty
         - sudo apt-get -qq update
       install:
         - sudo apt-get --yes install build-essential automake autoconf libtool pkg-config cmake
-        - sudo apt-get --yes install qt59-meta-full
+        - sudo apt-get --yes install qt510-meta-full
       before_script:
-        - QTDIR="/opt/qt59"
+        - QTDIR="/opt/qt510"
         - PATH="$QTDIR/bin:$PATH"
-        - source /opt/qt59/bin/qt59-env.sh
+        - source /opt/qt510/bin/qt510-env.sh
       addons:
         coverity_scan:
           project:
@@ -40,7 +40,7 @@ matrix:
 
 
     - os: osx
-      osx_image: xcode9
+      osx_image: xcode9.3
       compiler: clang
       before_install:
         - brew update

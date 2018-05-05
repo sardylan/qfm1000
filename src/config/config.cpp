@@ -25,7 +25,7 @@
 Config *Config::instance = nullptr;
 
 Config *Config::getInstance() {
-    if (instance == 0)
+    if (instance == nullptr)
         instance = new Config();
 
     return instance;

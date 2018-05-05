@@ -34,7 +34,7 @@ SquelchDelegate::createEditor(QWidget *parent, const QStyleOptionViewItem &optio
 }
 
 void SquelchDelegate::setEditorData(QWidget *editor, const QModelIndex &index) const {
-    QComboBox *comboBox = static_cast<QComboBox *>(editor);
+    auto *comboBox = dynamic_cast<QComboBox *>(editor);
     QString stringValue = index.model()->data(index).toString();
 
     for (int i = 0; i < powerValues.size(); i++)
@@ -47,18 +47,19 @@ void SquelchDelegate::setEditorData(QWidget *editor, const QModelIndex &index) c
 }
 
 void SquelchDelegate::setModelData(QWidget *editor, QAbstractItemModel *model, const QModelIndex &index) const {
-    QComboBox *comboBox = static_cast<QComboBox *>(editor);
+    auto *comboBox = dynamic_cast<QComboBox *>(editor);
     int data = comboBox->currentData().toInt();
     model->setData(index, data);
 }
 
-void SquelchDelegate::updateEditorGeometry(QWidget *editor, const QStyleOptionViewItem &option,
+void SquelchDelegate::updateEditorGeometry(QWidget *editor,
+                                           const QStyleOptionViewItem &option,
                                            const QModelIndex &index) const {
     editor->setGeometry(option.rect);
 }
 
 QComboBox *SquelchDelegate::createSquelchComboBox(QWidget *parent) {
-    QComboBox *comboBox = new QComboBox(parent);
+    auto *comboBox = new QComboBox(parent);
 
     comboBox->setEditable(true);
     comboBox->lineEdit()->setReadOnly(true);

@@ -29,7 +29,7 @@ class PowerDelegate : public QStyledItemDelegate {
 Q_OBJECT
 
 public:
-    PowerDelegate(QObject *parent = 0);
+    explicit PowerDelegate(QObject *parent = nullptr);
 
     QWidget *createEditor(QWidget *parent, const QStyleOptionViewItem &option, const QModelIndex &index) const override;
 

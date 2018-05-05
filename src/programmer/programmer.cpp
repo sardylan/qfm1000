@@ -30,9 +30,7 @@ ArduinoProgrammer::ArduinoProgrammer(QObject *parent) {
     ready = false;
 }
 
-ArduinoProgrammer::~ArduinoProgrammer() {
-
-}
+ArduinoProgrammer::~ArduinoProgrammer() = default;
 
 void ArduinoProgrammer::init(const QString &portName, QSerialPort::BaudRate baudRate) {
     serialPort.setPortName(portName);
