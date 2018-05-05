@@ -59,6 +59,10 @@ private:
 
     void reset();
 
+    void readEeprom();
+
+    void writeEeprom(QByteArray data);
+
     void readPage(uint8_t num);
 
     void writePage(uint8_t num, QByteArray data);

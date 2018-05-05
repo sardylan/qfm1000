@@ -52,11 +52,7 @@ void ArduinoProgrammer::read() {
     if (!ready)
         return;
 
-    for (uint8_t i = 0; i <= ARDUINO_PROGRAMMER_EEPROM_PAGE_COUNT - 1; i++)
-        readPage(i);
-
-    emit eepromRead(QByteArray(eepromData));
-    emit readCompleted();
+    QtConcurrent::run(this, &ArduinoProgrammer::readEeprom);
 }
 
 void ArduinoProgrammer::write(QByteArray data) {
@@ -66,6 +62,19 @@ void ArduinoProgrammer::write(QByteArray data) {
     if (data.length() != ARDUINO_PROGRAMMER_EEPROM_PAGE_SIZE * ARDUINO_PROGRAMMER_EEPROM_PAGE_COUNT)
         return;
 
+    QtConcurrent::run(this, &ArduinoProgrammer::writeEeprom, data);
+}
+
+void ArduinoProgrammer::readEeprom() {
+
+    for (uint8_t i = 0; i <= ARDUINO_PROGRAMMER_EEPROM_PAGE_COUNT - 1; i++)
+        readPage(i);
+
+    emit eepromRead(QByteArray(eepromData));
+    emit readCompleted();
+}
+
+void ArduinoProgrammer::writeEeprom(QByteArray data) {
     for (uint8_t i = 0; i <= ARDUINO_PROGRAMMER_EEPROM_PAGE_COUNT - 1; i++) {
         QByteArray pageData;
 
