@@ -75,7 +75,7 @@ elseif (APPLE)
             MACOSX_BUNDLE_ICON_FILE ${QFM1000_MAC_ICON_NAME})
     add_custom_command(TARGET qfm1000
             POST_BUILD
-            COMMAND macdeployqt $<TARGET_FILE:qfm1000> ${QFM1000_DEPLOYQT_TYPE} --dir ${PROJECT_BINARY_DIR}/windeployqt)
+            COMMAND macdeployqt $<TARGET_FILE:qfm1000> ${QFM1000_DEPLOYQT_TYPE})
 endif ()
 
 if (UNIX)
