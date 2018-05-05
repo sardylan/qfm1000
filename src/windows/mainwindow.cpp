@@ -67,6 +67,10 @@ void MainWindow::signalConnect() {
 
     connect(ui->actionEditConfiguration, SIGNAL(triggered()), this, SLOT(showConfigWindow()));
 
+    connect(ui->actionEepromConnect, SIGNAL(triggered()), this, SLOT(eepromConnect()));
+    connect(ui->actionEepromRead, SIGNAL(triggered()), this, SLOT(eepromRead()));
+    connect(ui->actionEepromWrite, SIGNAL(triggered()), this, SLOT(eepromWrite()));
+
     connect(ui->actionHelpAbout, SIGNAL(triggered()), this, SLOT(showAboutWindow()));
 
     connect(tableModel, SIGNAL(dataChanged(QModelIndex, QModelIndex)), this, SLOT(updateUiStatus()));
@@ -242,4 +246,16 @@ void MainWindow::updateUiStatus() {
     }
 
     setWindowTitle(title);
+}
+
+void MainWindow::eepromConnect() {
+    emit actionEepromConnect();
+}
+
+void MainWindow::eepromRead() {
+    emit actionEepromRead();
+}
+
+void MainWindow::eepromWrite() {
+    emit actionEepromWrite();
 }

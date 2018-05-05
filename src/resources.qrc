@@ -22,4 +22,8 @@
         <file alias="redo">../icons/action/edit-redo.svg</file>
         <file alias="undo">../icons/action/edit-undo.svg</file>
     </qresource>
+    <qresource prefix="/action/eeprom">
+        <file alias="read">../icons/action/eeprom-read.svg</file>
+        <file alias="write">../icons/action/eeprom-write.svg</file>
+    </qresource>
 </RCC>

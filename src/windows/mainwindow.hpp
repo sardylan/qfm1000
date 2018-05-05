@@ -112,6 +112,12 @@ private slots:
 
     void valueWriteLowPower(int newValue);
 
+    void eepromConnect();
+
+    void eepromRead();
+
+    void eepromWrite();
+
 signals:
 
     void actionConfig();
@@ -123,6 +129,12 @@ signals:
     void actionLoadFile(QString filename);
 
     void actionSaveFile(QString filename);
+
+    void actionEepromConnect();
+
+    void actionEepromRead();
+
+    void actionEepromWrite();
 
 };
 
