@@ -19,7 +19,7 @@ matrix:
             - pkg-config
             - cmake
       before_install:
-        - sudo apt-add-repository --yes ppa:beineri/opt-qt5.10.1-trusty
+        - sudo apt-add-repository --yes ppa:beineri/opt-qt-5.10.1-trusty
         - sudo apt-get -qq update
       install:
         - sudo apt-get --yes install build-essential automake autoconf libtool pkg-config cmake
