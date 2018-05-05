@@ -25,8 +25,8 @@
 #include <QtCore/QObject>
 #include <QtSerialPort/QSerialPort>
 
-#define ARDUINO_PROGRAMMER_BUFFER_SIZE 8
-#define ARDUINO_PROGRAMMER_EEPROM_SIZE 2048
+#define ARDUINO_PROGRAMMER_EEPROM_PAGE_SIZE 8
+#define ARDUINO_PROGRAMMER_EEPROM_PAGE_COUNT 256
 
 #define ARDUINO_PROGRAMMER_PROTOCOL_READY 'L'
 #define ARDUINO_PROGRAMMER_PROTOCOL_OK 'K'
@@ -40,49 +40,44 @@ Q_OBJECT
 public:
     explicit ArduinoProgrammer(QObject *parent = nullptr);
 
-    ~ArduinoProgrammer();
+    ~ArduinoProgrammer() override;
 
     void init(const QString &portName, QSerialPort::BaudRate baudRate);
 
     void close();
 
+public slots:
+
     void read();
 
-    void write(const QByteArray &data);
-
-    bool isReady() const;
+    void write(QByteArray data);
 
 private:
     QSerialPort serialPort;
     bool ready;
+    char eepromData[ARDUINO_PROGRAMMER_EEPROM_PAGE_COUNT * ARDUINO_PROGRAMMER_EEPROM_PAGE_SIZE];
 
-    QByteArray data;
+    void reset();
 
-    QByteArray readPage(uint8_t page);
+    void readPage(uint8_t num);
 
-    void readPages();
-
-    void writePage(uint8_t page, const QByteArray &data);
-
-    void writePages();
+    void writePage(uint8_t num, QByteArray data);
 
 private slots:
 
-    void catchReadyCommand();
-
-    void eepromReadFinish();
-
-    void eepromWriteFinish();
+    void readReadyResponse();
 
 signals:
 
+    void pageRead(uint8_t num);
+
+    void pageWritten(uint8_t num);
+
+    void readCompleted();
+
+    void writeCompleted();
+
     void eepromRead(QByteArray data);
-
-    void eepromWritten();
-
-    void pageRead(uint8_t page);
-
-    void pageWritten(uint8_t page, bool result);
 };
 
 #endif
