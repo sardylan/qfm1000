@@ -1,8 +1,8 @@
 set(QFM1000_PROGRAMMER_SOURCES
-        programmer.cpp)
+        arduino.cpp)
 
 set(QFM1000_PROGRAMMER_HEADERS
-        programmer.hpp)
+        arduino.hpp)
 
 find_package(Qt5 REQUIRED COMPONENTS
         Core

@@ -31,7 +31,7 @@
 #include <config/config.hpp>
 #include <config/status.hpp>
 #include <eeprom/eeprom.hpp>
-#include <programmer/programmer.hpp>
+#include <programmer/arduino.hpp>
 
 
 class QFM1000 : public QApplication {

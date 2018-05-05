@@ -32,9 +32,16 @@ void ConfigManager::load() {
     Config *config = Config::getInstance();
     QSettings settings;
 
-    settings.beginGroup("serial");
-    config->setPortName(settings.value("portName", CONFIG_PORTNAME_DEFAULT).toString());
-    config->setPortSpeed(settings.value("portSpeed", CONFIG_PORTSPEED_DEFAULT).value<QSerialPort::BaudRate>());
+    settings.beginGroup("eeprom");
+    config->setArduinoPortName(settings.value("portName", CONFIG_ARDUINO_PORT_NAME_DEFAULT).toString());
+    config->setArduinoPortSpeed(
+            settings.value("portSpeed", CONFIG_ARDUINO_PORT_SPEED_DEFAULT).value<QSerialPort::BaudRate>());
+    settings.endGroup();
+
+    settings.beginGroup("radio");
+    config->setRadioPortName(settings.value("portName", CONFIG_RADIO_PORT_NAME_DEFAULT).toString());
+    config->setRadioPortSpeed(
+            settings.value("portSpeed", CONFIG_RADIO_PORT_SPEED_DEFAULT).value<QSerialPort::BaudRate>());
     settings.endGroup();
 }
 
@@ -42,9 +49,14 @@ void ConfigManager::save() {
     Config *config = Config::getInstance();
     QSettings settings;
 
-    settings.beginGroup("serial");
-    settings.setValue("portName", config->getPortName());
-    settings.setValue("portSpeed", config->getPortSpeed());
+    settings.beginGroup("eeprom");
+    settings.setValue("portName", config->getArduinoPortName());
+    settings.setValue("portSpeed", config->getArduinoPortSpeed());
+    settings.endGroup();
+
+    settings.beginGroup("radio");
+    settings.setValue("portName", config->getRadioPortName());
+    settings.setValue("portSpeed", config->getRadioPortSpeed());
     settings.endGroup();
 
     settings.sync();

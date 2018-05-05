@@ -71,8 +71,8 @@ void StatusBarWidgets::updateFromConfig() {
     QString text;
 
     text = QString("<strong>Arduino:</strong> %1 %2 %3")
-            .arg(config->getPortName())
-            .arg(config->getPortSpeed())
+            .arg(config->getArduinoPortName())
+            .arg(config->getArduinoPortSpeed())
             .arg(serialPortParams(QSerialPort::Data8, QSerialPort::NoParity, QSerialPort::OneStop));
     habSerial->setText(text);
     habSerial->setEnabled(status->isSerialOpened());

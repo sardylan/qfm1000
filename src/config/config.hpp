@@ -32,20 +32,29 @@ private:
 
     static Config *instance;
 
-    QString portName;
-    QSerialPort::BaudRate portSpeed;
+    QString arduinoPortName;
+    QSerialPort::BaudRate arduinoPortSpeed;
+    QString radioPortName;
+    QSerialPort::BaudRate radioPortSpeed;
 
 public:
     static Config *getInstance();
 
-    const QString &getPortName() const;
+    const QString &getArduinoPortName() const;
 
-    void setPortName(const QString &portName);
+    void setArduinoPortName(const QString &arduinoPortName);
 
-    QSerialPort::BaudRate getPortSpeed() const;
+    QSerialPort::BaudRate getArduinoPortSpeed() const;
 
-    void setPortSpeed(QSerialPort::BaudRate portSpeed);
+    void setArduinoPortSpeed(QSerialPort::BaudRate arduinoPortSpeed);
 
+    const QString &getRadioPortName() const;
+
+    void setRadioPortName(const QString &radioPortName);
+
+    QSerialPort::BaudRate getRadioPortSpeed() const;
+
+    void setRadioPortSpeed(QSerialPort::BaudRate radioPortSpeed);
 };
 
 #endif

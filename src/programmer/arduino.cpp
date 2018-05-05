@@ -23,7 +23,7 @@
 #include <QFutureWatcher>
 #include <QtConcurrent>
 
-#include "programmer.hpp"
+#include "arduino.hpp"
 
 ArduinoProgrammer::ArduinoProgrammer(QObject *parent) {
     reset();

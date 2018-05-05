@@ -32,22 +32,41 @@ Config *Config::getInstance() {
 }
 
 Config::Config() {
-    portName = CONFIG_PORTNAME_DEFAULT;
-    portSpeed = CONFIG_PORTSPEED_DEFAULT;
+    arduinoPortName = CONFIG_ARDUINO_PORT_NAME_DEFAULT;
+    arduinoPortSpeed = CONFIG_ARDUINO_PORT_SPEED_DEFAULT;
+    radioPortName = CONFIG_RADIO_PORT_NAME_DEFAULT;
+    radioPortSpeed = CONFIG_RADIO_PORT_SPEED_DEFAULT;
 }
 
-const QString &Config::getPortName() const {
-    return portName;
+const QString &Config::getArduinoPortName() const {
+    return arduinoPortName;
 }
 
-void Config::setPortName(const QString &portName) {
-    Config::portName = portName;
+void Config::setArduinoPortName(const QString &arduinoPortName) {
+    Config::arduinoPortName = arduinoPortName;
 }
 
-QSerialPort::BaudRate Config::getPortSpeed() const {
-    return portSpeed;
+QSerialPort::BaudRate Config::getArduinoPortSpeed() const {
+    return arduinoPortSpeed;
 }
 
-void Config::setPortSpeed(QSerialPort::BaudRate portSpeed) {
-    Config::portSpeed = portSpeed;
+void Config::setArduinoPortSpeed(QSerialPort::BaudRate arduinoPortSpeed) {
+    Config::arduinoPortSpeed = arduinoPortSpeed;
 }
+
+const QString &Config::getRadioPortName() const {
+    return radioPortName;
+}
+
+void Config::setRadioPortName(const QString &radioPortName) {
+    Config::radioPortName = radioPortName;
+}
+
+QSerialPort::BaudRate Config::getRadioPortSpeed() const {
+    return radioPortSpeed;
+}
+
+void Config::setRadioPortSpeed(QSerialPort::BaudRate radioPortSpeed) {
+    Config::radioPortSpeed = radioPortSpeed;
+}
+
