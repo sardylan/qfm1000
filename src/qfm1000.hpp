@@ -31,6 +31,7 @@
 #include <config/config.hpp>
 #include <config/status.hpp>
 #include <eeprom/eeprom.hpp>
+#include <programmer/programmer.hpp>
 
 
 class QFM1000 : public QApplication {
@@ -51,6 +52,7 @@ private:
     Config *config;
     MainWindow *mainWindow;
     EEPROM *eeprom;
+    ArduinoProgrammer *programmer;
 
 private slots:
 

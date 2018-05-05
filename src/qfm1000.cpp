@@ -44,11 +44,14 @@ QFM1000::QFM1000(int &argc, char **argv) : QApplication(argc, argv) {
     status = Status::getInstance();
     config = Config::getInstance();
     eeprom = EEPROM::getInstance();
+    programmer = new ArduinoProgrammer();
 
     mainWindow = new MainWindow();
 }
 
 QFM1000::~QFM1000() {
+    delete programmer;
+
     delete mainWindow;
 }
 
