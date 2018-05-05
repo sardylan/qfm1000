@@ -31,8 +31,8 @@ StatusBarWidgets::StatusBarWidgets(QObject *parent) : QObject(parent) {
     initLabelStyle(time);
     initTime();
 
-    habSerial = new QLabel();
-    initLabelStyle(habSerial);
+    arduinoSerial = new QLabel();
+    initLabelStyle(arduinoSerial);
 
     timeTimer = new QTimer(this);
     initTimeTimer();
@@ -40,7 +40,12 @@ StatusBarWidgets::StatusBarWidgets(QObject *parent) : QObject(parent) {
     updateFromConfig();
 }
 
-StatusBarWidgets::~StatusBarWidgets() = default;
+StatusBarWidgets::~StatusBarWidgets() {
+    delete timeTimer;
+
+    delete time;
+    delete arduinoSerial;
+}
 
 void StatusBarWidgets::initLabelStyle(QLabel *label) {
     label->setFrameShape(QFrame::StyledPanel);
@@ -74,8 +79,8 @@ void StatusBarWidgets::updateFromConfig() {
             .arg(config->getArduinoPortName())
             .arg(config->getArduinoPortSpeed())
             .arg(serialPortParams(QSerialPort::Data8, QSerialPort::NoParity, QSerialPort::OneStop));
-    habSerial->setText(text);
-    habSerial->setEnabled(status->isSerialOpened());
+    arduinoSerial->setText(text);
+    arduinoSerial->setEnabled(status->isSerialOpened());
 }
 
 QString StatusBarWidgets::serialPortParams(QSerialPort::DataBits dataBits, QSerialPort::Parity parity,

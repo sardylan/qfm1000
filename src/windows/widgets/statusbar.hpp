@@ -38,7 +38,7 @@ public:
     ~StatusBarWidgets() override;
 
     QLabel *time;
-    QLabel *habSerial;
+    QLabel *arduinoSerial;
 
 public slots:
 

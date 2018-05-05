@@ -110,6 +110,7 @@ void MainWindow::initUi() {
 
 void MainWindow::initStatusBar() {
     ui->statusBar->addPermanentWidget(statusBarWidgets->time);
+    ui->statusBar->addWidget(statusBarWidgets->arduinoSerial);
 }
 
 void MainWindow::applicationClose() {
