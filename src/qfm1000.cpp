@@ -149,9 +149,15 @@ void QFM1000::actionEepromConnect() {
 }
 
 void QFM1000::actionEepromRead() {
+    if (!status->isSerialEepromOpened())
+        return;
 
+    arduinoProgrammer->read();
 }
 
 void QFM1000::actionEepromWrite() {
+    if (!status->isSerialEepromOpened())
+        return;
 
+    arduinoProgrammer->write(eeprom->getData());
 }

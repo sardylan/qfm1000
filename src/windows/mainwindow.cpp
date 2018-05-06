@@ -110,8 +110,9 @@ void MainWindow::initUi() {
 }
 
 void MainWindow::initStatusBar() {
+    ui->statusBar->addPermanentWidget(statusBarWidgets->arduinoSerial);
+
     ui->statusBar->addPermanentWidget(statusBarWidgets->time);
-    ui->statusBar->addWidget(statusBarWidgets->arduinoSerial);
 }
 
 void MainWindow::applicationClose() {
@@ -220,7 +221,16 @@ void MainWindow::eepromUpdated() {
 }
 
 void MainWindow::arduinoProgrammerUpdated() {
-    statusBarWidgets->updateFromConfig();
+    QString message;
+
+    if (status->isSerialEepromOpened())
+        message = "Arduino programmer connected";
+    else
+        message = "Arduino programmer disconnected";
+
+    showStatusBarMessage(message);
+
+    updateUiStatus();
 }
 
 void MainWindow::updateWidgetEnableStatus() {
@@ -250,9 +260,14 @@ void MainWindow::updateUiStatus() {
     }
 
     setWindowTitle(title);
+
+    statusBarWidgets->updateFromConfig();
+    ui->actionEepromRead->setEnabled(status->isSerialEepromOpened());
+    ui->actionEepromWrite->setEnabled(status->isSerialEepromOpened());
 }
 
 void MainWindow::eepromConnect() {
+    showStatusBarMessage("Connecting Arduino programmer...");
     emit actionEepromConnect();
 }
 
