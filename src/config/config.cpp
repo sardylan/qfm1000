@@ -69,4 +69,3 @@ QSerialPort::BaudRate Config::getRadioPortSpeed() const {
 void Config::setRadioPortSpeed(QSerialPort::BaudRate radioPortSpeed) {
     Config::radioPortSpeed = radioPortSpeed;
 }
-
