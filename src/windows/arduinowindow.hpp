@@ -38,13 +38,13 @@ public:
 
 public slots:
 
-    void start();
+    Q_INVOKABLE void start();
 
-    void finish();
+    Q_INVOKABLE void finish();
 
-    void log(QString text);
+    Q_INVOKABLE void log(QString text);
 
-    void progress(int maximum, int value);
+    Q_INVOKABLE void progress(int maximum, int value);
 
 private:
     Ui::ArduinoWindow *ui;

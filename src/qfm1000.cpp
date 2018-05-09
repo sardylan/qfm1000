@@ -164,10 +164,10 @@ void QFM1000::readArduinoEeprom() {
         QMetaObject::invokeMethod(mainWindow, "eepromUpdated", Qt::QueuedConnection);
     });
 
-    window->start();
-    window->log("Starting Arduino programmer");
+    QMetaObject::invokeMethod(window, "start", Qt::QueuedConnection);
+    QMetaObject::invokeMethod(window, "log", Qt::QueuedConnection, Q_ARG(QString, "Starting Arduino programmer"));
 
-    programmer->init();
+    QMetaObject::invokeMethod(programmer, "init", Qt::QueuedConnection);
 
     window->exec();
 
@@ -198,10 +198,10 @@ void QFM1000::writeArduinoEeprom() {
         QMetaObject::invokeMethod(window, "finish", Qt::QueuedConnection);
     });
 
-    window->start();
-    window->log("Starting Arduino programmer");
+    QMetaObject::invokeMethod(window, "start", Qt::QueuedConnection);
+    QMetaObject::invokeMethod(window, "log", Qt::QueuedConnection, Q_ARG(QString, "Starting Arduino programmer"));
 
-    programmer->init();
+    QMetaObject::invokeMethod(programmer, "init", Qt::QueuedConnection);
 
     window->exec();
 

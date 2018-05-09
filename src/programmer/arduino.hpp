@@ -45,7 +45,7 @@ public:
 
     ~ArduinoProgrammer() override;
 
-    void init();
+    Q_INVOKABLE void init();
 
     Q_INVOKABLE void close();
 
@@ -63,13 +63,13 @@ private:
 
     QSerialPort serialPort;
     bool ready;
-    char eepromData[ARDUINO_PROGRAMMER_EEPROM_PAGE_COUNT * ARDUINO_PROGRAMMER_EEPROM_PAGE_SIZE];
+    QByteArray eepromData;
 
     void reset();
 
-    void readEeprom();
+    Q_INVOKABLE void readEeprom();
 
-    void writeEeprom(QByteArray data);
+    Q_INVOKABLE void writeEeprom(QByteArray data);
 
     void readPage(uint8_t num);
 

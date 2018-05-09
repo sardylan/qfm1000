@@ -24,7 +24,7 @@ void setup() {
     digitalWrite(PIN_LED, LOW);
 
     Wire.begin();
-    Serial.begin(115200);
+    Serial.begin(9600);
 
     inWrite = 0;
     inRead = 0;
