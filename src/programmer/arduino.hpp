@@ -79,11 +79,15 @@ private slots:
 
     void readReadyResponse();
 
+    void errorOccurred(QSerialPort::SerialPortError serialPortError);
+
 signals:
 
     void connected();
 
     void disconnected();
+
+    void error();
 
     void pageRead(uint8_t num);
 
