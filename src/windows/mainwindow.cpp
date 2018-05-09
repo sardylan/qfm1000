@@ -22,6 +22,7 @@
 #include <QDebug>
 #include <QOpenGLWidget>
 #include <QtWidgets/QFileDialog>
+#include <QtCore/QThread>
 
 #include "mainwindow.hpp"
 #include "ui_mainwindow.h"

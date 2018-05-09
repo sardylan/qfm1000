@@ -43,16 +43,13 @@ int main(int argc, char *argv[]) {
 QFM1000::QFM1000(int &argc, char **argv) : QApplication(argc, argv) {
     status = Status::getInstance();
     config = Config::getInstance();
-    eeprom = EEPROM::getInstance();
 
-    arduinoProgrammer = new ArduinoProgrammer();
+    eeprom = EEPROM::getInstance();
 
     mainWindow = new MainWindow();
 }
 
 QFM1000::~QFM1000() {
-    delete arduinoProgrammer;
-
     delete mainWindow;
 }
 
@@ -60,16 +57,12 @@ void QFM1000::prepare() {
     ConfigManager::load();
     ConfigManager::save();
 
-    connect(arduinoProgrammer, SIGNAL(connected()), mainWindow, SLOT(arduinoProgrammerUpdated()));
-    connect(arduinoProgrammer, SIGNAL(disconnected()), mainWindow, SLOT(arduinoProgrammerUpdated()));
-
     connect(mainWindow, SIGNAL(actionConfig()), this, SLOT(showConfigWindow()));
     connect(mainWindow, SIGNAL(actionAbout()), this, SLOT(showAboutWindow()));
     connect(mainWindow, SIGNAL(actionCloseFile()), this, SLOT(closeEepromFile()));
     connect(mainWindow, SIGNAL(actionLoadFile(QString)), this, SLOT(loadEepromFile(QString)));
     connect(mainWindow, SIGNAL(actionSaveFile(QString)), this, SLOT(saveEepromFile(QString)));
 
-    connect(mainWindow, SIGNAL(actionEepromConnect()), this, SLOT(actionEepromConnect()));
     connect(mainWindow, SIGNAL(actionEepromRead()), this, SLOT(actionEepromRead()));
     connect(mainWindow, SIGNAL(actionEepromWrite()), this, SLOT(actionEepromWrite()));
 }
@@ -140,24 +133,10 @@ void QFM1000::saveEepromFile(QString fileName) {
     mainWindow->eepromUpdated();
 }
 
-void QFM1000::actionEepromConnect() {
-    if (!status->isSerialEepromOpened()) {
-        arduinoProgrammer->init();
-    } else {
-        arduinoProgrammer->close();
-    }
+void QFM1000::readArduinoEeprom() {
+
 }
 
-void QFM1000::actionEepromRead() {
-    if (!status->isSerialEepromOpened())
-        return;
+void QFM1000::writeArduinoEeprom() {
 
-    arduinoProgrammer->read();
-}
-
-void QFM1000::actionEepromWrite() {
-    if (!status->isSerialEepromOpened())
-        return;
-
-    arduinoProgrammer->write(eeprom->getData());
 }

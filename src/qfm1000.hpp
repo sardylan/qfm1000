@@ -50,9 +50,10 @@ public:
 private:
     Status *status;
     Config *config;
-    MainWindow *mainWindow;
+
     EEPROM *eeprom;
-    ArduinoProgrammer *arduinoProgrammer;
+
+    MainWindow *mainWindow;
 
 private slots:
 
@@ -66,12 +67,9 @@ private slots:
 
     void saveEepromFile(QString fileName);
 
-    void actionEepromConnect();
+    void readArduinoEeprom();
 
-    void actionEepromRead();
-
-    void actionEepromWrite();
-
+    void writeArduinoEeprom();
 };
 
 #endif
