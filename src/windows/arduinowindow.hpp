@@ -19,58 +19,45 @@
  *
  */
 
-#ifndef __QFM1000_QFM1000_H
-#define __QFM1000_QFM1000_H
+#ifndef __QFM1000_WINDOWS_ARDUINOWINDOW_H
+#define __QFM1000_WINDOWS_ARDUINOWINDOW_H
 
-#include "version.hpp"
+#include <QDialog>
 
-#include <QApplication>
+namespace Ui {
+    class ArduinoWindow;
+}
 
-#include <windows/mainwindow.hpp>
-
-#include <config/config.hpp>
-#include <config/status.hpp>
-#include <eeprom/eeprom.hpp>
-#include <programmer/arduino.hpp>
-#include <windows/arduinowindow.hpp>
-
-
-class QFM1000 : public QApplication {
+class ArduinoWindow : public QDialog {
 Q_OBJECT
 
 public:
+    explicit ArduinoWindow(QWidget *parent = nullptr);
 
-    explicit QFM1000(int &argc, char **argv);
+    ~ArduinoWindow() override;
 
-    ~QFM1000() override;
+public slots:
 
-    void prepare();
+    void start();
 
-    int run();
+    void finish();
+
+    void log(QString text);
+
+    void progress(int maximum, int value);
 
 private:
-    Status *status;
-    Config *config;
+    Ui::ArduinoWindow *ui;
 
-    EEPROM *eeprom;
+    void signalConnect();
 
-    MainWindow *mainWindow;
+    void initUi();
+
 
 private slots:
 
-    void showConfigWindow();
+    void handleClose();
 
-    void showAboutWindow();
-
-    void closeEepromFile();
-
-    void loadEepromFile(QString fileName);
-
-    void saveEepromFile(QString fileName);
-
-    void readArduinoEeprom();
-
-    void writeArduinoEeprom();
 };
 
 #endif

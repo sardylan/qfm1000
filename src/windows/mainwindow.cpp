@@ -68,7 +68,6 @@ void MainWindow::signalConnect() {
 
     connect(ui->actionEditConfiguration, SIGNAL(triggered()), this, SLOT(showConfigWindow()));
 
-    connect(ui->actionEepromConnect, SIGNAL(triggered()), this, SLOT(eepromConnect()));
     connect(ui->actionEepromRead, SIGNAL(triggered()), this, SLOT(eepromRead()));
     connect(ui->actionEepromWrite, SIGNAL(triggered()), this, SLOT(eepromWrite()));
 
@@ -263,13 +262,6 @@ void MainWindow::updateUiStatus() {
     setWindowTitle(title);
 
     statusBarWidgets->updateFromConfig();
-    ui->actionEepromRead->setEnabled(status->isSerialEepromOpened());
-    ui->actionEepromWrite->setEnabled(status->isSerialEepromOpened());
-}
-
-void MainWindow::eepromConnect() {
-    showStatusBarMessage("Connecting Arduino programmer...");
-    emit actionEepromConnect();
 }
 
 void MainWindow::eepromRead() {

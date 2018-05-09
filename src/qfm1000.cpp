@@ -63,8 +63,8 @@ void QFM1000::prepare() {
     connect(mainWindow, SIGNAL(actionLoadFile(QString)), this, SLOT(loadEepromFile(QString)));
     connect(mainWindow, SIGNAL(actionSaveFile(QString)), this, SLOT(saveEepromFile(QString)));
 
-    connect(mainWindow, SIGNAL(actionEepromRead()), this, SLOT(actionEepromRead()));
-    connect(mainWindow, SIGNAL(actionEepromWrite()), this, SLOT(actionEepromWrite()));
+    connect(mainWindow, SIGNAL(actionEepromRead()), this, SLOT(readArduinoEeprom()));
+    connect(mainWindow, SIGNAL(actionEepromWrite()), this, SLOT(writeArduinoEeprom()));
 }
 
 int QFM1000::run() {
@@ -134,9 +134,11 @@ void QFM1000::saveEepromFile(QString fileName) {
 }
 
 void QFM1000::readArduinoEeprom() {
-
+    ArduinoWindow arduinoWindow;
+    arduinoWindow.exec();
 }
 
 void QFM1000::writeArduinoEeprom() {
-
+    ArduinoWindow arduinoWindow;
+    arduinoWindow.exec();
 }

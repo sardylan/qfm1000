@@ -36,6 +36,11 @@ set(QFM1000_WINDOWS_ABOUT
         aboutwindow.hpp
         aboutwindow.ui)
 
+set(QFM1000_WINDOWS_ARDUINO
+        arduinowindow.cpp
+        arduinowindow.hpp
+        arduinowindow.ui)
+
 find_package(Qt5 REQUIRED COMPONENTS
         Core
         Widgets
@@ -50,7 +55,8 @@ add_library(windows
         ${QFM1000_WINDOWS_MODEL_HEADERS}
         ${QFM1000_WINDOWS_MAIN}
         ${QFM1000_WINDOWS_CONFIG}
-        ${QFM1000_WINDOWS_ABOUT})
+        ${QFM1000_WINDOWS_ABOUT}
+        ${QFM1000_WINDOWS_ARDUINO})
 
 target_link_libraries(windows
         config
