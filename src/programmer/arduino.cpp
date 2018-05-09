@@ -69,7 +69,8 @@ void ArduinoProgrammer::read() {
     if (!isReady())
         return;
 
-    QtConcurrent::run(this, &ArduinoProgrammer::readEeprom);
+//    QtConcurrent::run(this, &ArduinoProgrammer::readEeprom);
+    readEeprom();
 }
 
 void ArduinoProgrammer::write(QByteArray data) {
@@ -79,7 +80,8 @@ void ArduinoProgrammer::write(QByteArray data) {
     if (data.length() != ARDUINO_PROGRAMMER_EEPROM_PAGE_SIZE * ARDUINO_PROGRAMMER_EEPROM_PAGE_COUNT)
         return;
 
-    QtConcurrent::run(this, &ArduinoProgrammer::writeEeprom, data);
+//    QtConcurrent::run(this, &ArduinoProgrammer::writeEeprom, data);
+    writeEeprom(data);
 }
 
 void ArduinoProgrammer::readEeprom() {
@@ -108,12 +110,14 @@ void ArduinoProgrammer::readPage(uint8_t num) {
     char buff[ARDUINO_PROGRAMMER_EEPROM_PAGE_SIZE];
 
     cmd.append(ARDUINO_PROGRAMMER_PROTOCOL_READ);
-    cmd.append((char) num);
+    cmd.append(num);
     serialPort.write(cmd);
+    serialPort.waitForBytesWritten();
 
     serialPort.read(&buff[0], ARDUINO_PROGRAMMER_EEPROM_PAGE_SIZE);
     memcpy(&eepromData[ARDUINO_PROGRAMMER_EEPROM_PAGE_SIZE * num], &buff[0], ARDUINO_PROGRAMMER_EEPROM_PAGE_SIZE);
 
+    qDebug() << "Read page" << num << " - " << QByteArray(cmd).toHex() << " - " << QByteArray(buff).toHex();
     emit pageRead(num);
 }
 
@@ -122,12 +126,15 @@ void ArduinoProgrammer::writePage(uint8_t num, QByteArray data) {
     char c;
 
     cmd.append(ARDUINO_PROGRAMMER_PROTOCOL_WRITE);
-    cmd.append((char) num);
+    cmd.append(num);
     cmd.append(data);
     serialPort.write(cmd);
+    serialPort.waitForBytesWritten();
 
+    serialPort.waitForReadyRead();
     serialPort.read(&c, 1);
 
+    qDebug() << "Write page" << num << " - " << QByteArray(cmd).toHex() << " - " << c;
     if (c == ARDUINO_PROGRAMMER_PROTOCOL_OK)
             emit pageWritten(num);
 }
