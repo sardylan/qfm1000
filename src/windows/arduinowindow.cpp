@@ -50,14 +50,14 @@ void ArduinoWindow::handleClose() {
 void ArduinoWindow::start() {
     ui->buttonBox->button(QDialogButtonBox::Close)->setEnabled(false);
     ui->logText->clear();
-    ui->progressBar->setMaximum(1);
+    ui->progressBar->setMaximum(10);
     ui->progressBar->setValue(0);
 }
 
 void ArduinoWindow::finish() {
     ui->buttonBox->button(QDialogButtonBox::Close)->setEnabled(true);
-    ui->progressBar->setMaximum(1);
-    ui->progressBar->setValue(1);
+    ui->progressBar->setMaximum(10);
+    ui->progressBar->setValue(10);
 }
 
 void ArduinoWindow::log(QString text) {

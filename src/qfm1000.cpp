@@ -134,11 +134,77 @@ void QFM1000::saveEepromFile(QString fileName) {
 }
 
 void QFM1000::readArduinoEeprom() {
-    ArduinoWindow arduinoWindow;
-    arduinoWindow.exec();
+    auto *programmer = new ArduinoProgrammer();
+    auto *window = new ArduinoWindow();
+
+    connect(programmer, &ArduinoProgrammer::connected, [=]() {
+        QMetaObject::invokeMethod(window, "log", Qt::QueuedConnection, Q_ARG(QString, "Connected"));
+        QMetaObject::invokeMethod(programmer, "read", Qt::QueuedConnection);
+    });
+
+    connect(programmer, &ArduinoProgrammer::disconnected, [=]() {
+        QMetaObject::invokeMethod(window, "log", Qt::QueuedConnection, Q_ARG(QString, "Disonnected"));
+        QMetaObject::invokeMethod(window, "finish", Qt::QueuedConnection);
+    });
+
+    connect(programmer, &ArduinoProgrammer::pageRead, [=](uint8_t num) {
+        QMetaObject::invokeMethod(window, "progress", Qt::QueuedConnection, Q_ARG(int, 256), Q_ARG(int, num));
+    });
+
+    connect(programmer, &ArduinoProgrammer::readCompleted, [=]() {
+        QMetaObject::invokeMethod(window, "log", Qt::QueuedConnection, Q_ARG(QString, "Read completed"));
+        QMetaObject::invokeMethod(window, "finish", Qt::QueuedConnection);
+        QMetaObject::invokeMethod(programmer, "close", Qt::QueuedConnection);
+    });
+
+    connect(programmer, &ArduinoProgrammer::eepromRead, [=](QByteArray data) {
+        eeprom->setData(data);
+        status->setCurrentFileName("eeprom");
+        status->setOriginalData(eeprom->getData());
+        QMetaObject::invokeMethod(mainWindow, "eepromUpdated", Qt::QueuedConnection);
+    });
+
+    window->start();
+    window->log("Starting Arduino programmer");
+
+    programmer->init();
+
+    window->exec();
+
+    delete window;
+    delete programmer;
 }
 
 void QFM1000::writeArduinoEeprom() {
-    ArduinoWindow arduinoWindow;
-    arduinoWindow.exec();
+    auto *programmer = new ArduinoProgrammer();
+    auto *window = new ArduinoWindow();
+
+    connect(programmer, &ArduinoProgrammer::connected, [=]() {
+        QMetaObject::invokeMethod(window, "log", Qt::QueuedConnection, Q_ARG(QString, "Connected"));
+        QMetaObject::invokeMethod(programmer, "write", Qt::QueuedConnection, Q_ARG(QByteArray, eeprom->getData()));
+    });
+
+    connect(programmer, &ArduinoProgrammer::disconnected, [=]() {
+        QMetaObject::invokeMethod(window, "log", Qt::QueuedConnection, Q_ARG(QString, "Disonnected"));
+        QMetaObject::invokeMethod(window, "finish", Qt::QueuedConnection);
+    });
+
+    connect(programmer, &ArduinoProgrammer::pageWritten, [=](uint8_t num) {
+        QMetaObject::invokeMethod(window, "progress", Qt::QueuedConnection, Q_ARG(int, 256), Q_ARG(int, num));
+    });
+
+    connect(programmer, &ArduinoProgrammer::writeCompleted, [=]() {
+        QMetaObject::invokeMethod(window, "log", Qt::QueuedConnection, Q_ARG(QString, "Write completed"));
+        QMetaObject::invokeMethod(window, "finish", Qt::QueuedConnection);
+    });
+
+    window->start();
+    window->log("Starting Arduino programmer");
+
+    programmer->init();
+
+    window->exec();
+
+    delete window;
+    delete programmer;
 }

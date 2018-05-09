@@ -29,9 +29,6 @@ ArduinoProgrammer::ArduinoProgrammer(QObject *parent) {
     status = Status::getInstance();
     config = Config::getInstance();
 
-    connect(&serialPort, SIGNAL(errorOccurred(QSerialPort::SerialPortError)), this,
-            SLOT(errorOccurred(QSerialPort::SerialPortError)));
-
     reset();
 }
 
@@ -50,7 +47,8 @@ void ArduinoProgrammer::init() {
 
     serialPort.open(QIODevice::ReadWrite);
     serialPort.clear();
-    connect(&serialPort, SIGNAL(readyRead()), this, SLOT(readReadyResponse()));
+    connect(&serialPort, &QSerialPort::readyRead, this, &ArduinoProgrammer::readReadyResponse);
+    connect(&serialPort, &QSerialPort::errorOccurred, this, &ArduinoProgrammer::errorOccurred);
 }
 
 void ArduinoProgrammer::close() {
@@ -148,8 +146,6 @@ void ArduinoProgrammer::readReadyResponse() {
         if (serialPort.read(&c, 1) != 1)
             break;
 
-        qDebug() << c;
-
         if (c == ARDUINO_PROGRAMMER_PROTOCOL_READY) {
             disconnect(&serialPort, SIGNAL(readyRead()), this, SLOT(readReadyResponse()));
             serialPort.clear();
@@ -165,8 +161,9 @@ void ArduinoProgrammer::readReadyResponse() {
 void ArduinoProgrammer::errorOccurred(QSerialPort::SerialPortError serialPortError) {
     emit error();
 
-    serialPort.clearError();
-    serialPort.close();
+//    serialPort.clearError();
+    if (serialPort.isOpen())
+        serialPort.close();
 
     reset();
     emit disconnected();

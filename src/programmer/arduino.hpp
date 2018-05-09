@@ -47,7 +47,7 @@ public:
 
     void init();
 
-    void close();
+    Q_INVOKABLE void close();
 
     bool isReady() const;
 
