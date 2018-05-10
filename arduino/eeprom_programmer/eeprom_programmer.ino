@@ -37,16 +37,18 @@ void setup() {
 }
 
 void loop() {
-    byte c;
+    int c;
 
     while (Serial.available()) {
         c = Serial.read();
+        if (c == -1)
+            continue;
 
         if (inWrite == 1) {
-            page = c;
+            page = (byte) c;
             inWrite = 2;
         } else if (inWrite == 2) {
-            buffer[buf_pos] = c;
+            buffer[buf_pos] = (byte) c;
             buf_pos++;
 
             if (buf_pos == BUFFER_SIZE) {
@@ -55,11 +57,13 @@ void loop() {
                 else
                     Serial.write(PROTOCOL_ERROR);
 
+                Serial.flush();
+
                 inWrite = 0;
                 buf_pos = 0;
             }
         } else if (inRead == 1) {
-            page = c;
+            page = (byte) c;
 
             buffer_read();
             send_buffer();
@@ -75,6 +79,7 @@ void loop() {
                     break;
                 default:
                     Serial.write(PROTOCOL_ERROR);
+                    Serial.flush();
             }
         }
     }
@@ -117,16 +122,14 @@ int buffer_read() {
 }
 
 void send_buffer() {
-    int i;
-
-    for (i = 0; i < BUFFER_SIZE; i++)
-        Serial.write(buffer[i]);
+    Serial.write(buffer, BUFFER_SIZE);
+    Serial.flush();
 }
 
 byte eeprom_read(word address) {
     byte data = 0;
 
-    Wire.beginTransmission((byte)(EEPROM_ADDRESS | ((address >> 8) & 0x07)));
+    Wire.beginTransmission((byte) (EEPROM_ADDRESS | ((address >> 8) & 0x07)));
     Wire.write(address & 0xFF);
     Wire.endTransmission();
 
@@ -137,7 +140,7 @@ byte eeprom_read(word address) {
 }
 
 void eeprom_write(word address, byte data) {
-    Wire.beginTransmission((byte)(EEPROM_ADDRESS | ((address >> 8) & 0x07)));
+    Wire.beginTransmission((byte) (EEPROM_ADDRESS | ((address >> 8) & 0x07)));
     Wire.write(address & 0xFF);
     Wire.write(data);
     Wire.endTransmission();
