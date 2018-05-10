@@ -119,6 +119,7 @@ void ArduinoProgrammer::readPage(uint8_t num) {
     serialPort.write(cmd);
     serialPort.waitForBytesWritten();
 
+    serialPort.waitForReadyRead();
     buff = serialPort.readAll();
     qDebug() << "Read page" << num << " - " << QByteArray(cmd).toHex() << " - " << QByteArray(buff).toHex();
     if (buff.length() == ARDUINO_PROGRAMMER_EEPROM_PAGE_SIZE) {
