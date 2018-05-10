@@ -21,6 +21,7 @@
 
 #include <QDebug>
 #include <QMessageBox>
+#include <QThread>
 
 #include <config/manager.hpp>
 #include <windows/configwindow.hpp>
@@ -137,6 +138,10 @@ void QFM1000::readArduinoEeprom() {
     auto *programmer = new ArduinoProgrammer();
     auto *window = new ArduinoWindow();
 
+    auto *thread = new QThread();
+    programmer->moveToThread(thread);
+    thread->start();
+
     connect(programmer, &ArduinoProgrammer::connected, [=]() {
         QMetaObject::invokeMethod(window, "log", Qt::QueuedConnection, Q_ARG(QString, "Connected"));
         QMetaObject::invokeMethod(programmer, "read", Qt::QueuedConnection);
@@ -171,13 +176,20 @@ void QFM1000::readArduinoEeprom() {
 
     window->exec();
 
+    thread->quit();
+
     delete window;
     delete programmer;
+    delete thread;
 }
 
 void QFM1000::writeArduinoEeprom() {
     auto *programmer = new ArduinoProgrammer();
     auto *window = new ArduinoWindow();
+
+    auto *thread = new QThread();
+    programmer->moveToThread(thread);
+    thread->start();
 
     connect(programmer, &ArduinoProgrammer::connected, [=]() {
         QMetaObject::invokeMethod(window, "log", Qt::QueuedConnection, Q_ARG(QString, "Connected"));
@@ -205,6 +217,9 @@ void QFM1000::writeArduinoEeprom() {
 
     window->exec();
 
+    thread->quit();
+
     delete window;
     delete programmer;
+    delete thread;
 }
