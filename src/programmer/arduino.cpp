@@ -73,8 +73,6 @@ void ArduinoProgrammer::read() {
     if (!isReady())
         return;
 
-//    QtConcurrent::run(this, &ArduinoProgrammer::readEeprom);
-//    readEeprom();
     QMetaObject::invokeMethod(this, "readEeprom", Qt::QueuedConnection);
 }
 
@@ -85,8 +83,6 @@ void ArduinoProgrammer::write(QByteArray data) {
     if (data.length() != ARDUINO_PROGRAMMER_EEPROM_PAGE_SIZE * ARDUINO_PROGRAMMER_EEPROM_PAGE_COUNT)
         return;
 
-//    QtConcurrent::run(this, &ArduinoProgrammer::writeEeprom, data);
-//    writeEeprom(data);
     QMetaObject::invokeMethod(this, "writeEeprom", Qt::QueuedConnection, Q_ARG(QByteArray, data));
 }
 
