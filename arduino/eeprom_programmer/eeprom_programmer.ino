@@ -131,9 +131,7 @@ byte eeprom_read(word address) {
     Wire.endTransmission();
 
     Wire.requestFrom((byte)(EEPROM_ADDRESS | ((address >> 8) & 0x07)), (byte) 1);
-    while (!Wire.available())
-        delay(1);
-
+    Wire.available();
     data = Wire.read();
 
     return data;
