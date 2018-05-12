@@ -135,15 +135,25 @@ void QFM1000::saveEepromFile(QString fileName) {
 }
 
 void QFM1000::readArduinoEeprom() {
-    auto *programmer = new ArduinoProgrammer();
     auto *window = new ArduinoWindow();
-
+    auto *programmer = new ArduinoProgrammer();
     auto *thread = new QThread();
+
     programmer->moveToThread(thread);
     thread->start();
 
+    connect(window, &ArduinoWindow::finished, [=]() {
+        thread->quit();
+        thread->wait();
+
+        window->deleteLater();
+        programmer->deleteLater();
+        thread->deleteLater();
+    });
+
     connect(programmer, &ArduinoProgrammer::connected, [=]() {
         QMetaObject::invokeMethod(window, "log", Qt::QueuedConnection, Q_ARG(QString, "Connected"));
+        QMetaObject::invokeMethod(window, "log", Qt::QueuedConnection, Q_ARG(QString, "Reading EEPROM..."));
         QMetaObject::invokeMethod(programmer, "read", Qt::QueuedConnection);
     });
 
@@ -177,29 +187,33 @@ void QFM1000::readArduinoEeprom() {
                               Q_ARG(QSerialPort::BaudRate, config->getArduinoPortSpeed()));
 
     window->exec();
-
-    thread->quit();
-
-    window->deleteLater();
-    programmer->deleteLater();
-    thread->deleteLater();
 }
 
 void QFM1000::writeArduinoEeprom() {
-    auto *programmer = new ArduinoProgrammer();
     auto *window = new ArduinoWindow();
-
+    auto *programmer = new ArduinoProgrammer();
     auto *thread = new QThread();
+
     programmer->moveToThread(thread);
     thread->start();
 
+    connect(window, &ArduinoWindow::finished, [=]() {
+        thread->quit();
+        thread->wait();
+
+        window->deleteLater();
+        programmer->deleteLater();
+        thread->deleteLater();
+    });
+
     connect(programmer, &ArduinoProgrammer::connected, [=]() {
         QMetaObject::invokeMethod(window, "log", Qt::QueuedConnection, Q_ARG(QString, "Connected"));
+        QMetaObject::invokeMethod(window, "log", Qt::QueuedConnection, Q_ARG(QString, "Writing EEPROM..."));
         QMetaObject::invokeMethod(programmer, "write", Qt::QueuedConnection, Q_ARG(QByteArray, eeprom->getData()));
     });
 
     connect(programmer, &ArduinoProgrammer::disconnected, [=]() {
-        QMetaObject::invokeMethod(window, "log", Qt::QueuedConnection, Q_ARG(QString, "Disonnected"));
+        QMetaObject::invokeMethod(window, "log", Qt::QueuedConnection, Q_ARG(QString, "Disconnected"));
         QMetaObject::invokeMethod(window, "finish", Qt::QueuedConnection);
     });
 
@@ -210,18 +224,15 @@ void QFM1000::writeArduinoEeprom() {
     connect(programmer, &ArduinoProgrammer::writeCompleted, [=]() {
         QMetaObject::invokeMethod(window, "log", Qt::QueuedConnection, Q_ARG(QString, "Write completed"));
         QMetaObject::invokeMethod(window, "finish", Qt::QueuedConnection);
+        QMetaObject::invokeMethod(programmer, "close", Qt::QueuedConnection);
     });
 
     QMetaObject::invokeMethod(window, "start", Qt::QueuedConnection);
     QMetaObject::invokeMethod(window, "log", Qt::QueuedConnection, Q_ARG(QString, "Starting Arduino programmer"));
 
-    QMetaObject::invokeMethod(programmer, "init", Qt::QueuedConnection);
+    QMetaObject::invokeMethod(programmer, "init", Qt::QueuedConnection,
+                              Q_ARG(QString, config->getArduinoPortName()),
+                              Q_ARG(QSerialPort::BaudRate, config->getArduinoPortSpeed()));
 
     window->exec();
-
-    thread->quit();
-
-    delete window;
-    delete programmer;
-    delete thread;
 }

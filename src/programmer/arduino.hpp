@@ -72,8 +72,6 @@ private:
 
 private slots:
 
-    void readReadyResponse();
-
     void errorOccurred(QSerialPort::SerialPortError serialPortError);
 
 signals:
