@@ -24,11 +24,15 @@
 
 #include "arduino.hpp"
 
+#define ARDUINO_PROGRAMMER_SERIAL_WAIT 30000
 #define ARDUINO_PROGRAMMER_SERIAL_SLEEP 25
 
 ArduinoProgrammer::ArduinoProgrammer(QObject *parent) {
     serialPort = new QSerialPort(this);
+
+#if QT_VERSION >= QT_VERSION_CHECK(5, 8, 0)
     connect(serialPort, &QSerialPort::errorOccurred, this, &ArduinoProgrammer::errorOccurred);
+#endif
 
     ready = false;
 }
@@ -51,7 +55,7 @@ void ArduinoProgrammer::init(QString portName, QSerialPort::BaudRate portSpeed) 
     serialPort->open(QIODevice::ReadWrite);
     serialPort->clear();
 
-    serialPort->waitForReadyRead();
+    serialPort->waitForReadyRead(ARDUINO_PROGRAMMER_SERIAL_WAIT);
     QByteArray data = serialPort->readAll();
     if (data.length() > 0 && data.at(0) == ARDUINO_PROGRAMMER_PROTOCOL_READY) {
         ready = true;
@@ -142,10 +146,10 @@ void ArduinoProgrammer::readPage(uint8_t num) {
     cmd.append(num);
 
     serialPort->write(cmd);
-    serialPort->waitForBytesWritten();
+    serialPort->waitForBytesWritten(ARDUINO_PROGRAMMER_SERIAL_WAIT);
 
     while (serialPort->bytesAvailable() < ARDUINO_PROGRAMMER_EEPROM_PAGE_SIZE)
-        serialPort->waitForReadyRead();
+        serialPort->waitForReadyRead(ARDUINO_PROGRAMMER_SERIAL_WAIT);
 
     QByteArray pageData = serialPort->read(8);
     eepromData.replace(ARDUINO_PROGRAMMER_EEPROM_PAGE_SIZE * num, ARDUINO_PROGRAMMER_EEPROM_PAGE_SIZE, pageData);
@@ -159,10 +163,10 @@ void ArduinoProgrammer::writePage(uint8_t num, QByteArray data) {
     cmd.append(num);
     cmd.append(data);
     serialPort->write(cmd);
-    serialPort->waitForBytesWritten();
+    serialPort->waitForBytesWritten(ARDUINO_PROGRAMMER_SERIAL_WAIT);
 
     while (serialPort->bytesAvailable() == 0)
-        serialPort->waitForReadyRead();
+        serialPort->waitForReadyRead(ARDUINO_PROGRAMMER_SERIAL_WAIT);
 
     QByteArray response = serialPort->read(1);
     qDebug() << "Write page" << num << " - " << QByteArray(cmd).toHex() << " - " << response;
