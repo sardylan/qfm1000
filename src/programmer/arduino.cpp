@@ -28,24 +28,22 @@
 #define ARDUINO_PROGRAMMER_SERIAL_SLEEP 25
 
 ArduinoProgrammer::ArduinoProgrammer(QObject *parent) {
-    status = Status::getInstance();
-    config = Config::getInstance();
-
     serialPort = new QSerialPort();
+    connect(serialPort, &QSerialPort::errorOccurred, this, &ArduinoProgrammer::errorOccurred);
 
-    reset();
+    ready = false;
 }
 
 ArduinoProgrammer::~ArduinoProgrammer() {
     delete serialPort;
 }
 
-void ArduinoProgrammer::init() {
+void ArduinoProgrammer::init(QString portName, QSerialPort::BaudRate portSpeed) {
     if (serialPort->isOpen())
         return;
 
-    serialPort->setPortName(config->getArduinoPortName());
-    serialPort->setBaudRate(config->getArduinoPortSpeed());
+    serialPort->setPortName(portName);
+    serialPort->setBaudRate(portSpeed);
 
     serialPort->setDataBits(QSerialPort::Data8);
     serialPort->setParity(QSerialPort::NoParity);
@@ -56,22 +54,35 @@ void ArduinoProgrammer::init() {
     serialPort->open(QIODevice::ReadWrite);
     serialPort->clear();
 
-    connect(serialPort, &QSerialPort::readyRead, this, &ArduinoProgrammer::readReadyResponse);
-    connect(serialPort, &QSerialPort::errorOccurred, this, &ArduinoProgrammer::errorOccurred);
+    serialPort->waitForReadyRead();
+    QByteArray data = serialPort->readAll();
+    if (data.length() > 0 && data.at(0) == ARDUINO_PROGRAMMER_PROTOCOL_READY) {
+        ready = true;
+        serialPort->clear();
+        emit connected();
+    }
 }
 
 void ArduinoProgrammer::close() {
     if (serialPort->isOpen()) {
         serialPort->clear();
         serialPort->close();
+        emit disconnected();
     }
 
-    reset();
-    emit disconnected();
+    ready = false;
 }
 
 bool ArduinoProgrammer::isReady() const {
     return serialPort->isOpen() && ready;
+}
+
+void ArduinoProgrammer::errorOccurred(QSerialPort::SerialPortError serialPortError) {
+    qDebug() << "ERROR:" << serialPortError;
+
+    emit error();
+
+    close();
 }
 
 void ArduinoProgrammer::read() {
@@ -92,13 +103,20 @@ void ArduinoProgrammer::write(QByteArray data) {
 }
 
 void ArduinoProgrammer::readEeprom() {
-    for (int i = 0; i <= ARDUINO_PROGRAMMER_EEPROM_PAGE_COUNT - 1; i++) {
+    int i = 0;
+
+    while (isReady() && i < ARDUINO_PROGRAMMER_EEPROM_PAGE_COUNT) {
         readPage(static_cast<uint8_t>(i));
+
         QThread::msleep(ARDUINO_PROGRAMMER_SERIAL_SLEEP);
+
+        i++;
     }
 
-    emit eepromRead(QByteArray(eepromData));
-    emit readCompleted();
+    if (i == ARDUINO_PROGRAMMER_EEPROM_PAGE_COUNT) {
+        emit eepromRead(QByteArray(eepromData));
+        emit readCompleted();
+    }
 }
 
 void ArduinoProgrammer::writeEeprom(QByteArray data) {
@@ -117,25 +135,21 @@ void ArduinoProgrammer::writeEeprom(QByteArray data) {
 
 void ArduinoProgrammer::readPage(uint8_t num) {
     QByteArray cmd;
-    QByteArray buff;
-
     cmd.append(ARDUINO_PROGRAMMER_PROTOCOL_READ);
     cmd.append(num);
+
     serialPort->write(cmd);
     serialPort->waitForBytesWritten();
 
-    buff.clear();
-    while (buff.size() != ARDUINO_PROGRAMMER_EEPROM_PAGE_SIZE && serialPort->waitForReadyRead(1000)) {
-        buff.append(serialPort->read(1));
-        qDebug() << "Buff:" << buff.toHex();
-    }
+    while (serialPort->bytesAvailable() < ARDUINO_PROGRAMMER_EEPROM_PAGE_SIZE)
+        serialPort->waitForReadyRead();
 
-    qDebug() << "Read page" << num << " - " << QByteArray(cmd).toHex() << " - " << QByteArray(buff).toHex();
+    QByteArray pageData = serialPort->read(8);
 
-    if (buff.length() == ARDUINO_PROGRAMMER_EEPROM_PAGE_SIZE) {
-        eepromData.replace(ARDUINO_PROGRAMMER_EEPROM_PAGE_SIZE * num, ARDUINO_PROGRAMMER_EEPROM_PAGE_SIZE, buff);
-        emit pageRead(num);
-    }
+    qDebug() << "Read page" << num << " - " << QByteArray(cmd).toHex() << " - " << QByteArray(pageData).toHex();
+
+    eepromData.replace(ARDUINO_PROGRAMMER_EEPROM_PAGE_SIZE * num, ARDUINO_PROGRAMMER_EEPROM_PAGE_SIZE, pageData);
+    emit pageRead(num);
 }
 
 void ArduinoProgrammer::writePage(uint8_t num, QByteArray data) {
@@ -156,13 +170,6 @@ void ArduinoProgrammer::writePage(uint8_t num, QByteArray data) {
             emit pageWritten(num);
 }
 
-void ArduinoProgrammer::reset() {
-    ready = false;
-    eepromData.clear();
-    eepromData.append(ARDUINO_PROGRAMMER_EEPROM_PAGE_COUNT * ARDUINO_PROGRAMMER_EEPROM_PAGE_SIZE, '\0');
-
-    status->setSerialEepromOpened(false);
-}
 
 void ArduinoProgrammer::readReadyResponse() {
     char c;
@@ -177,21 +184,7 @@ void ArduinoProgrammer::readReadyResponse() {
 
             ready = true;
 
-            status->setSerialEepromOpened(true);
             emit connected();
         }
     }
-}
-
-void ArduinoProgrammer::errorOccurred(QSerialPort::SerialPortError serialPortError) {
-    qDebug() << "ERROR" << serialPortError;
-
-    emit error();
-
-//    serialPort->clearError();
-    if (serialPort->isOpen())
-        serialPort->close();
-
-    reset();
-    emit disconnected();
 }

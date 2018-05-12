@@ -27,7 +27,6 @@
 
 #include <config.hpp>
 #include <status.hpp>
-#include <QtCore/QThread>
 
 #define ARDUINO_PROGRAMMER_EEPROM_PAGE_SIZE 8
 #define ARDUINO_PROGRAMMER_EEPROM_PAGE_COUNT 256
@@ -46,7 +45,7 @@ public:
 
     ~ArduinoProgrammer() override;
 
-    Q_INVOKABLE void init();
+    Q_INVOKABLE void init(QString portName, QSerialPort::BaudRate portSpeed);
 
     Q_INVOKABLE void close();
 
@@ -59,15 +58,9 @@ public slots:
     void write(QByteArray data);
 
 private:
-    Status *status;
-    Config *config;
-
     QSerialPort *serialPort;
-
     bool ready;
     QByteArray eepromData;
-
-    void reset();
 
     Q_INVOKABLE void readEeprom();
 

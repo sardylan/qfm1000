@@ -148,7 +148,7 @@ void QFM1000::readArduinoEeprom() {
     });
 
     connect(programmer, &ArduinoProgrammer::disconnected, [=]() {
-        QMetaObject::invokeMethod(window, "log", Qt::QueuedConnection, Q_ARG(QString, "Disonnected"));
+        QMetaObject::invokeMethod(window, "log", Qt::QueuedConnection, Q_ARG(QString, "Disconnected"));
         QMetaObject::invokeMethod(window, "finish", Qt::QueuedConnection);
     });
 
@@ -172,15 +172,17 @@ void QFM1000::readArduinoEeprom() {
     QMetaObject::invokeMethod(window, "start", Qt::QueuedConnection);
     QMetaObject::invokeMethod(window, "log", Qt::QueuedConnection, Q_ARG(QString, "Starting Arduino programmer"));
 
-    QMetaObject::invokeMethod(programmer, "init", Qt::QueuedConnection);
+    QMetaObject::invokeMethod(programmer, "init", Qt::QueuedConnection,
+                              Q_ARG(QString, config->getArduinoPortName()),
+                              Q_ARG(QSerialPort::BaudRate, config->getArduinoPortSpeed()));
 
     window->exec();
 
     thread->quit();
 
-    delete window;
-    delete programmer;
-    delete thread;
+    window->deleteLater();
+    programmer->deleteLater();
+    thread->deleteLater();
 }
 
 void QFM1000::writeArduinoEeprom() {
