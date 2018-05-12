@@ -27,6 +27,7 @@
 
 #include <config.hpp>
 #include <status.hpp>
+#include <QtCore/QThread>
 
 #define ARDUINO_PROGRAMMER_EEPROM_PAGE_SIZE 8
 #define ARDUINO_PROGRAMMER_EEPROM_PAGE_COUNT 256
@@ -61,7 +62,8 @@ private:
     Status *status;
     Config *config;
 
-    QSerialPort serialPort;
+    QSerialPort *serialPort;
+
     bool ready;
     QByteArray eepromData;
 
