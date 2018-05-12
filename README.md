@@ -30,6 +30,8 @@ Windows build are created using the official releases of Qt 5.9.2. Just download
 ## Changelog
 
 
+* 0.4.0
+    * ADD: Support for read/write EEPROM with Arduino
 * 0.3.1
     * FIX: Power values and channel numbers
 * 0.3.0
