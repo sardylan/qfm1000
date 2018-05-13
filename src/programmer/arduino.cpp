@@ -55,9 +55,11 @@ void ArduinoProgrammer::init(QString portName, QSerialPort::BaudRate portSpeed) 
     serialPort->open(QIODevice::ReadWrite);
     serialPort->clear();
 
-    serialPort->waitForReadyRead(ARDUINO_PROGRAMMER_SERIAL_WAIT);
-    QByteArray data = serialPort->readAll();
-    if (data.length() > 0 && data.at(0) == ARDUINO_PROGRAMMER_PROTOCOL_READY) {
+    while (serialPort->bytesAvailable() < 1)
+        serialPort->waitForReadyRead(ARDUINO_PROGRAMMER_SERIAL_WAIT);
+
+    QByteArray data = serialPort->read(1);
+    if (data.at(0) == ARDUINO_PROGRAMMER_PROTOCOL_READY) {
         ready = true;
         serialPort->clear();
         emit connected();
@@ -79,6 +81,9 @@ bool ArduinoProgrammer::isReady() const {
 }
 
 void ArduinoProgrammer::errorOccurred(QSerialPort::SerialPortError serialPortError) {
+    if (serialPortError == QSerialPort::NoError)
+        return;
+
     qDebug() << "ERROR:" << serialPortError;
 
     emit error();
