@@ -58,14 +58,14 @@ void QFM1000::prepare() {
     ConfigManager::load();
     ConfigManager::save();
 
-    connect(mainWindow, SIGNAL(actionConfig()), this, SLOT(showConfigWindow()));
-    connect(mainWindow, SIGNAL(actionAbout()), this, SLOT(showAboutWindow()));
-    connect(mainWindow, SIGNAL(actionCloseFile()), this, SLOT(closeEepromFile()));
-    connect(mainWindow, SIGNAL(actionLoadFile(QString)), this, SLOT(loadEepromFile(QString)));
-    connect(mainWindow, SIGNAL(actionSaveFile(QString)), this, SLOT(saveEepromFile(QString)));
+    connect(mainWindow, &MainWindow::actionConfig, this, &QFM1000::showConfigWindow);
+    connect(mainWindow, &MainWindow::actionAbout, this, &QFM1000::showAboutWindow);
+    connect(mainWindow, &MainWindow::actionCloseFile, this, &QFM1000::closeEepromFile);
+    connect(mainWindow, &MainWindow::actionLoadFile, this, &QFM1000::loadEepromFile);
+    connect(mainWindow, &MainWindow::actionSaveFile, this, &QFM1000::saveEepromFile);
 
-    connect(mainWindow, SIGNAL(actionEepromRead()), this, SLOT(readArduinoEeprom()));
-    connect(mainWindow, SIGNAL(actionEepromWrite()), this, SLOT(writeArduinoEeprom()));
+    connect(mainWindow, &MainWindow::actionEepromRead, this, &QFM1000::readArduinoEeprom);
+    connect(mainWindow, &MainWindow::actionEepromWrite, this, &QFM1000::writeArduinoEeprom);
 }
 
 int QFM1000::run() {
@@ -77,6 +77,8 @@ int QFM1000::run() {
 void QFM1000::showConfigWindow() {
     ConfigWindow configWindow;
     configWindow.exec();
+
+    QMetaObject::invokeMethod(mainWindow, &MainWindow::configUpdated);
 }
 
 void QFM1000::showAboutWindow() {
@@ -101,7 +103,8 @@ void QFM1000::closeEepromFile() {
 
     status->setCurrentFileName("");
     status->clearOriginalData();
-    mainWindow->eepromUpdated();
+
+    QMetaObject::invokeMethod(mainWindow, &MainWindow::eepromUpdated);
 }
 
 void QFM1000::loadEepromFile(QString fileName) {
@@ -116,7 +119,8 @@ void QFM1000::loadEepromFile(QString fileName) {
 
     status->setCurrentFileName(fileName);
     status->setOriginalData(eeprom->getData());
-    mainWindow->eepromUpdated();
+
+    QMetaObject::invokeMethod(mainWindow, &MainWindow::eepromUpdated);
 }
 
 void QFM1000::saveEepromFile(QString fileName) {
@@ -131,7 +135,8 @@ void QFM1000::saveEepromFile(QString fileName) {
 
     status->setCurrentFileName(fileName);
     status->setOriginalData(eeprom->getData());
-    mainWindow->eepromUpdated();
+
+    QMetaObject::invokeMethod(mainWindow, &MainWindow::eepromUpdated);
 }
 
 void QFM1000::readArduinoEeprom() {
