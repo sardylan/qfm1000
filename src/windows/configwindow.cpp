@@ -60,11 +60,7 @@ void ConfigWindow::initUi() {
 
     for (portIterator = portList.begin(); portIterator != portList.end(); portIterator++) {
         QSerialPortInfo serialPortInfo = *portIterator;
-#if defined(Q_OS_WIN)
-        ui->arduinoSerialPortCombo->addItem(serialPortInfo.portName());
-#else
         ui->arduinoSerialPortCombo->addItem(serialPortInfo.systemLocation());
-#endif
     }
 
     ui->arduinoSerialSpeedCombo->clear();

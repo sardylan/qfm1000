@@ -30,6 +30,8 @@ Windows build are created using the official releases of Qt 5.9.2. Just download
 ## Changelog
 
 
+* 0.4.2
+    * FIX: Arduino serial port in Windows
 * 0.4.1
     * FIX: Fix build for old Qt version
     * FIX: Arduino serial port in Windows

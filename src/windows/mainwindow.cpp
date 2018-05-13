@@ -53,6 +53,7 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
     initStatusBar();
 
     eepromUpdated();
+    configUpdated();
 }
 
 MainWindow::~MainWindow() {
@@ -218,6 +219,10 @@ void MainWindow::eepromUpdated() {
 
     valueReadDefaultChannel();
     valueReadLowPower();
+}
+
+void MainWindow::configUpdated() {
+    statusBarWidgets->updateFromConfig();
 }
 
 void MainWindow::arduinoProgrammerUpdated() {

@@ -50,6 +50,8 @@ public:
 
 public slots:
 
+    void configUpdated();
+
     void eepromUpdated();
 
     void arduinoProgrammerUpdated();
