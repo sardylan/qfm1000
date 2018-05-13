@@ -23,9 +23,6 @@ void setup() {
     pinMode(PIN_LED, OUTPUT);
     digitalWrite(PIN_LED, LOW);
 
-    Wire.begin();
-    Serial.begin(9600);
-
     inWrite = 0;
     inRead = 0;
 
@@ -33,6 +30,9 @@ void setup() {
     memset(buffer, '\0', BUFFER_SIZE);
     page = 0x00;
 
+    Wire.begin();
+
+    Serial.begin(9600);
     Serial.write(PROTOCOL_READY);
 }
 
@@ -131,7 +131,6 @@ byte eeprom_read(word address) {
     Wire.endTransmission();
 
     Wire.requestFrom((byte)(EEPROM_ADDRESS | ((address >> 8) & 0x07)), (byte) 1);
-    Wire.available();
     data = Wire.read();
 
     return data;
