@@ -68,14 +68,14 @@ if (WIN32)
 
     add_custom_command(TARGET qfm1000
             POST_BUILD
-            COMMAND windeployqt $<TARGET_FILE:qfm1000> ${QFM1000_DEPLOYQT_TYPE} --dir ${PROJECT_BINARY_DIR}/windeployqt)
+            COMMAND ${QT5_DEPLOYQT_BIN} $<TARGET_FILE:qfm1000> ${QFM1000_DEPLOYQT_TYPE} --dir ${PROJECT_BINARY_DIR}/windeployqt)
 elseif (APPLE)
     set_target_properties(qfm1000
             PROPERTIES
             MACOSX_BUNDLE_ICON_FILE ${QFM1000_MAC_ICON_NAME})
     add_custom_command(TARGET qfm1000
             POST_BUILD
-            COMMAND macdeployqt $<TARGET_FILE:qfm1000> ${QFM1000_DEPLOYQT_TYPE})
+            COMMAND ${QT5_DEPLOYQT_BIN} $<TARGET_FILE:qfm1000> ${QFM1000_DEPLOYQT_TYPE})
 endif ()
 
 if (UNIX)

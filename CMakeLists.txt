@@ -16,7 +16,43 @@ set(CMAKE_AUTORCC ON)
 
 set(QT5_PREFIX "$ENV{QTDIR}" CACHE PATH "Qt5 prefix path")
 
+find_program(QT5_QMAKE_BIN
+        qmake
+        PATHS "${QT5_PREFIX}/bin"
+        NO_CMAKE_PATH
+        NO_CMAKE_ENVIRONMENT_PATH
+        NO_SYSTEM_ENVIRONMENT_PATH
+        NO_CMAKE_SYSTEM_PATH)
+
+if (NOT QT5_QMAKE_BIN)
+    message(FATAL_ERROR "Wrong Qt5 directory: ${QT5_PREFIX}")
+endif ()
+
 set(CMAKE_PREFIX_PATH "${QT5_PREFIX}/lib/cmake")
+
+if (WIN32 OR APPLE)
+    if (WIN32)
+        find_program(QT5_DEPLOYQT_BIN
+                windeployqt
+                PATHS "${QT5_PREFIX}/bin"
+                NO_CMAKE_PATH
+                NO_CMAKE_ENVIRONMENT_PATH
+                NO_SYSTEM_ENVIRONMENT_PATH
+                NO_CMAKE_SYSTEM_PATH)
+    elseif (APPLE)
+        find_program(QT5_DEPLOYQT_BIN
+                macdeployqt
+                PATHS "${QT5_PREFIX}/bin"
+                NO_CMAKE_PATH
+                NO_CMAKE_ENVIRONMENT_PATH
+                NO_SYSTEM_ENVIRONMENT_PATH
+                NO_CMAKE_SYSTEM_PATH)
+    endif ()
+
+    if (NOT QT5_DEPLOYQT_BIN)
+        message(FATAL_ERROR "No Qt Deploy command found in : ${QT5_PREFIX}/bin")
+    endif ()
+endif ()
 
 set(QFM1000_APPLICATION_NAME "qFM1000")
 set(QFM1000_APPLICATION_VERSION_MAJOR "0")
