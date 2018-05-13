@@ -25,8 +25,8 @@ matrix:
         - sudo apt-get --yes install build-essential automake autoconf libtool pkg-config cmake
         - sudo apt-get --yes install qt510-meta-full
       before_script:
-        - QTDIR="/opt/qt510"
-        - PATH="$QTDIR/bin:$PATH"
+        - export QTDIR="/opt/qt510"
+        - export PATH="$QTDIR/bin:$PATH"
         - source /opt/qt510/bin/qt510-env.sh
       addons:
         coverity_scan:
@@ -47,11 +47,11 @@ matrix:
       install:
         - brew install qt5
       before_script:
-        - QTDIR="/usr/local/opt/qt"
-        - LDFLAGS="-L$QTDIR/lib:$LDFLAGS"
-        - CPPFLAGS="-I$QTDIR/include:$CPPFLAGS"
-        - PKG_CONFIG_PATH="$QTDIR/lib/pkgconfig:$PKG_CONFIG_PATH"
-        - PATH="$QTDIR/bin:$PATH"
+        - export QTDIR="/usr/local/opt/qt"
+        - export LDFLAGS="-L$QTDIR/lib:$LDFLAGS"
+        - export CPPFLAGS="-I$QTDIR/include:$CPPFLAGS"
+        - export PKG_CONFIG_PATH="$QTDIR/lib/pkgconfig:$PKG_CONFIG_PATH"
+        - export PATH="$QTDIR/bin:$PATH"
 
 
 script:
