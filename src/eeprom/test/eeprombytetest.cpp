@@ -230,7 +230,7 @@ void EEPROMByteTest::testChannelSquelch() {
         CUSTOM_QTRY_COMPARE_NO_TIMEOUT(byte, (char) 0x00);
 
         char value;
-        for (unsigned int p = 0; p <= 5; p++) {
+        for (unsigned int p = 0; p <= 6; p++) {
             value = eeprom->getData()[offset + 7];
             eeprom->setChannelSquelch(i, p);
 
