@@ -32,6 +32,15 @@ public:
     static bool loadFromFile(EEPROM *eeprom, QString filename);
 
     static bool saveToFile(EEPROM *eeprom, QString filename);
+
+private:
+    static QByteArray parseFile(const QByteArray &rawData);
+
+    static bool isIntelHex(const QByteArray &rawFile);
+
+    static QStringList splitInLines(const QByteArray &rawData);
+
+    static QByteArray intelHexToByteArray(const QByteArray &rawData);
 };
 
 #endif
