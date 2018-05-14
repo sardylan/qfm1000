@@ -129,7 +129,7 @@ void send_buffer() {
 byte eeprom_read(word address) {
     byte data = 0;
 
-    Wire.beginTransmission((byte) (EEPROM_ADDRESS | ((address >> 8) & 0x07)));
+    Wire.beginTransmission((byte)(EEPROM_ADDRESS | ((address >> 8) & 0x07)));
     Wire.write(address & 0xFF);
     Wire.endTransmission();
 
@@ -140,7 +140,7 @@ byte eeprom_read(word address) {
 }
 
 void eeprom_write(word address, byte data) {
-    Wire.beginTransmission((byte) (EEPROM_ADDRESS | ((address >> 8) & 0x07)));
+    Wire.beginTransmission((byte)(EEPROM_ADDRESS | ((address >> 8) & 0x07)));
     Wire.write(address & 0xFF);
     Wire.write(data);
     Wire.endTransmission();
