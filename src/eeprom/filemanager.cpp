@@ -74,7 +74,7 @@ bool FileManager::isIntelHex(const QByteArray &rawFile) {
         if (!row.startsWith(":"))
             return false;
 
-    return rows.last() == ":00000001FF";
+    return rows.length() > 0 && rows.last() == ":00000001FF";
 
 }
 
