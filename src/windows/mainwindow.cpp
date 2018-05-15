@@ -61,24 +61,29 @@ MainWindow::~MainWindow() {
 }
 
 void MainWindow::signalConnect() {
-    connect(ui->actionFileClose, SIGNAL(triggered()), this, SLOT(closeFile()));
-    connect(ui->actionFileOpen, SIGNAL(triggered()), this, SLOT(openFile()));
-    connect(ui->actionFileSave, SIGNAL(triggered()), this, SLOT(saveFile()));
-    connect(ui->actionFileSaveas, SIGNAL(triggered()), this, SLOT(saveFileAs()));
-    connect(ui->actionFileQuit, SIGNAL(triggered()), this, SLOT(applicationClose()));
+    connect(ui->actionFileClose, &QAction::triggered, this, &MainWindow::closeFile);
+    connect(ui->actionFileOpen, &QAction::triggered, this, &MainWindow::openFile);
+    connect(ui->actionFileSave, &QAction::triggered, this, &MainWindow::saveFile);
+    connect(ui->actionFileSaveas, &QAction::triggered, this, &MainWindow::saveFileAs);
+    connect(ui->actionFileQuit, &QAction::triggered, this, &MainWindow::applicationClose);
 
-    connect(ui->actionEditConfiguration, SIGNAL(triggered()), this, SLOT(showConfigWindow()));
+    connect(ui->actionEditConfiguration, &QAction::triggered, this, &MainWindow::showConfigWindow);
 
-    connect(ui->actionEepromRead, SIGNAL(triggered()), this, SLOT(eepromRead()));
-    connect(ui->actionEepromWrite, SIGNAL(triggered()), this, SLOT(eepromWrite()));
+    connect(ui->actionEepromRead, &QAction::triggered, this, &MainWindow::eepromRead);
+    connect(ui->actionEepromWrite, &QAction::triggered, this, &MainWindow::eepromWrite);
 
-    connect(ui->actionHelpAbout, SIGNAL(triggered()), this, SLOT(showAboutWindow()));
+    connect(ui->actionHelpAbout, &QAction::triggered, this, &MainWindow::showAboutWindow);
 
-    connect(tableModel, SIGNAL(dataChanged(QModelIndex, QModelIndex)), this, SLOT(updateUiStatus()));
+    connect(tableModel, &TableModel::dataChanged, this, &MainWindow::updateUiStatus);
 
-    connect(ui->totSlider, SIGNAL(valueChanged(int)), this, SLOT(valueWriteTot()));
-    connect(ui->defaultChannelComboBox, SIGNAL(currentIndexChanged(int)), this, SLOT(valueWriteDefaultChannel(int)));
-    connect(ui->lowPowerComboBox, SIGNAL(currentIndexChanged(int)), this, SLOT(valueWriteLowPower(int)));
+    connect(ui->frequencyBandComboBox, static_cast<void (QComboBox::*)(int)>(&QComboBox::currentIndexChanged),
+            this, &MainWindow::valueWriteFrequencyBand);
+
+    connect(ui->totSlider, &QSlider::valueChanged, this, &MainWindow::valueWriteTot);
+    connect(ui->defaultChannelComboBox, static_cast<void (QComboBox::*)(int)>(&QComboBox::currentIndexChanged),
+            this, &MainWindow::valueWriteDefaultChannel);
+    connect(ui->lowPowerComboBox, static_cast<void (QComboBox::*)(int)>(&QComboBox::currentIndexChanged),
+            this, &MainWindow::valueWriteLowPower);
 }
 
 void MainWindow::initUi() {
@@ -201,7 +206,8 @@ void MainWindow::valueWriteLowPower(int newValue) {
 }
 
 void MainWindow::valueWriteFrequencyBand(int newValue) {
-    status->setFrequencyBand((FrequencyBand) ui->lowPowerComboBox->itemData(newValue).toInt());
+    status->setFrequencyBand((FrequencyBand) ui->frequencyBandComboBox->itemData(newValue).toInt());
+    ui->tableView->update();
     updateUiStatus();
 }
 
