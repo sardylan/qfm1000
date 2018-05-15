@@ -207,7 +207,7 @@ void MainWindow::valueWriteLowPower(int newValue) {
 
 void MainWindow::valueWriteFrequencyBand(int newValue) {
     status->setFrequencyBand((FrequencyBand) ui->frequencyBandComboBox->itemData(newValue).toInt());
-    ui->tableView->update();
+    ui->tableView->viewport()->repaint();
     updateUiStatus();
 }
 
