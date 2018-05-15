@@ -22,6 +22,9 @@
 #ifndef __QFM1000_EEPROM_EEPROM_H
 #define __QFM1000_EEPROM_EEPROM_H
 
+#include <QVector>
+#include <QByteArray>
+
 #define EEPROM_SIZE 2048
 
 #define CHANNELS_COUNT 100
@@ -35,8 +38,18 @@
 #define OFFSET_LAST_USED_CHANNEL 0x1
 #define OFFSET_LAST_USED_CTCSS 0x2
 
-#include <QVector>
-#include <QByteArray>
+enum FrequencyBand {
+    E0,
+    B0,
+    A9,
+    K1,
+    K2,
+    TM,
+    T4,
+    U0,
+    W1,
+    W4
+};
 
 class EEPROM {
 

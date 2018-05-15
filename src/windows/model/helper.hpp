@@ -86,4 +86,17 @@ const std::vector<QString> squelchValues = {
         "24dB SINAD"
 };
 
+const std::vector<QString> frequencyBandValues = {
+        "E0 (68-88 MHz)",
+        "B0 (132-156 MHz)",
+        "A9 (146-174 MHz)",
+        "K1 (174-208 MHz)",
+        "K2 (192-225 MHz)",
+        "TM (400-440 MHz)",
+        "T4 (425-450 MHz)",
+        "U0 (440-470 MHz)",
+        "W1 (470-500 MHz)",
+        "W4 (500-520 MHz)"
+};
+
 #endif

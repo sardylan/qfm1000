@@ -25,6 +25,8 @@
 #include <QString>
 #include <QByteArray>
 
+#include <eeprom.hpp>
+
 class Status {
 
 private:
@@ -32,21 +34,26 @@ private:
 
     static Status *instance;
 
-    QString currentFileName;
+    FrequencyBand frequencyBand;
     QByteArray originalData;
+    QString currentFileName;
     bool serialEepromOpened;
     bool serialRadioOpened;
 
 public:
     static Status *getInstance();
 
-    const QString &getCurrentFileName() const;
+    FrequencyBand getFrequencyBand() const;
 
-    void setCurrentFileName(const QString &currentFileName);
+    void setFrequencyBand(FrequencyBand frequencyBand);
 
     void setOriginalData(const QByteArray &originalData);
 
     void clearOriginalData();
+
+    const QString &getCurrentFileName() const;
+
+    void setCurrentFileName(const QString &currentFileName);
 
     bool isDataDirty(const QByteArray &eepromData);
 

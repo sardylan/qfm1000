@@ -32,18 +32,19 @@ Status *Status::getInstance() {
 }
 
 Status::Status() {
+    frequencyBand = B0;
     currentFileName = "";
     originalData.clear();
     serialEepromOpened = false;
     serialRadioOpened = false;
 }
 
-const QString &Status::getCurrentFileName() const {
-    return currentFileName;
+FrequencyBand Status::getFrequencyBand() const {
+    return frequencyBand;
 }
 
-void Status::setCurrentFileName(const QString &currentFileName) {
-    Status::currentFileName = currentFileName;
+void Status::setFrequencyBand(FrequencyBand frequencyBand) {
+    Status::frequencyBand = frequencyBand;
 }
 
 void Status::setOriginalData(const QByteArray &originalData) {
@@ -52,6 +53,14 @@ void Status::setOriginalData(const QByteArray &originalData) {
 
 void Status::clearOriginalData() {
     originalData.clear();
+}
+
+const QString &Status::getCurrentFileName() const {
+    return currentFileName;
+}
+
+void Status::setCurrentFileName(const QString &currentFileName) {
+    Status::currentFileName = currentFileName;
 }
 
 bool Status::isDataDirty(const QByteArray &eepromData) {
