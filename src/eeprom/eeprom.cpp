@@ -52,40 +52,62 @@ bool EEPROM::isValidChannelNumber(int channel) {
     return channel >= 0 && channel < CHANNELS_COUNT;
 }
 
-unsigned int EEPROM::getChannelRxFreq(int channel) {
+unsigned int EEPROM::wordToFrequency(uint16_t word, FrequencyBand frequencyBand) {
+    switch (frequencyBand) {
+        case B0:
+            return (unsigned int) (word * 6250);
+        case T4:
+            return (unsigned int) ((word + 48000) * 6250);
+        default:
+            return 0;
+    }
+}
+
+uint16_t EEPROM::frequencyToWord(unsigned int frequency, FrequencyBand frequencyBand) {
+    switch (frequencyBand) {
+        case B0:
+            return (uint16_t) (frequency / 6250);
+        case T4:
+            return (uint16_t) ((frequency / 6250) - 48000);
+        default:
+            return 0;
+    }
+}
+
+unsigned int EEPROM::getChannelRxFreq(int channel, FrequencyBand frequencyBand) {
     if (!isValidChannelNumber(channel))
         return 0;
 
     int offset = OFFSET_CHANNEL_FIRST + (channel * 8);
     uint16_t rxFreqBits = ((uint8_t) data[offset] << 8) | ((uint8_t) data[offset + 1]);
-    return (unsigned int) (rxFreqBits * 6250);
+    return wordToFrequency(rxFreqBits, frequencyBand);
 }
 
-void EEPROM::setChannelRxFreq(int channel, unsigned int freq) {
+void EEPROM::setChannelRxFreq(int channel, unsigned int freq, FrequencyBand frequencyBand) {
     if (!isValidChannelNumber(channel))
         return;
 
     int offset = OFFSET_CHANNEL_FIRST + (channel * 8);
-    auto rxValue = (uint16_t) (freq / 6250);
+    auto rxValue = frequencyToWord(freq, frequencyBand);
     assign(offset + 0, (uint8_t) (rxValue >> 8));
     assign(offset + 1, (uint8_t) (rxValue & 0xff));
 }
 
-unsigned int EEPROM::getChannelTxFreq(int channel) {
+unsigned int EEPROM::getChannelTxFreq(int channel, FrequencyBand frequencyBand) {
     if (!isValidChannelNumber(channel))
         return 0;
 
     int offset = OFFSET_CHANNEL_FIRST + (channel * 8);
     uint16_t rxFreqBits = ((uint8_t) data[offset + 2] << 8) | ((uint8_t) data[offset + 3]);
-    return (unsigned int) (rxFreqBits * 6250);
+    return wordToFrequency(rxFreqBits, frequencyBand);
 }
 
-void EEPROM::setChannelTxFreq(int channel, unsigned int freq) {
+void EEPROM::setChannelTxFreq(int channel, unsigned int freq, FrequencyBand frequencyBand) {
     if (!isValidChannelNumber(channel))
         return;
 
     int offset = OFFSET_CHANNEL_FIRST + (channel * 8);
-    auto txValue = (uint16_t) (freq / 6250);
+    auto txValue = frequencyToWord(freq, frequencyBand);
     assign(offset + 2, (uint8_t) (txValue >> 8));
     assign(offset + 3, (uint8_t) (txValue & 0xff));
 }

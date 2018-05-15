@@ -27,12 +27,14 @@
 #include <QList>
 #include <QString>
 
-#include "../../eeprom/eeprom.hpp"
+#include <status.hpp>
+#include <eeprom.hpp>
 
 class TableModel : public QAbstractTableModel {
 Q_OBJECT
 
 private:
+    Status *status;
     EEPROM *eeprom;
 
     static unsigned int strFreqToInt(QString input);

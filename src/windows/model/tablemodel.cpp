@@ -27,6 +27,7 @@
 
 TableModel::TableModel(QObject *parent) : QAbstractTableModel(parent) {
     eeprom = EEPROM::getInstance();
+    status = Status::getInstance();
 }
 
 int TableModel::rowCount(const QModelIndex &parent) const {
@@ -51,11 +52,14 @@ QVariant TableModel::data(const QModelIndex &index, int role) const {
 
         switch (index.column()) {
             case 0:
-                return intFreqToStr(eeprom->getChannelRxFreq(channel));
+                return intFreqToStr(eeprom->getChannelRxFreq(channel, status->getFrequencyBand()));
             case 1:
-                return intFreqToStr(eeprom->getChannelTxFreq(channel));
-            case 2:
-                return shiftToStr(eeprom->getChannelTxFreq(channel), eeprom->getChannelRxFreq(channel));
+                return intFreqToStr(eeprom->getChannelTxFreq(channel, status->getFrequencyBand()));
+            case 2: {
+                unsigned int txFreq = eeprom->getChannelTxFreq(channel, status->getFrequencyBand());
+                unsigned int rxFreq = eeprom->getChannelRxFreq(channel, status->getFrequencyBand());
+                return shiftToStr(txFreq, rxFreq);
+            }
             case 3:
                 return ctcssValues[eeprom->getChannelRxCtcss(channel)];
             case 4:
@@ -121,14 +125,14 @@ bool TableModel::setData(const QModelIndex &index, const QVariant &value, int ro
                 newValue = strFreqToInt(value.toString());
                 if (newValue == 0)
                     return false;
-                eeprom->setChannelRxFreq(channel, newValue);
+                eeprom->setChannelRxFreq(channel, newValue, status->getFrequencyBand());
                 break;
 
             case 1:
                 newValue = strFreqToInt(value.toString());
                 if (newValue == 0)
                     return false;
-                eeprom->setChannelTxFreq(channel, newValue);
+                eeprom->setChannelTxFreq(channel, newValue, status->getFrequencyBand());
                 break;
 
             case 3:

@@ -64,6 +64,10 @@ private:
 
     bool isValidChannelNumber(int channel);
 
+    unsigned int wordToFrequency(uint16_t word, FrequencyBand frequencyBand);
+
+    uint16_t frequencyToWord(unsigned int frequency, FrequencyBand frequencyBand);
+
 public:
     static EEPROM *getInstance();
 
@@ -73,13 +77,13 @@ public:
 
     void setData(const QByteArray &data);
 
-    unsigned int getChannelRxFreq(int channel);
+    unsigned int getChannelRxFreq(int channel, FrequencyBand frequencyBand);
 
-    void setChannelRxFreq(int channel, unsigned int freq);
+    void setChannelRxFreq(int channel, unsigned int freq, FrequencyBand frequencyBand);
 
-    unsigned int getChannelTxFreq(int channel);
+    unsigned int getChannelTxFreq(int channel, FrequencyBand frequencyBand);
 
-    void setChannelTxFreq(int channel, unsigned int freq);
+    void setChannelTxFreq(int channel, unsigned int freq, FrequencyBand frequencyBand);
 
     uint8_t getChannelRxCtcss(int channel);
 
