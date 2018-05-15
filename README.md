@@ -30,6 +30,9 @@ Windows build are created using the official releases of Qt 5.9.2. Just download
 ## Changelog
 
 
+* 0.6.0
+    * ADD: Support for UHF frequencies
+    * FIX: Bug on Intel HEX parsing
 * 0.5.0
     * ADD: Support for reading files in I8HEX (Intel HEX with 16 bit addresses) format
 * 0.4.2
