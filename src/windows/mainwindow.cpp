@@ -97,8 +97,8 @@ void MainWindow::initUi() {
     ui->tableView->resizeColumnsToContents();
 
     ui->frequencyBandComboBox->clear();
-    for (int i = 0; i < frequencyBandValues.size(); i++)
-        ui->frequencyBandComboBox->addItem(frequencyBandValues[i], i);
+    ui->frequencyBandComboBox->addItem(frequencyBandValues[FrequencyBand::B0], FrequencyBand::B0);
+    ui->frequencyBandComboBox->addItem(frequencyBandValues[FrequencyBand::T4], FrequencyBand::T4);
 
     ui->defaultChannelComboBox->clear();
     ui->defaultChannelComboBox->addItem("Last used", -1);
@@ -200,12 +200,21 @@ void MainWindow::valueWriteLowPower(int newValue) {
     updateUiStatus();
 }
 
+void MainWindow::valueWriteFrequencyBand(int newValue) {
+    status->setFrequencyBand((FrequencyBand) ui->lowPowerComboBox->itemData(newValue).toInt());
+    updateUiStatus();
+}
+
 void MainWindow::valueReadDefaultChannel() {
     ui->defaultChannelComboBox->setCurrentIndex(ui->defaultChannelComboBox->findData(eeprom->getDefaultChannel()));
 }
 
 void MainWindow::valueReadLowPower() {
     ui->lowPowerComboBox->setCurrentIndex(ui->lowPowerComboBox->findData(eeprom->getLowPower()));
+}
+
+void MainWindow::valueReadFrequencyBand() {
+    ui->frequencyBandComboBox->setCurrentIndex(ui->frequencyBandComboBox->findData(status->getFrequencyBand()));
 }
 
 void MainWindow::eepromUpdated() {
@@ -223,29 +232,18 @@ void MainWindow::eepromUpdated() {
 
     valueReadDefaultChannel();
     valueReadLowPower();
+    valueReadFrequencyBand();
 }
 
 void MainWindow::configUpdated() {
     statusBarWidgets->updateFromConfig();
 }
 
-void MainWindow::arduinoProgrammerUpdated() {
-    QString message;
-
-    if (status->isSerialEepromOpened())
-        message = "Arduino programmer connected";
-    else
-        message = "Arduino programmer disconnected";
-
-    showStatusBarMessage(message);
-
-    updateUiStatus();
-}
-
 void MainWindow::updateWidgetEnableStatus() {
     bool fileOpened = status->getCurrentFileName().length() > 0;
     ui->generalConfGroupBox->setEnabled(fileOpened);
     ui->channelsGroupBox->setEnabled(fileOpened);
+    ui->eepromFeaturesGroupBox->setEnabled(fileOpened);
 }
 
 void MainWindow::updateUiStatus() {

@@ -54,8 +54,6 @@ public slots:
 
     void eepromUpdated();
 
-    void arduinoProgrammerUpdated();
-
 private:
 
     Ui::MainWindow *ui;
@@ -88,6 +86,8 @@ private:
 
     void valueReadLowPower();
 
+    void valueReadFrequencyBand();
+
     void updateWidgetEnableStatus();
 
     void updateTotValueString();
@@ -115,6 +115,8 @@ private slots:
     void valueWriteDefaultChannel(int newValue);
 
     void valueWriteLowPower(int newValue);
+
+    void valueWriteFrequencyBand(int newValue);
 
     void eepromRead();
 
