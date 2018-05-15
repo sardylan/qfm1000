@@ -96,6 +96,10 @@ void MainWindow::initUi() {
     ui->tableView->setItemDelegateForColumn(8, cpuOffsetFlagDelegate);
     ui->tableView->resizeColumnsToContents();
 
+    ui->frequencyBandComboBox->clear();
+    for (int i = 0; i < frequencyBandValues.size(); i++)
+        ui->frequencyBandComboBox->addItem(frequencyBandValues[i], i);
+
     ui->defaultChannelComboBox->clear();
     ui->defaultChannelComboBox->addItem("Last used", -1);
     for (int i = 0; i < CHANNELS_COUNT; i++)
