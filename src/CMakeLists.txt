@@ -1,6 +1,6 @@
+add_subdirectory(eeprom)
 add_subdirectory(config)
 add_subdirectory(windows)
-add_subdirectory(eeprom)
 add_subdirectory(programmer)
 
 set(QFM1000_SOURCES

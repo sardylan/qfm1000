@@ -18,6 +18,7 @@ add_library(config
         ${QFM1000_CONFIG_HEADERS})
 
 target_link_libraries(config
+        eeprom
         Qt5::Core
         Qt5::SerialPort)
 
