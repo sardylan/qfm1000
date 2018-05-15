@@ -26,6 +26,7 @@ QTEST_MAIN(EEPROMByteTest)
 #define CUSTOM_QTRY_COMPARE_NO_TIMEOUT(expr, expected) QTRY_COMPARE_WITH_TIMEOUT((expr), expected, 0)
 
 #define TEST_EEPROM_FREQ (unsigned int) 145000000
+#define TEST_EEPROM_FREQBAND FrequencyBand::B0
 #define TEST_EEPROM_FREQ_MSB (char) 0x5a
 #define TEST_EEPROM_FREQ_LSB (char) 0xa0
 
@@ -119,7 +120,7 @@ void EEPROMByteTest::testChannelRxFreq() {
         CUSTOM_QTRY_COMPARE_NO_TIMEOUT(msb, (char) 0x00);
         CUSTOM_QTRY_COMPARE_NO_TIMEOUT(lsb, (char) 0x00);
 
-        eeprom->setChannelRxFreq(i, TEST_EEPROM_FREQ);
+        eeprom->setChannelRxFreq(i, TEST_EEPROM_FREQ, TEST_EEPROM_FREQBAND);
         msb = eeprom->getData()[offset];
         lsb = eeprom->getData()[offset + 1];
         CUSTOM_QTRY_COMPARE_NO_TIMEOUT(msb, TEST_EEPROM_FREQ_MSB);
@@ -136,7 +137,7 @@ void EEPROMByteTest::testChannelTxFreq() {
         CUSTOM_QTRY_COMPARE_NO_TIMEOUT(msb, (char) 0x00);
         CUSTOM_QTRY_COMPARE_NO_TIMEOUT(lsb, (char) 0x00);
 
-        eeprom->setChannelTxFreq(i, TEST_EEPROM_FREQ);
+        eeprom->setChannelTxFreq(i, TEST_EEPROM_FREQ, TEST_EEPROM_FREQBAND);
         msb = eeprom->getData()[offset + 2];
         lsb = eeprom->getData()[offset + 3];
         CUSTOM_QTRY_COMPARE_NO_TIMEOUT(msb, TEST_EEPROM_FREQ_MSB);

@@ -26,6 +26,7 @@ QTEST_MAIN(EEPROMTest)
 #define CUSTOM_QTRY_COMPARE_NO_TIMEOUT(expr, expected) QTRY_COMPARE_WITH_TIMEOUT((expr), expected, 0)
 
 #define TEST_EEPROM_FREQ (unsigned int) 145000000
+#define TEST_EEPROM_FREQBAND FrequencyBand::B0
 #define TEST_EEPROM_CTCSS (uint8_t) 1
 #define TEST_DEFAULT_CHANNEL 10
 #define TEST_TOT 10
@@ -55,17 +56,17 @@ void EEPROMTest::testClear() {
 
 void EEPROMTest::testChannelRxFreq() {
     for (int i = 0; i < CHANNELS_COUNT; i++) {
-        CUSTOM_QTRY_COMPARE_NO_TIMEOUT(eeprom->getChannelRxFreq(i), (unsigned int) 0);
-        eeprom->setChannelRxFreq(i, TEST_EEPROM_FREQ);
-        CUSTOM_QTRY_COMPARE_NO_TIMEOUT(eeprom->getChannelRxFreq(i), TEST_EEPROM_FREQ);
+        CUSTOM_QTRY_COMPARE_NO_TIMEOUT(eeprom->getChannelRxFreq(i, TEST_EEPROM_FREQBAND), (unsigned int) 0);
+        eeprom->setChannelRxFreq(i, TEST_EEPROM_FREQ, TEST_EEPROM_FREQBAND);
+        CUSTOM_QTRY_COMPARE_NO_TIMEOUT(eeprom->getChannelRxFreq(i, TEST_EEPROM_FREQBAND), TEST_EEPROM_FREQ);
     }
 }
 
 void EEPROMTest::testChannelTxFreq() {
     for (int i = 0; i < CHANNELS_COUNT; i++) {
-        CUSTOM_QTRY_COMPARE_NO_TIMEOUT(eeprom->getChannelTxFreq(i), (unsigned int) 0);
-        eeprom->setChannelTxFreq(i, TEST_EEPROM_FREQ);
-        CUSTOM_QTRY_COMPARE_NO_TIMEOUT(eeprom->getChannelTxFreq(i), TEST_EEPROM_FREQ);
+        CUSTOM_QTRY_COMPARE_NO_TIMEOUT(eeprom->getChannelTxFreq(i, TEST_EEPROM_FREQBAND), (unsigned int) 0);
+        eeprom->setChannelTxFreq(i, TEST_EEPROM_FREQ, TEST_EEPROM_FREQBAND);
+        CUSTOM_QTRY_COMPARE_NO_TIMEOUT(eeprom->getChannelTxFreq(i, TEST_EEPROM_FREQBAND), TEST_EEPROM_FREQ);
     }
 }
 
