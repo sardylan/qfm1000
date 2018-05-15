@@ -14,7 +14,39 @@
    <string>MainWindow</string>
   </property>
   <widget class="QWidget" name="mainContainer">
-   <layout class="QVBoxLayout" name="verticalLayout" stretch="0,1">
+   <layout class="QVBoxLayout" name="verticalLayout" stretch="0,0,1">
+    <item>
+     <widget class="QGroupBox" name="eepromFeaturesGroupBox">
+      <property name="title">
+       <string>EEPROM features</string>
+      </property>
+      <layout class="QGridLayout" name="gridLayout_3" columnstretch="0,0,0">
+       <item row="0" column="1">
+        <widget class="QComboBox" name="frequencyBandComboBox"/>
+       </item>
+       <item row="0" column="0">
+        <widget class="QLabel" name="frequencyBandLabel">
+         <property name="text">
+          <string>Frequency band</string>
+         </property>
+        </widget>
+       </item>
+       <item row="0" column="2">
+        <spacer name="horizontalSpacer_2">
+         <property name="orientation">
+          <enum>Qt::Horizontal</enum>
+         </property>
+         <property name="sizeHint" stdset="0">
+          <size>
+           <width>40</width>
+           <height>20</height>
+          </size>
+         </property>
+        </spacer>
+       </item>
+      </layout>
+     </widget>
+    </item>
     <item>
      <widget class="QGroupBox" name="generalConfGroupBox">
       <property name="title">
