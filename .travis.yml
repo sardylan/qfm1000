@@ -8,6 +8,8 @@ matrix:
     dist: xenial
     compiler: gcc
     sudo: false
+    before_script:
+    - export QTDIR="/usr"
     addons:
       apt:
         packages:
@@ -15,8 +17,8 @@ matrix:
         - pkg-config
         - cmake
         - qt5-default
-    before_script:
-    - export QTDIR="/usr"
+        - libqt5serialport5
+        - libqt5serialport5-dev
 
   - os: osx
     osx_image: xcode9.3
