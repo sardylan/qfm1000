@@ -1,65 +1,43 @@
 language: cpp
 
-env:
-  global:
-    - secure: "cV3F1rbX3CzKc2jS2t7qBGN+g2Bc7F5SlGwxi/OpqmDFDleavqAZzzvez0rMSV/Kv912jVFzQFSzBRykMCblQv1PM3SZr+4SPAxTHvRJw9U2/Sbk91c6anbW980kl1aklbGH1IVmUmlc6y4nWueqOfVfk/IhLDOBlS2vT4A80rZgwym9bv5XV0SP0TIU9A5AwSwB9/M+YW073gcg4PtChS8FrnDe1j0DJSoMuDmgcUlI1pYa7dX4A707QSYW5YYlCuJ2MVIkGT81Pq5PNy9eAeT1ajc6rKS5OBj5fdVwudjyeRSAq7APUr8oZdk2OBrWvq8gTXnDcbxc8MvmjUG9izK5QBGh+DzP8UYHuQdLLkp99a06vJxVTo1ExJFPz8TWGAPDRcJoAC+vQOLZCDPpnCNNkjojLd41obM6qSclyZzRz5veZv1vMCo7dekHFebfLotmRaLclx8xMQqPGW2OZDa4uT0VFkQJLtH5ePa0pZLs0hZ96G1EIuTRjnYR4JMlP0VTGaOie7zDop/Ep6g7HOCdma2xaAgWldM1FoUY9gmwd0Rdd8zwp64PqkxRczCvErm7m9IKb/GNnXvs7tq9GcW5Gw2Mt9TchZchJPOXntoqJiaXZspaK9259gb1Z0u74TgRh5nfR4GVr+veqda75pGhGHhDuwXrQwjfd4+CUqk="
-
 matrix:
 
   include:
 
-    - os: linux
-      dist: trusty
-      compiler: gcc
-      sudo: required
-      addons:
-        apt:
-          packages:
-            - build-essential
-            - pkg-config
-            - cmake
-      before_install:
-        - sudo apt-add-repository --yes ppa:beineri/opt-qt-5.10.1-trusty
-        - sudo apt-get -qq update
-      install:
-        - sudo apt-get --yes install build-essential automake autoconf libtool pkg-config cmake
-        - sudo apt-get --yes install qt510-meta-full
-      before_script:
-        - export QTDIR="/opt/qt510"
-        - export PATH="$QTDIR/bin:$PATH"
-        - source /opt/qt510/bin/qt510-env.sh
-      addons:
-        coverity_scan:
-          project:
-            name: "sardylan/qfm1000"
-            description: "Build submitted via Travis CI"
-          notification_email: sardylan@gmail.com
-          build_command_prepend: "mkdir build; cd build; cmake .."
-          build_command: "make"
-          branch_pattern: coverity_scan
+  - os: linux
+    dist: xenial
+    compiler: gcc
+    sudo: false
+    addons:
+      apt:
+        packages:
+        - build-essential
+        - pkg-config
+        - cmake
+        - qt5-default
+    before_script:
+    - export QTDIR="/usr"
 
-
-    - os: osx
-      osx_image: xcode9.3
-      compiler: clang
-      before_install:
-        - brew update
-      install:
-        - brew install qt5
-      before_script:
-        - export QTDIR="/usr/local/opt/qt"
-        - export LDFLAGS="-L$QTDIR/lib:$LDFLAGS"
-        - export CPPFLAGS="-I$QTDIR/include:$CPPFLAGS"
-        - export PKG_CONFIG_PATH="$QTDIR/lib/pkgconfig:$PKG_CONFIG_PATH"
-        - export PATH="$QTDIR/bin:$PATH"
-
+  - os: osx
+    osx_image: xcode9.3
+    compiler: clang
+    before_install:
+    - brew update
+    install:
+    - brew install qt5
+    before_script:
+    - export QTDIR="/usr/local/opt/qt"
+    - export LDFLAGS="-L$QTDIR/lib:$LDFLAGS"
+    - export CPPFLAGS="-I$QTDIR/include:$CPPFLAGS"
+    - export PKG_CONFIG_PATH="$QTDIR/lib/pkgconfig:$PKG_CONFIG_PATH"
+    - export PATH="$QTDIR/bin:$PATH"
 
 script:
-  - mkdir build
-  - cd build
-  - cmake ..
-  - make
+- mkdir build
+- cd build
+- cmake ..
+- make
 
 after_script:
-  - cd build
-  - ctest
+- cd build
+- ctest
