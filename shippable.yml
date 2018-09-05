@@ -8,10 +8,9 @@ compiler:
 env:
 - QTDIR=/usr
 build:
-  pre_ci:
-  - shippable_retry sudo apt update
-  - shippable_retry sudo apt install build-essential cmake git qt5-default libqt5svg5 libqt5svg5-dev libqt5serialport5 libqt5serialport5-dev
   ci:
+  - sudo apt update
+  - sudo apt install build-essential cmake git qt5-default libqt5svg5 libqt5svg5-dev libqt5serialport5 libqt5serialport5-dev
   - mkdir build
   - cd build
   - cmake -DCMAKE_INSTALL_PREFIX=dist ..
