@@ -15,6 +15,5 @@ build:
   - cd build
   - cmake -DCMAKE_INSTALL_PREFIX=dist ..
   - make
-  on_success:
-  - ctest
+  - make test
   - cpack
