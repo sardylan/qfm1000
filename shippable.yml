@@ -19,5 +19,5 @@ build:
   - cmake -DCMAKE_INSTALL_PREFIX=dist ..
   - make
   - make install
-  - ctest
+  - ctest --verbose
   - cpack
