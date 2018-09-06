@@ -19,5 +19,5 @@ build:
   - cmake -DCMAKE_INSTALL_PREFIX=dist ..
   - make
   - make install
-  - ctest --verbose | grep -E "^[0-9]+:" | grep -E "<|>" | sed -e "s/^[0-9]\+://g"
+  - ctest --verbose
   - cpack
