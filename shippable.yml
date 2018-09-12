@@ -20,5 +20,5 @@ build:
   - make
   - make install
   - ctest --verbose
-  - cat src/eeprom/result-*.xml
+  - mkdir shippable/testresults && cp -v src/eeprom/testresult-*.xml shippable/testresults
   - cpack
