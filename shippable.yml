@@ -14,11 +14,14 @@ build:
   ci:
   - sudo apt update
   - sudo apt install build-essential cmake git qt5-default libqt5svg5 libqt5svg5-dev libqt5serialport5 libqt5serialport5-dev
-  - mkdir build
+  - mkdir -pv shippable/testresults
+  - mkdir -pv shippable/codecoverage
+  - mkdir -pv build
   - cd build
   - cmake -DCMAKE_INSTALL_PREFIX=dist ..
   - make -j
-  - make install
   - ctest --verbose
-  - mkdir -pv shippable/testresults && cp -v src/eeprom/testresult-*.xml shippable/testresults
+  - cp -v src/eeprom/testresult-*.xml ../shippable/testresults
+  post_ci:
+  - make install
   - cpack
