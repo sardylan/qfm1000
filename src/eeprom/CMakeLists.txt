@@ -31,7 +31,7 @@ target_link_libraries(testeeprom
         eeprom)
 
 add_test(TestEEPROM
-        testeeprom -xunitxml)
+        testeeprom -o result-testeeprom.xml,xunitxml)
 
 add_executable(testeeprombyte
         test/eeprombytetest.hpp
@@ -43,4 +43,4 @@ target_link_libraries(testeeprombyte
         eeprom)
 
 add_test(TestEEPROMByte
-        testeeprombyte -xunitxml)
+        testeeprombyte -o result-testeeprombyte.xml,xunitxml)
