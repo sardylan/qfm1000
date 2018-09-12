@@ -17,8 +17,8 @@ build:
   - mkdir build
   - cd build
   - cmake -DCMAKE_INSTALL_PREFIX=dist ..
-  - make
+  - make -j
   - make install
   - ctest --verbose
-  - mkdir shippable/testresults && cp -v src/eeprom/testresult-*.xml shippable/testresults
+  - mkdir -pv shippable/testresults && cp -v src/eeprom/testresult-*.xml shippable/testresults
   - cpack
