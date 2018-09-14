@@ -14,21 +14,6 @@ set(CPACK_PACKAGE_EXECUTABLES qfm1000 "qFM1000")
 #set(CPACK_RESOURCE_FILE_README "README.txt")
 #set(CPACK_RESOURCE_FILE_WELCOME "WELCOME.txt")
 
-list(APPEND CPACK_COMPONENTS_ALL qfm1000)
-
-set(CPACK_COMPONENT_QFM1000_DISPLAY_NAME "qFM1000")
-set(CPACK_COMPONENT_QFM1000_DESCRIPTION "Simple tool for editing channels and configuration parameters of Philips FM1000 radio.")
-set(CPACK_COMPONENT_QFM1000_REQUIRED TRUE)
-
-if (WIN32 OR APPLE)
-    list(APPEND CPACK_COMPONENTS_ALL qtlibs)
-    set(CPACK_COMPONENT_QTLIBS_DISPLAY_NAME "Qt libs")
-    set(CPACK_COMPONENT_QTLIBS_DESCRIPTION "Needed Qt libraries")
-    set(CPACK_COMPONENT_QTLIBS_REQUIRED TRUE)
-
-    list(APPEND CPACK_COMPONENT_FDOTOOL_DEPENDS qtlibs)
-endif ()
-
 if (UNIX AND NOT APPLE)
     set(CPACK_GENERATOR "DEB")
 
@@ -47,7 +32,7 @@ elseif (WIN32)
     set(CPACK_WIX_PRODUCT_GUID "A54CC844-1C6A-4C4B-9C5A-C4BB58C9454C")
     set(CPACK_WIX_UPGRADE_GUID "E6D59A10-31FD-4512-868C-4F86EF50950F")
     set(CPACK_WIX_PROPERTY_ARPHELPLINK "https://github.com/sardylan/qfm1000")
-    set(CPACK_WIX_PROPERTY_ARPSIZE "0")
+    #    set(CPACK_WIX_PROPERTY_ARPSIZE "0")
 
     set(CPACK_PACKAGE_INSTALL_DIRECTORY "qFM1000 ${CPACK_PACKAGE_VERSION}")
     set(CPACK_PACKAGE_ICON "icons/windows/icon-256.ico")
@@ -61,3 +46,15 @@ elseif (APPLE)
 endif ()
 
 include(CPack)
+
+cpack_add_component(qfm1000
+        DISPLAY_NAME "qFM1000"
+        DESCRIPTION "Simple tool for editing channels and configuration parameters of Philips FM1000 radio."
+        REQUIRED)
+
+if (WIN32 OR APPLE)
+    cpack_add_component(qtlibs
+            DISPLAY_NAME "Qt libs"
+            DESCRIPTION "Qt libraries"
+            DEPENDS qfm1000)
+endif ()
