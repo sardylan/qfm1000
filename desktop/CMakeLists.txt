@@ -1,6 +1,6 @@
-configure_file(qfm1000.desktop.in qfm1000.desktop @ONLY)
-
 if (UNIX AND NOT APPLE)
+    configure_file(qfm1000.desktop.in qfm1000.desktop @ONLY)
+
     install(FILES ${CMAKE_BINARY_DIR}/desktop/qfm1000.desktop
             DESTINATION "${CMAKE_INSTALL_DATAROOTDIR}/applications"
             COMPONENT qfm1000)
