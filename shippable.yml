@@ -10,7 +10,7 @@ env:
 build:
   pre_ci_boot:
     image_name: drydock/u16cppall
-    image_tag: v6.7.4
+    image_tag: v6.8.4
   ci:
   - sudo apt update
   - sudo apt install build-essential cmake git qt5-default libqt5svg5 libqt5svg5-dev libqt5serialport5 libqt5serialport5-dev
