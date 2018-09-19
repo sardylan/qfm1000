@@ -77,11 +77,17 @@ Windows build are created using the official releases of Qt 5.9.2. Just download
 The whole project is based on CMake and developed under GNU/Linux Ubuntu 17.04 using JetBrains CLion IDE, but can be
 developed using any IDE, included [VIm](https://en.wikipedia.org/wiki/Vim_(text_editor)) or [Notepad](https://en.wikipedia.org/wiki/Microsoft_Notepad)
 
-Please have a look to [BUILD.md](BUILD.md) for installing needed tools and libraries.
+Please have a look to [BUILD.md](BUILD.md) for installing required tools and libraries.
 
 ## Meta
 
 Luca Cireddu - [@sardylan](https://twitter.com/sardylan) - sardylan@gmail.com
+
+I wish to thanks all the people without whom this software cannot be made:
+
+- All friends in ERA association, here in Cagliari,
+- All the people in Transmission1 forum, especially recat user,
+- David Craig (GI8LCJ) for very useful informations in his RadCom article
 
 This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public
 License as published by the Free Software Foundation, either version 3 of the License.
