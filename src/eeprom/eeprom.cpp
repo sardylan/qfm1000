@@ -55,8 +55,11 @@ bool EEPROM::isValidChannelNumber(int channel) {
 unsigned int EEPROM::wordToFrequency(uint16_t word, FrequencyBand frequencyBand) {
     switch (frequencyBand) {
         case B0:
+        case A9:
             return (unsigned int) (word * 6250);
+        case TM:
         case T4:
+        case U0:
             return (unsigned int) ((word + 48000) * 6250);
         default:
             return 0;
@@ -66,8 +69,11 @@ unsigned int EEPROM::wordToFrequency(uint16_t word, FrequencyBand frequencyBand)
 uint16_t EEPROM::frequencyToWord(unsigned int frequency, FrequencyBand frequencyBand) {
     switch (frequencyBand) {
         case B0:
+        case A9:
             return (uint16_t) (frequency / 6250);
+        case TM:
         case T4:
+        case U0:
             return (uint16_t) ((frequency / 6250) - 48000);
         default:
             return 0;

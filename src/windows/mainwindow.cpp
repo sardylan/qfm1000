@@ -103,7 +103,10 @@ void MainWindow::initUi() {
 
     ui->frequencyBandComboBox->clear();
     ui->frequencyBandComboBox->addItem(frequencyBandValues[FrequencyBand::B0], FrequencyBand::B0);
+    ui->frequencyBandComboBox->addItem(frequencyBandValues[FrequencyBand::A9], FrequencyBand::A9);
+    ui->frequencyBandComboBox->addItem(frequencyBandValues[FrequencyBand::TM], FrequencyBand::TM);
     ui->frequencyBandComboBox->addItem(frequencyBandValues[FrequencyBand::T4], FrequencyBand::T4);
+    ui->frequencyBandComboBox->addItem(frequencyBandValues[FrequencyBand::U0], FrequencyBand::U0);
 
     ui->defaultChannelComboBox->clear();
     ui->defaultChannelComboBox->addItem("Last used", -1);
