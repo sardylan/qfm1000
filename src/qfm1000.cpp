@@ -22,6 +22,7 @@
 #include <QDebug>
 #include <QMessageBox>
 #include <QThread>
+#include <QFile>
 
 #include <config/manager.hpp>
 #include <windows/configwindow.hpp>
@@ -60,6 +61,8 @@ void QFM1000::prepare() {
 
     connect(mainWindow, &MainWindow::actionConfig, this, &QFM1000::showConfigWindow);
     connect(mainWindow, &MainWindow::actionAbout, this, &QFM1000::showAboutWindow);
+
+    connect(mainWindow, &MainWindow::actionNewFile, this, &QFM1000::newEepromFile);
     connect(mainWindow, &MainWindow::actionCloseFile, this, &QFM1000::closeEepromFile);
     connect(mainWindow, &MainWindow::actionLoadFile, this, &QFM1000::loadEepromFile);
     connect(mainWindow, &MainWindow::actionSaveFile, this, &QFM1000::saveEepromFile);
@@ -84,6 +87,32 @@ void QFM1000::showConfigWindow() {
 void QFM1000::showAboutWindow() {
     AboutWindow aboutWindow;
     aboutWindow.exec();
+}
+
+void QFM1000::newEepromFile() {
+    if (status->isFileOpened() && status->isDataDirty(eeprom->getData())) {
+        QMessageBox messageBox;
+        messageBox.setText("Are you sure to create a new EEPROM file without saving changes?");
+        messageBox.setStandardButtons(QMessageBox::Yes | QMessageBox::No);
+        int reply = messageBox.exec();
+
+        switch (reply) {
+            case QMessageBox::No:
+                return;
+            default:
+                break;
+        }
+    }
+
+    status->setCurrentFileName("");
+
+    QFile file(":/files/eeprom/new");
+    QByteArray data = file.readAll();
+    file.close();
+
+    status->setOriginalData(data);
+
+    QMetaObject::invokeMethod(mainWindow, "eepromUpdated");
 }
 
 void QFM1000::closeEepromFile() {

@@ -61,6 +61,7 @@ MainWindow::~MainWindow() {
 }
 
 void MainWindow::signalConnect() {
+    connect(ui->actionFileNew, &QAction::triggered, this, &MainWindow::newFile);
     connect(ui->actionFileClose, &QAction::triggered, this, &MainWindow::closeFile);
     connect(ui->actionFileOpen, &QAction::triggered, this, &MainWindow::openFile);
     connect(ui->actionFileSave, &QAction::triggered, this, &MainWindow::saveFile);
@@ -130,6 +131,10 @@ void MainWindow::initStatusBar() {
 
 void MainWindow::applicationClose() {
     QApplication::quit();
+}
+
+void MainWindow::newFile() {
+    emit actionNewFile();
 }
 
 void MainWindow::closeFile() {
@@ -231,8 +236,7 @@ void MainWindow::eepromUpdated() {
     updateUiStatus();
     updateWidgetEnableStatus();
 
-    bool fileOpened = status->getCurrentFileName().length() > 0;
-    if (!fileOpened)
+    if (!status->isFileOpened())
         return;
 
     ui->tableView->update();
@@ -250,14 +254,14 @@ void MainWindow::configUpdated() {
 }
 
 void MainWindow::updateWidgetEnableStatus() {
-    bool fileOpened = status->getCurrentFileName().length() > 0;
+    bool fileOpened = status->isFileOpened();
     ui->generalConfGroupBox->setEnabled(fileOpened);
     ui->channelsGroupBox->setEnabled(fileOpened);
     ui->eepromFeaturesGroupBox->setEnabled(fileOpened);
 }
 
 void MainWindow::updateUiStatus() {
-    bool fileOpened = status->getCurrentFileName().length() > 0;
+    bool fileOpened = status->isFileOpened();
     bool eepromDirty = status->isDataDirty(eeprom->getData());
 
     ui->actionFileClose->setEnabled(fileOpened);
@@ -270,6 +274,8 @@ void MainWindow::updateUiStatus() {
 
     if (fileOpened) {
         QString fileName = status->getCurrentFileName();
+        if (fileName.length() == 0)
+            fileName = "[NEW UNSAVED EEPROM FILE]";
         title.append(QString(" - %1").arg(fileName));
 
         if (eepromDirty)

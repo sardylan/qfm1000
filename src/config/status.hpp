@@ -55,6 +55,8 @@ public:
 
     void setCurrentFileName(const QString &currentFileName);
 
+    bool isFileOpened();
+
     bool isDataDirty(const QByteArray &eepromData);
 
     bool isSerialEepromOpened() const;

@@ -96,6 +96,8 @@ private slots:
 
     void applicationClose();
 
+    void newFile();
+
     void closeFile();
 
     void openFile();
@@ -127,6 +129,8 @@ signals:
     void actionConfig();
 
     void actionAbout();
+
+    void actionNewFile();
 
     void actionCloseFile();
 

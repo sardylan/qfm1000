@@ -63,6 +63,10 @@ void Status::setCurrentFileName(const QString &currentFileName) {
     Status::currentFileName = currentFileName;
 }
 
+bool Status::isFileOpened() {
+    return originalData.size() == EEPROM_SIZE;
+}
+
 bool Status::isDataDirty(const QByteArray &eepromData) {
     if (originalData.length() != eepromData.length())
         return true;
