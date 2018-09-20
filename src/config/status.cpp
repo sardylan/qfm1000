@@ -35,6 +35,7 @@ Status::Status() {
     frequencyBand = B0;
     currentFileName = "";
     originalData.clear();
+    eepromLoaded = false;
     serialEepromOpened = false;
     serialRadioOpened = false;
 }
@@ -76,6 +77,14 @@ bool Status::isDataDirty(const QByteArray &eepromData) {
             return true;
 
     return false;
+}
+
+bool Status::isEepromLoaded() const {
+    return eepromLoaded;
+}
+
+void Status::setEepromLoaded(bool eepromLoaded) {
+    Status::eepromLoaded = eepromLoaded;
 }
 
 bool Status::isSerialEepromOpened() const {

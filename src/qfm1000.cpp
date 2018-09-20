@@ -24,10 +24,10 @@
 #include <QThread>
 #include <QFile>
 
-#include <config/manager.hpp>
+#include <eeprom/filemanager.hpp>
 #include <windows/configwindow.hpp>
 #include <windows/aboutwindow.hpp>
-#include <eeprom/filemanager.hpp>
+#include <config/manager.hpp>
 
 #include "qfm1000.hpp"
 
@@ -104,13 +104,16 @@ void QFM1000::newEepromFile() {
         }
     }
 
-    status->setCurrentFileName("");
-
     QFile file(":/files/eeprom/new");
+    file.open(QIODevice::ReadOnly);
     QByteArray data = file.readAll();
     file.close();
 
-    status->setOriginalData(data);
+    eeprom->setData(data);
+
+    status->setEepromLoaded(true);
+    status->setCurrentFileName("");
+    status->clearOriginalData();
 
     QMetaObject::invokeMethod(mainWindow, "eepromUpdated");
 }
@@ -130,6 +133,7 @@ void QFM1000::closeEepromFile() {
         }
     }
 
+    status->setEepromLoaded(false);
     status->setCurrentFileName("");
     status->clearOriginalData();
 
@@ -146,6 +150,7 @@ void QFM1000::loadEepromFile(QString fileName) {
         return;
     }
 
+    status->setEepromLoaded(true);
     status->setCurrentFileName(fileName);
     status->setOriginalData(eeprom->getData());
 
@@ -162,6 +167,7 @@ void QFM1000::saveEepromFile(QString fileName) {
         return;
     }
 
+    status->setEepromLoaded(true);
     status->setCurrentFileName(fileName);
     status->setOriginalData(eeprom->getData());
 
@@ -208,7 +214,8 @@ void QFM1000::readArduinoEeprom() {
 
     connect(programmer, &ArduinoProgrammer::eepromRead, [=](QByteArray data) {
         eeprom->setData(data);
-        status->setCurrentFileName("eeprom");
+        status->setEepromLoaded(true);
+        status->setCurrentFileName("");
         status->setOriginalData(eeprom->getData());
         QMetaObject::invokeMethod(mainWindow, "eepromUpdated", Qt::QueuedConnection);
     });

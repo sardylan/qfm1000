@@ -37,6 +37,7 @@ private:
     FrequencyBand frequencyBand;
     QByteArray originalData;
     QString currentFileName;
+    bool eepromLoaded;
     bool serialEepromOpened;
     bool serialRadioOpened;
 
@@ -58,6 +59,10 @@ public:
     bool isFileOpened();
 
     bool isDataDirty(const QByteArray &eepromData);
+
+    bool isEepromLoaded() const;
+
+    void setEepromLoaded(bool eepromLoaded);
 
     bool isSerialEepromOpened() const;
 

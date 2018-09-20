@@ -24,9 +24,10 @@
 #include <QtWidgets/QFileDialog>
 #include <QtCore/QThread>
 
+#include <model/helper.hpp>
+
 #include "mainwindow.hpp"
 #include "ui_mainwindow.h"
-#include "model/helper.hpp"
 
 MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWindow) {
     ui->setupUi(this);
@@ -167,6 +168,7 @@ void MainWindow::saveFileAs() {
     fileDialog.setAcceptMode(QFileDialog::AcceptSave);
     fileDialog.setFileMode(QFileDialog::AnyFile);
     fileDialog.setNameFilter("EEPROM file (*.bin)");
+    fileDialog.setDefaultSuffix("bin");
 
     int result = fileDialog.exec();
     if (result != QDialog::Accepted)
@@ -236,7 +238,7 @@ void MainWindow::eepromUpdated() {
     updateUiStatus();
     updateWidgetEnableStatus();
 
-    if (!status->isFileOpened())
+    if (!status->isEepromLoaded())
         return;
 
     ui->tableView->update();
@@ -254,28 +256,29 @@ void MainWindow::configUpdated() {
 }
 
 void MainWindow::updateWidgetEnableStatus() {
-    bool fileOpened = status->isFileOpened();
-    ui->generalConfGroupBox->setEnabled(fileOpened);
-    ui->channelsGroupBox->setEnabled(fileOpened);
-    ui->eepromFeaturesGroupBox->setEnabled(fileOpened);
+    bool eepromLoaded = status->isEepromLoaded();
+    ui->generalConfGroupBox->setEnabled(eepromLoaded);
+    ui->channelsGroupBox->setEnabled(eepromLoaded);
+    ui->eepromFeaturesGroupBox->setEnabled(eepromLoaded);
 }
 
 void MainWindow::updateUiStatus() {
-    bool fileOpened = status->isFileOpened();
+    bool eepromLoaded = status->isEepromLoaded();
     bool eepromDirty = status->isDataDirty(eeprom->getData());
+    bool eepromHasName = status->getCurrentFileName().length() > 0;
 
-    ui->actionFileClose->setEnabled(fileOpened);
-    ui->actionFileSave->setEnabled(fileOpened && eepromDirty);
-    ui->actionFileSaveas->setEnabled(fileOpened);
+    ui->actionFileClose->setEnabled(eepromLoaded);
+    ui->actionFileSave->setEnabled(eepromLoaded && eepromDirty && eepromHasName);
+    ui->actionFileSaveas->setEnabled(eepromLoaded);
 
     QString title = QString("%1 %2")
             .arg(QCoreApplication::applicationName())
             .arg(QCoreApplication::applicationVersion());
 
-    if (fileOpened) {
+    if (eepromLoaded) {
         QString fileName = status->getCurrentFileName();
         if (fileName.length() == 0)
-            fileName = "[NEW UNSAVED EEPROM FILE]";
+            fileName = "[UNSAVED EEPROM FILE]";
         title.append(QString(" - %1").arg(fileName));
 
         if (eepromDirty)
