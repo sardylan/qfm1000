@@ -1,4 +1,5 @@
 # qFm1000
+
 > Simple tool for editing channels and configuration parameters of Philips FM1000 radio.
 
 [![Build status Shippable (Linux)](https://api.shippable.com/projects/5b90607f6217c20600d0beaa/badge?branch=master)](https://app.shippable.com/github/sardylan/qfm1000)
@@ -18,19 +19,24 @@ All releases are created using CPack extension of CMake builder.
 
 ### Linux
 
-There are some deb packages preapred for different Debian-based Linux distribution. Just pick up the one for your OS and install it using `dpkg -i <file>.deb`. 
+There are some deb packages preapred for different Debian-based Linux distribution.
+Just pick up the one for your OS and install it using `dpkg -i <file>.deb`. 
 
 ### MAC
 
-There is no pre-compiled version for MAC. Still working to produce a official DMG release.
+There is no pre-compiled version for MacOS, yet. Still working to produce a official DMG release.
 
 ### Windows
 
-Windows build are created using the official releases of Qt 5.9.2. Just download the MSI package and install it.
+Windows build are created using the official releases of Qt. Just download the MSI package and install it.
 
 ## Changelog
 
 
+* 0.7.0
+    * ADD: "New File" feature
+* 0.6.1
+    * ADD: Support for model A9, TM and U0
 * 0.6.0
     * ADD: Support for UHF frequencies
     * FIX: Bug on Intel HEX parsing
