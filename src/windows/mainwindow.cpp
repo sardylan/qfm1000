@@ -161,6 +161,7 @@ void MainWindow::saveFileAs() {
     QFileDialog fileDialog;
     fileDialog.setAcceptMode(QFileDialog::AcceptSave);
     fileDialog.setFileMode(QFileDialog::AnyFile);
+    fileDialog.setNameFilter("EEPROM file (*.bin)");
 
     int result = fileDialog.exec();
     if (result != QDialog::Accepted)
