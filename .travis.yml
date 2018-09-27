@@ -1,38 +1,18 @@
 language: cpp
 
-matrix:
-
-  include:
-
-  - os: linux
-    dist: xenial
-    compiler: gcc
-    sudo: false
-    before_script:
-    - export QTDIR="/usr"
-    addons:
-      apt:
-        packages:
-        - build-essential
-        - pkg-config
-        - cmake
-        - qt5-default
-        - libqt5serialport5
-        - libqt5serialport5-dev
-
-  - os: osx
-    osx_image: xcode9.3
-    compiler: clang
-    before_install:
-    - brew update
-    install:
-    - brew install qt5
-    before_script:
-    - export QTDIR="/usr/local/opt/qt"
-    - export LDFLAGS="-L$QTDIR/lib:$LDFLAGS"
-    - export CPPFLAGS="-I$QTDIR/include:$CPPFLAGS"
-    - export PKG_CONFIG_PATH="$QTDIR/lib/pkgconfig:$PKG_CONFIG_PATH"
-    - export PATH="$QTDIR/bin:$PATH"
+os: osx
+osx_image: xcode9.3
+compiler: clang
+before_install:
+- brew update
+install:
+- brew install qt5
+before_script:
+- export QTDIR="/usr/local/opt/qt"
+- export LDFLAGS="-L$QTDIR/lib:$LDFLAGS"
+- export CPPFLAGS="-I$QTDIR/include:$CPPFLAGS"
+- export PKG_CONFIG_PATH="$QTDIR/lib/pkgconfig:$PKG_CONFIG_PATH"
+- export PATH="$QTDIR/bin:$PATH"
 
 script:
 - mkdir build
