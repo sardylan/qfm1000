@@ -85,7 +85,7 @@ unsigned int EEPROM::getChannelRxFreq(int channel, FrequencyBand frequencyBand) 
         return 0;
 
     int offset = OFFSET_CHANNEL_FIRST + (channel * 8);
-    uint16_t rxFreqBits = ((uint8_t) data[offset] << 8) | ((uint8_t) data[offset + 1]);
+    uint16_t rxFreqBits = ((quint8) data[offset] << 8) | ((quint8) data[offset + 1]);
     return wordToFrequency(rxFreqBits, frequencyBand);
 }
 
@@ -95,8 +95,8 @@ void EEPROM::setChannelRxFreq(int channel, unsigned int freq, FrequencyBand freq
 
     int offset = OFFSET_CHANNEL_FIRST + (channel * 8);
     auto rxValue = frequencyToWord(freq, frequencyBand);
-    assign(offset + 0, (uint8_t) (rxValue >> 8));
-    assign(offset + 1, (uint8_t) (rxValue & 0xff));
+    assign(offset + 0, (quint8) (rxValue >> 8));
+    assign(offset + 1, (quint8) (rxValue & 0xff));
 }
 
 unsigned int EEPROM::getChannelTxFreq(int channel, FrequencyBand frequencyBand) {
@@ -104,7 +104,7 @@ unsigned int EEPROM::getChannelTxFreq(int channel, FrequencyBand frequencyBand) 
         return 0;
 
     int offset = OFFSET_CHANNEL_FIRST + (channel * 8);
-    uint16_t rxFreqBits = ((uint8_t) data[offset + 2] << 8) | ((uint8_t) data[offset + 3]);
+    uint16_t rxFreqBits = ((quint8) data[offset + 2] << 8) | ((quint8) data[offset + 3]);
     return wordToFrequency(rxFreqBits, frequencyBand);
 }
 
@@ -114,16 +114,16 @@ void EEPROM::setChannelTxFreq(int channel, unsigned int freq, FrequencyBand freq
 
     int offset = OFFSET_CHANNEL_FIRST + (channel * 8);
     auto txValue = frequencyToWord(freq, frequencyBand);
-    assign(offset + 2, (uint8_t) (txValue >> 8));
-    assign(offset + 3, (uint8_t) (txValue & 0xff));
+    assign(offset + 2, (quint8) (txValue >> 8));
+    assign(offset + 3, (quint8) (txValue & 0xff));
 }
 
-uint8_t EEPROM::getChannelRxCtcss(int channel) {
+quint8 EEPROM::getChannelRxCtcss(int channel) {
     if (!isValidChannelNumber(channel))
         return 0;
 
     int offset = OFFSET_CHANNEL_FIRST + (channel * 8);
-    return (uint8_t) data[offset + 4];
+    return (quint8) data[offset + 4];
 }
 
 void EEPROM::setChannelRxCtcss(int channel, int ctcss) {
@@ -131,16 +131,16 @@ void EEPROM::setChannelRxCtcss(int channel, int ctcss) {
         return;
 
     int offset = OFFSET_CHANNEL_FIRST + (channel * 8);
-    assign(offset + 4, (uint8_t) ctcss);
+    assign(offset + 4, (quint8) ctcss);
 }
 
-uint8_t EEPROM::getChannelTxCtcss(int channel) {
+quint8 EEPROM::getChannelTxCtcss(int channel) {
     if (!isValidChannelNumber(channel))
         return 0;
 
     int offset = OFFSET_CHANNEL_FIRST + (channel * 8);
     char b = data[offset + 5];
-    return (uint8_t) b;
+    return (quint8) b;
 }
 
 void EEPROM::setChannelTxCtcss(int channel, int ctcss) {
@@ -148,7 +148,7 @@ void EEPROM::setChannelTxCtcss(int channel, int ctcss) {
         return;
 
     int offset = OFFSET_CHANNEL_FIRST + (channel * 8);
-    assign(offset + 5, (uint8_t) ctcss);
+    assign(offset + 5, (quint8) ctcss);
 }
 
 unsigned int EEPROM::getChannelPower(int channel) {
@@ -156,7 +156,7 @@ unsigned int EEPROM::getChannelPower(int channel) {
         return 0;
 
     int offset = OFFSET_CHANNEL_FIRST + (channel * 8);
-    auto txPowerByte = (uint8_t) data[offset + 6];
+    auto txPowerByte = (quint8) data[offset + 6];
     auto value = static_cast<unsigned int>((txPowerByte & 0b00111000) >> 3);
 
     return value;
@@ -167,7 +167,7 @@ void EEPROM::setChannelPower(int channel, unsigned int power) {
         return;
 
     int offset = OFFSET_CHANNEL_FIRST + (channel * 8);
-    auto byte = (uint8_t) data[offset + 6];
+    auto byte = (quint8) data[offset + 6];
     switch (power) {
         case 5:  // 0b11101000 - 0xe8
             byte &= 0b11000111;
@@ -202,7 +202,7 @@ unsigned int EEPROM::getChannelSquelch(int channel) {
         return 0;
 
     int offset = OFFSET_CHANNEL_FIRST + (channel * 8);
-    auto txPowerByte = (uint8_t) data[offset + 7];
+    auto txPowerByte = (quint8) data[offset + 7];
     int extractValue = txPowerByte & 0b00011100;
     int shiftedValue = extractValue >> 2;
     auto value = static_cast<unsigned int>(shiftedValue);
@@ -215,7 +215,7 @@ void EEPROM::setChannelSquelch(int channel, unsigned int power) {
         return;
 
     int offset = OFFSET_CHANNEL_FIRST + (channel * 8);
-    auto byte = (uint8_t) data[offset + 7];
+    auto byte = (quint8) data[offset + 7];
     switch (power) {
         case 6:
             byte &= 0b11100011;
@@ -254,7 +254,7 @@ bool EEPROM::getChannelSelectiveCalling(int channel) {
         return false;
 
     int offset = OFFSET_CHANNEL_FIRST + (channel * 8);
-    auto configBit = (uint8_t) data[offset + 7];
+    auto configBit = (quint8) data[offset + 7];
     return (bool) (configBit & 0b00000010);
 }
 
@@ -263,7 +263,7 @@ void EEPROM::setChannelSelectiveCalling(int channel, bool selectiveCalling) {
         return;
 
     int offset = OFFSET_CHANNEL_FIRST + (channel * 8);
-    auto byte = (uint8_t) data[offset + 7];
+    auto byte = (quint8) data[offset + 7];
     byte &= 0b00000011;
     byte |= 0b00100100;
     if (selectiveCalling)
@@ -278,7 +278,7 @@ bool EEPROM::getChannelCpuOffset(int channel) {
         return false;
 
     int offset = OFFSET_CHANNEL_FIRST + (channel * 8);
-    auto configBit = (uint8_t) data[offset + 7];
+    auto configBit = (quint8) data[offset + 7];
     return (bool) (configBit & 0b00000001);
 }
 
@@ -287,7 +287,7 @@ void EEPROM::setChannelCpuOffset(int channel, bool cpuOffset) {
         return;
 
     int offset = OFFSET_CHANNEL_FIRST + (channel * 8);
-    auto byte = (uint8_t) data[offset + 7];
+    auto byte = (quint8) data[offset + 7];
     byte &= 0b00000011;
     byte |= 0b00100100;
     if (cpuOffset)
@@ -307,21 +307,21 @@ void EEPROM::setDefaultChannel(int defaultChannel) {
     if (!isValidChannelNumber(defaultChannel))
         return;
 
-    auto byte = (uint8_t) (defaultChannel >= 0 && defaultChannel < CHANNELS_COUNT
+    auto byte = (quint8) (defaultChannel >= 0 && defaultChannel < CHANNELS_COUNT
                            ? defaultChannel
                            : 0xff);
     assign(OFFSET_STARTUP_CHANNEL, byte);
 }
 
-uint8_t EEPROM::getTot() {
-    return (uint8_t) data[OFFSET_TOT];
+quint8 EEPROM::getTot() {
+    return (quint8) data[OFFSET_TOT];
 }
 
 void EEPROM::setTot(int tot) {
     if (tot < 0 || tot > 255)
         return;
 
-    assign(OFFSET_TOT, (uint8_t) tot);
+    assign(OFFSET_TOT, (quint8) tot);
 }
 
 int EEPROM::getLowPower() {
@@ -332,9 +332,9 @@ void EEPROM::setLowPower(int lowPower) {
     if (lowPower <= 0 || lowPower >= 5)
         return;
 
-    assign(OFFSET_LOW_POWER, (uint8_t) lowPower);
+    assign(OFFSET_LOW_POWER, (quint8) lowPower);
 }
 
-void EEPROM::assign(int pos, uint8_t value) {
+void EEPROM::assign(int pos, quint8 value) {
     data.replace(pos, 1, (const char *) &value, 1);
 }
