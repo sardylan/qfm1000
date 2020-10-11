@@ -1,13 +1,11 @@
 /*
  * qFM1000
- * Copyright (C) 2017  Luca Cireddu
- * sardylan@gmail.com
- * http://www.lucacireddu.it
+ * Copyright (C) 2020  Luca Cireddu (sardylan@gmail.com)
+ * https://www.lucacireddu.it/
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
+ * the Free Software Foundation, either version 3 of the License.
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -19,28 +17,32 @@
  *
  */
 
-#ifndef __QFM1000_EEPROM_MANAGER_H
-#define __QFM1000_EEPROM_MANAGER_H
+#ifndef __QFM1000__EEPROM__FILEMANAGER_H
+#define __QFM1000__EEPROM__FILEMANAGER_H
 
 #include <QString>
 
 #include "eeprom.hpp"
 
-class FileManager {
+namespace qfm1000::eeprom {
 
-public:
-    static bool loadFromFile(EEPROM *eeprom, QString filename);
+    class FileManager {
 
-    static bool saveToFile(EEPROM *eeprom, QString filename);
+    public:
+        static bool loadFromFile(EEPROM *eeprom, const QString& filename);
 
-private:
-    static QByteArray parseFile(const QByteArray &rawData);
+        static bool saveToFile(EEPROM *eeprom, const QString& filename);
 
-    static bool isIntelHex(const QByteArray &rawFile);
+    private:
+        static QByteArray parseFile(const QByteArray &rawData);
 
-    static QStringList splitInLines(const QByteArray &rawData);
+        static bool isIntelHex(const QByteArray &rawFile);
 
-    static QByteArray intelHexToByteArray(const QByteArray &rawData);
-};
+        static QStringList splitInLines(const QByteArray &rawData);
+
+        static QByteArray intelHexToByteArray(const QByteArray &rawData);
+    };
+
+}
 
 #endif

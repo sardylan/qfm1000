@@ -1,13 +1,11 @@
 /*
  * qFM1000
- * Copyright (C) 2017  Luca Cireddu
- * sardylan@gmail.com
- * http://www.lucacireddu.it
+ * Copyright (C) 2020  Luca Cireddu (sardylan@gmail.com)
+ * https://www.lucacireddu.it/
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
+ * the Free Software Foundation, either version 3 of the License.
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -19,54 +17,47 @@
  *
  */
 
-#ifndef __QFM1000_EEPROM_EEPROM_TEST_H
-#define __QFM1000_EEPROM_EEPROM_TEST_H
+#ifndef __QFM1000__EEPROM__EEPROMTEST_H
+#define __QFM1000__EEPROM__EEPROMTEST_H
 
-#include <QtTest>
+#include <QtTest/QtTest>
 
 #include <eeprom.hpp>
 
-class EEPROMTest : public QObject {
+namespace qfm1000::eeprom {
 
-Q_OBJECT
+    class EEPROMTest : public QObject {
 
-private:
-    EEPROM *eeprom;
+    Q_OBJECT
 
-private slots:
+    private slots:
 
-    void initTestCase();
+        void testClear();
 
-    void cleanupTestCase();
+        void testChannelRxFreq();
 
-    void init();
+        void testChannelTxFreq();
 
-    void cleanup();
+        void testChannelRxCtcss();
 
-    void testClear();
+        void testChannelTxCtcss();
 
-    void testChannelRxFreq();
+        void testChannelPower();
 
-    void testChannelTxFreq();
+        void testChannelSquelch();
 
-    void testChannelRxCtcss();
+        void testChannelSelectiveCalling();
 
-    void testChannelTxCtcss();
+        void testChannelCpuOffset();
 
-    void testChannelPower();
+        void testDefaultChannel();
 
-    void testChannelSquelch();
+        void testTot();
 
-    void testChannelSelectiveCalling();
+        void testLowPower();
 
-    void testChannelCpuOffset();
+    };
 
-    void testDefaultChannel();
-
-    void testTot();
-
-    void testLowPower();
-
-};
+}
 
 #endif

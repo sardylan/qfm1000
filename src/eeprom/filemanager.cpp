@@ -1,13 +1,11 @@
 /*
  * qFM1000
- * Copyright (C) 2017  Luca Cireddu
- * sardylan@gmail.com
- * http://www.lucacireddu.it
+ * Copyright (C) 2020  Luca Cireddu (sardylan@gmail.com)
+ * https://www.lucacireddu.it/
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
+ * the Free Software Foundation, either version 3 of the License.
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -23,7 +21,9 @@
 
 #include "filemanager.hpp"
 
-bool FileManager::loadFromFile(EEPROM *eeprom, QString filename) {
+using namespace qfm1000::eeprom;
+
+bool FileManager::loadFromFile(EEPROM *eeprom, const QString& filename) {
     QFile file(filename);
     if (!file.exists())
         return false;
@@ -43,7 +43,7 @@ bool FileManager::loadFromFile(EEPROM *eeprom, QString filename) {
     return true;
 }
 
-bool FileManager::saveToFile(EEPROM *eeprom, QString filename) {
+bool FileManager::saveToFile(EEPROM *eeprom, const QString& filename) {
     QFile file(filename);
     if (!file.open(QIODevice::ReadWrite))
         return false;

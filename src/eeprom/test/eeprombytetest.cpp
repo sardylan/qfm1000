@@ -1,13 +1,11 @@
 /*
  * qFM1000
- * Copyright (C) 2017  Luca Cireddu
- * sardylan@gmail.com
- * http://www.lucacireddu.it
+ * Copyright (C) 2020  Luca Cireddu (sardylan@gmail.com)
+ * https://www.lucacireddu.it/
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
+ * the Free Software Foundation, either version 3 of the License.
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -21,64 +19,48 @@
 
 #include "eeprombytetest.hpp"
 
-QTEST_MAIN(EEPROMByteTest)
+using namespace qfm1000::eeprom;
 
-#define CUSTOM_QTRY_COMPARE_NO_TIMEOUT(expr, expected) QTRY_COMPARE_WITH_TIMEOUT((expr), expected, 0)
+QTEST_MAIN(EEPROMByteTest)
 
 #define TEST_EEPROM_FREQ (unsigned int) 145000000
 #define TEST_EEPROM_FREQBAND FrequencyBand::B0
 #define TEST_EEPROM_FREQ_MSB (char) 0x5a
 #define TEST_EEPROM_FREQ_LSB (char) 0xa0
 
-#define TEST_EEPROM_CTCSS (uint8_t) 1
+#define TEST_EEPROM_CTCSS (quint8) 1
 #define TEST_DEFAULT_CHANNEL 10
 #define TEST_TOT 10
 #define TEST_LOW_POWER 2
 
-void EEPROMByteTest::initTestCase() {
-    eeprom = EEPROM::getInstance();
-}
-
-void EEPROMByteTest::cleanupTestCase() {
-
-}
-
-void EEPROMByteTest::init() {
-    eeprom->clear();
-}
-
-void EEPROMByteTest::cleanup() {
-
-}
-
 void EEPROMByteTest::testSimpleBitwise() {
-    uint8_t input;
-    uint8_t expected;
+    quint8 input;
+    quint8 expected;
 
     input = 0b00000000;
     expected = 0b001100111;
     input |= 0b001100111;
-    CUSTOM_QTRY_COMPARE_NO_TIMEOUT(input, expected);
+    QCOMPARE(input, expected);
 
     input = 0b11111111;
     expected = 0b001100111;
     input &= 0b001100111;
-    CUSTOM_QTRY_COMPARE_NO_TIMEOUT(input, expected);
+    QCOMPARE(input, expected);
 
     input = 0b01010101;
     expected = 0b01010111;
     input |= 0b00000010;
-    CUSTOM_QTRY_COMPARE_NO_TIMEOUT(input, expected);
+    QCOMPARE(input, expected);
 
     input = 0b01010111;
     expected = 0b01010101;
     input &= 0b11111101;
-    CUSTOM_QTRY_COMPARE_NO_TIMEOUT(input, expected);
+    QCOMPARE(input, expected);
 
     input = 0b01010111;
     expected = 0b01010111;
     input &= 0b11111111;
-    CUSTOM_QTRY_COMPARE_NO_TIMEOUT(input, expected);
+    QCOMPARE(input, expected);
 }
 
 void EEPROMByteTest::testSimpleQByteArray() {
@@ -89,101 +71,115 @@ void EEPROMByteTest::testSimpleQByteArray() {
         data.append((char) '\0');
 
     char byte = data[10];
-    CUSTOM_QTRY_COMPARE_NO_TIMEOUT(byte, (char) 0x00);
+    QCOMPARE(byte, (char) 0x00);
 
     data[10] = 0x30;
     byte = data[10];
-    CUSTOM_QTRY_COMPARE_NO_TIMEOUT(byte, (char) 0x30);
+    QCOMPARE(byte, (char) 0x30);
 }
 
 void EEPROMByteTest::testEepromQByteArray() {
-    char byte = eeprom->getData()[10];
-    CUSTOM_QTRY_COMPARE_NO_TIMEOUT(byte, (char) 0x00);
+    EEPROM eeprom;
 
-    eeprom->setTot(0x30);
-    byte = eeprom->getData()[OFFSET_TOT];
-    CUSTOM_QTRY_COMPARE_NO_TIMEOUT(byte, (char) 0x30);
+    char byte = eeprom.getData()[10];
+    QCOMPARE(byte, (char) 0x00);
+
+    eeprom.setTot(0x30);
+    byte = eeprom.getData()[OFFSET_TOT];
+    QCOMPARE(byte, (char) 0x30);
 }
 
 void EEPROMByteTest::testClear() {
-    CUSTOM_QTRY_COMPARE_NO_TIMEOUT(eeprom->getData().size(), EEPROM_SIZE);
+    EEPROM eeprom;
+
+    QCOMPARE(eeprom.getData().size(), EEPROM_SIZE);
     for (int i = 0; i < EEPROM_SIZE; i++)
-        CUSTOM_QTRY_COMPARE_NO_TIMEOUT(eeprom->getData()[i], '\0');
+        QCOMPARE(eeprom.getData()[i], '\0');
 }
 
 void EEPROMByteTest::testChannelRxFreq() {
+    EEPROM eeprom;
+
     for (int i = 0; i < CHANNELS_COUNT; i++) {
         int offset = OFFSET_CHANNEL_FIRST + (i * 8);
 
-        char msb = eeprom->getData()[offset];
-        char lsb = eeprom->getData()[offset + 1];
-        CUSTOM_QTRY_COMPARE_NO_TIMEOUT(msb, (char) 0x00);
-        CUSTOM_QTRY_COMPARE_NO_TIMEOUT(lsb, (char) 0x00);
+        char msb = eeprom.getData()[offset];
+        char lsb = eeprom.getData()[offset + 1];
+        QCOMPARE(msb, (char) 0x00);
+        QCOMPARE(lsb, (char) 0x00);
 
-        eeprom->setChannelRxFreq(i, TEST_EEPROM_FREQ, TEST_EEPROM_FREQBAND);
-        msb = eeprom->getData()[offset];
-        lsb = eeprom->getData()[offset + 1];
-        CUSTOM_QTRY_COMPARE_NO_TIMEOUT(msb, TEST_EEPROM_FREQ_MSB);
-        CUSTOM_QTRY_COMPARE_NO_TIMEOUT(lsb, TEST_EEPROM_FREQ_LSB);
+        eeprom.setChannelRxFreq(i, TEST_EEPROM_FREQ, TEST_EEPROM_FREQBAND);
+        msb = eeprom.getData()[offset];
+        lsb = eeprom.getData()[offset + 1];
+        QCOMPARE(msb, TEST_EEPROM_FREQ_MSB);
+        QCOMPARE(lsb, TEST_EEPROM_FREQ_LSB);
     }
 }
 
 void EEPROMByteTest::testChannelTxFreq() {
+    EEPROM eeprom;
+
     for (int i = 0; i < CHANNELS_COUNT; i++) {
         int offset = OFFSET_CHANNEL_FIRST + (i * 8);
 
-        char msb = eeprom->getData()[offset + 2];
-        char lsb = eeprom->getData()[offset + 3];
-        CUSTOM_QTRY_COMPARE_NO_TIMEOUT(msb, (char) 0x00);
-        CUSTOM_QTRY_COMPARE_NO_TIMEOUT(lsb, (char) 0x00);
+        char msb = eeprom.getData()[offset + 2];
+        char lsb = eeprom.getData()[offset + 3];
+        QCOMPARE(msb, (char) 0x00);
+        QCOMPARE(lsb, (char) 0x00);
 
-        eeprom->setChannelTxFreq(i, TEST_EEPROM_FREQ, TEST_EEPROM_FREQBAND);
-        msb = eeprom->getData()[offset + 2];
-        lsb = eeprom->getData()[offset + 3];
-        CUSTOM_QTRY_COMPARE_NO_TIMEOUT(msb, TEST_EEPROM_FREQ_MSB);
-        CUSTOM_QTRY_COMPARE_NO_TIMEOUT(lsb, TEST_EEPROM_FREQ_LSB);
+        eeprom.setChannelTxFreq(i, TEST_EEPROM_FREQ, TEST_EEPROM_FREQBAND);
+        msb = eeprom.getData()[offset + 2];
+        lsb = eeprom.getData()[offset + 3];
+        QCOMPARE(msb, TEST_EEPROM_FREQ_MSB);
+        QCOMPARE(lsb, TEST_EEPROM_FREQ_LSB);
     }
 }
 
 void EEPROMByteTest::testChannelRxCtcss() {
+    EEPROM eeprom;
+
     for (int i = 0; i < CHANNELS_COUNT; i++) {
         int offset = OFFSET_CHANNEL_FIRST + (i * 8);
 
-        char byte = eeprom->getData()[offset + 4];
-        CUSTOM_QTRY_COMPARE_NO_TIMEOUT(byte, (char) 0x00);
+        char byte = eeprom.getData()[offset + 4];
+        QCOMPARE(byte, (char) 0x00);
 
-        eeprom->setChannelRxCtcss(i, TEST_EEPROM_CTCSS);
-        byte = eeprom->getData()[offset + 4];
-        CUSTOM_QTRY_COMPARE_NO_TIMEOUT(byte, (char) TEST_EEPROM_CTCSS);
+        eeprom.setChannelRxCtcss(i, TEST_EEPROM_CTCSS);
+        byte = eeprom.getData()[offset + 4];
+        QCOMPARE(byte, (char) TEST_EEPROM_CTCSS);
     }
 }
 
 void EEPROMByteTest::testChannelTxCtcss() {
+    EEPROM eeprom;
+
     for (int i = 0; i < CHANNELS_COUNT; i++) {
         int offset = OFFSET_CHANNEL_FIRST + (i * 8);
 
-        char byte = eeprom->getData()[offset + 5];
-        CUSTOM_QTRY_COMPARE_NO_TIMEOUT(byte, (char) 0x00);
+        char byte = eeprom.getData()[offset + 5];
+        QCOMPARE(byte, (char) 0x00);
 
-        eeprom->setChannelTxCtcss(i, TEST_EEPROM_CTCSS);
-        byte = eeprom->getData()[offset + 5];
-        CUSTOM_QTRY_COMPARE_NO_TIMEOUT(byte, (char) TEST_EEPROM_CTCSS);
+        eeprom.setChannelTxCtcss(i, TEST_EEPROM_CTCSS);
+        byte = eeprom.getData()[offset + 5];
+        QCOMPARE(byte, (char) TEST_EEPROM_CTCSS);
     }
 }
 
 void EEPROMByteTest::testChannelPower() {
+    EEPROM eeprom;
+
     for (int i = 0; i < CHANNELS_COUNT; i++) {
         int offset = OFFSET_CHANNEL_FIRST + (i * 8);
 
-        char byte = eeprom->getData()[offset + 6];
-        CUSTOM_QTRY_COMPARE_NO_TIMEOUT(byte, (char) 0x00);
+        char byte = eeprom.getData()[offset + 6];
+        QCOMPARE(byte, (char) 0x00);
 
         char value;
         for (unsigned int p = 0; p <= 5; p++) {
-            value = eeprom->getData()[offset + 6];
-            eeprom->setChannelPower(i, p);
+            value = eeprom.getData()[offset + 6];
+            eeprom.setChannelPower(i, p);
 
-            byte = eeprom->getData()[offset + 6];
+            byte = eeprom.getData()[offset + 6];
 
             switch (p) {
                 case 5:
@@ -211,31 +207,33 @@ void EEPROMByteTest::testChannelPower() {
                     value &= 0b11000111;
             }
 
-            CUSTOM_QTRY_COMPARE_NO_TIMEOUT(byte, value);
+            QCOMPARE(byte, value);
         }
 
-        value = eeprom->getData()[offset + 6];
+        value = eeprom.getData()[offset + 6];
         value &= 0b11000111;
 
-        eeprom->setChannelPower(i, 6);
-        byte = eeprom->getData()[offset + 6];
-        CUSTOM_QTRY_COMPARE_NO_TIMEOUT(byte, value);
+        eeprom.setChannelPower(i, 6);
+        byte = eeprom.getData()[offset + 6];
+        QCOMPARE(byte, value);
     }
 }
 
 void EEPROMByteTest::testChannelSquelch() {
+    EEPROM eeprom;
+
     for (int i = 0; i < CHANNELS_COUNT; i++) {
         int offset = OFFSET_CHANNEL_FIRST + (i * 8);
 
-        char byte = eeprom->getData()[offset + 7];
-        CUSTOM_QTRY_COMPARE_NO_TIMEOUT(byte, (char) 0x00);
+        char byte = eeprom.getData()[offset + 7];
+        QCOMPARE(byte, (char) 0x00);
 
         char value;
         for (unsigned int p = 0; p <= 6; p++) {
-            value = eeprom->getData()[offset + 7];
-            eeprom->setChannelSquelch(i, p);
+            value = eeprom.getData()[offset + 7];
+            eeprom.setChannelSquelch(i, p);
 
-            byte = eeprom->getData()[offset + 7];
+            byte = eeprom.getData()[offset + 7];
 
             switch (p) {
                 case 6:
@@ -267,73 +265,83 @@ void EEPROMByteTest::testChannelSquelch() {
                     value &= 0b11100011;
             }
 
-            CUSTOM_QTRY_COMPARE_NO_TIMEOUT(byte, value);
+            QCOMPARE(byte, value);
         }
 
-        value = eeprom->getData()[offset + 7];
+        value = eeprom.getData()[offset + 7];
         value &= 0b11100011;
 
-        eeprom->setChannelSquelch(i, 7);
-        byte = eeprom->getData()[offset + 7];
-        CUSTOM_QTRY_COMPARE_NO_TIMEOUT(byte, value);
+        eeprom.setChannelSquelch(i, 7);
+        byte = eeprom.getData()[offset + 7];
+        QCOMPARE(byte, value);
     }
 }
 
 void EEPROMByteTest::testChannelSelectiveCalling() {
+    EEPROM eeprom;
+
     for (int i = 0; i < CHANNELS_COUNT; i++) {
         int offset = OFFSET_CHANNEL_FIRST + (i * 8);
-        auto byte = (uint8_t) eeprom->getData()[offset + 7];
-        CUSTOM_QTRY_COMPARE_NO_TIMEOUT((bool) (byte & 0b00000010), false);
+        auto byte = (quint8) eeprom.getData()[offset + 7];
+        QCOMPARE((bool) (byte & 0b00000010), false);
 
-        eeprom->setChannelSelectiveCalling(i, true);
-        byte = (uint8_t) eeprom->getData()[offset + 7];
-        CUSTOM_QTRY_COMPARE_NO_TIMEOUT((bool) (byte & 0b00000010), true);
+        eeprom.setChannelSelectiveCalling(i, true);
+        byte = (quint8) eeprom.getData()[offset + 7];
+        QCOMPARE((bool) (byte & 0b00000010), true);
 
-        eeprom->setChannelSelectiveCalling(i, false);
-        byte = (uint8_t) eeprom->getData()[offset + 7];
-        CUSTOM_QTRY_COMPARE_NO_TIMEOUT((bool) (byte & 0b00000010), false);
+        eeprom.setChannelSelectiveCalling(i, false);
+        byte = (quint8) eeprom.getData()[offset + 7];
+        QCOMPARE((bool) (byte & 0b00000010), false);
     }
 }
 
 void EEPROMByteTest::testChannelCpuOffset() {
+    EEPROM eeprom;
+
     for (int i = 0; i < CHANNELS_COUNT; i++) {
         int offset = OFFSET_CHANNEL_FIRST + (i * 8);
-        auto byte = (uint8_t) eeprom->getData()[offset + 7];
-        CUSTOM_QTRY_COMPARE_NO_TIMEOUT((bool) (byte & 0b00000001), false);
+        auto byte = (quint8) eeprom.getData()[offset + 7];
+        QCOMPARE((bool) (byte & 0b00000001), false);
 
-        eeprom->setChannelCpuOffset(i, true);
-        byte = (uint8_t) eeprom->getData()[offset + 7];
-        CUSTOM_QTRY_COMPARE_NO_TIMEOUT((bool) (byte & 0b00000001), true);
+        eeprom.setChannelCpuOffset(i, true);
+        byte = (quint8) eeprom.getData()[offset + 7];
+        QCOMPARE((bool) (byte & 0b00000001), true);
 
-        eeprom->setChannelCpuOffset(i, false);
-        byte = (uint8_t) eeprom->getData()[offset + 7];
-        CUSTOM_QTRY_COMPARE_NO_TIMEOUT((bool) (byte & 0b00000001), false);
+        eeprom.setChannelCpuOffset(i, false);
+        byte = (quint8) eeprom.getData()[offset + 7];
+        QCOMPARE((bool) (byte & 0b00000001), false);
     }
 }
 
 void EEPROMByteTest::testDefaultChannel() {
-    auto byte = (uint8_t) eeprom->getData()[OFFSET_STARTUP_CHANNEL];
-    CUSTOM_QTRY_COMPARE_NO_TIMEOUT(byte, (uint8_t) 0x00);
+    EEPROM eeprom;
 
-    eeprom->setDefaultChannel(TEST_DEFAULT_CHANNEL);
-    byte = (uint8_t) eeprom->getData()[OFFSET_STARTUP_CHANNEL];
-    CUSTOM_QTRY_COMPARE_NO_TIMEOUT(byte, (uint8_t) TEST_DEFAULT_CHANNEL);
+    auto byte = (quint8) eeprom.getData()[OFFSET_STARTUP_CHANNEL];
+    QCOMPARE(byte, (quint8) 0x00);
+
+    eeprom.setDefaultChannel(TEST_DEFAULT_CHANNEL);
+    byte = (quint8) eeprom.getData()[OFFSET_STARTUP_CHANNEL];
+    QCOMPARE(byte, (quint8) TEST_DEFAULT_CHANNEL);
 }
 
 void EEPROMByteTest::testTot() {
-    auto byte = (uint8_t) eeprom->getData()[OFFSET_TOT];
-    CUSTOM_QTRY_COMPARE_NO_TIMEOUT(byte, (uint8_t) 0x00);
+    EEPROM eeprom;
 
-    eeprom->setTot(TEST_TOT);
-    byte = (uint8_t) eeprom->getData()[OFFSET_TOT];
-    CUSTOM_QTRY_COMPARE_NO_TIMEOUT(byte, (uint8_t) TEST_TOT);
+    auto byte = (quint8) eeprom.getData()[OFFSET_TOT];
+    QCOMPARE(byte, (quint8) 0x00);
+
+    eeprom.setTot(TEST_TOT);
+    byte = (quint8) eeprom.getData()[OFFSET_TOT];
+    QCOMPARE(byte, (quint8) TEST_TOT);
 }
 
 void EEPROMByteTest::testLowPower() {
-    auto byte = (uint8_t) eeprom->getData()[OFFSET_LOW_POWER];
-    CUSTOM_QTRY_COMPARE_NO_TIMEOUT(byte, (uint8_t) 0x00);
+    EEPROM eeprom;
 
-    eeprom->setLowPower(TEST_LOW_POWER);
-    byte = (uint8_t) eeprom->getData()[OFFSET_LOW_POWER];
-    CUSTOM_QTRY_COMPARE_NO_TIMEOUT(byte, (uint8_t) TEST_LOW_POWER);
+    auto byte = (quint8) eeprom.getData()[OFFSET_LOW_POWER];
+    QCOMPARE(byte, (quint8) 0x00);
+
+    eeprom.setLowPower(TEST_LOW_POWER);
+    byte = (quint8) eeprom.getData()[OFFSET_LOW_POWER];
+    QCOMPARE(byte, (quint8) TEST_LOW_POWER);
 }
