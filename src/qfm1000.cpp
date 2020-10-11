@@ -140,7 +140,7 @@ void QFM1000::closeEepromFile() {
     QMetaObject::invokeMethod(mainWindow, "eepromUpdated");
 }
 
-void QFM1000::loadEepromFile(const QString& fileName) {
+void QFM1000::loadEepromFile(const QString &fileName) {
     bool result = FileManager::loadFromFile(eeprom, fileName);
     if (!result) {
         QMessageBox messageBox;
@@ -157,7 +157,7 @@ void QFM1000::loadEepromFile(const QString& fileName) {
     QMetaObject::invokeMethod(mainWindow, "eepromUpdated");
 }
 
-void QFM1000::saveEepromFile(const QString& fileName) {
+void QFM1000::saveEepromFile(const QString &fileName) {
     bool result = FileManager::saveToFile(eeprom, fileName);
     if (!result) {
         QMessageBox messageBox;
@@ -225,7 +225,7 @@ void QFM1000::readArduinoEeprom() {
                               Q_ARG(QString, config->getArduinoPortName()),
                               Q_ARG(QSerialPort::BaudRate, config->getArduinoPortSpeed()));
 
-    window->exec();
+    QMetaObject::invokeMethod(window, &ArduinoWindow::exec, Qt::QueuedConnection);
 }
 
 void QFM1000::writeArduinoEeprom() {
@@ -271,5 +271,5 @@ void QFM1000::writeArduinoEeprom() {
                               Q_ARG(QString, config->getArduinoPortName()),
                               Q_ARG(QSerialPort::BaudRate, config->getArduinoPortSpeed()));
 
-    window->exec();
+    QMetaObject::invokeMethod(window, &ArduinoWindow::exec, Qt::QueuedConnection);
 }
