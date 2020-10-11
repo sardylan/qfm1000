@@ -5,7 +5,7 @@ if (UNIX)
     include(GNUInstallDirs)
 endif ()
 
-set(CMAKE_CXX_STANDARD 14)
+set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
 
 set_property(GLOBAL PROPERTY USE_FOLDERS ON)
