@@ -45,32 +45,32 @@ public:
 
     ~ArduinoProgrammer() override;
 
-    Q_INVOKABLE void init(QString portName, QSerialPort::BaudRate portSpeed);
-
-    Q_INVOKABLE void close();
-
     bool isReady() const;
 
 public slots:
 
+    void init(const QString& portName, QSerialPort::BaudRate portSpeed);
+
+    void close();
+
     void read();
 
-    void write(QByteArray data);
+    void write(const QByteArray &data);
 
 private:
     QSerialPort *serialPort;
     bool ready;
     QByteArray eepromData;
 
-    Q_INVOKABLE void readEeprom();
+    void readPage(quint8 num);
 
-    Q_INVOKABLE void writeEeprom(QByteArray data);
-
-    void readPage(uint8_t num);
-
-    void writePage(uint8_t num, QByteArray data);
+    void writePage(quint8 num, const QByteArray &data);
 
 private slots:
+
+    void readEeprom();
+
+    void writeEeprom(const QByteArray &data);
 
     void errorOccurred(QSerialPort::SerialPortError serialPortError);
 
@@ -82,9 +82,9 @@ signals:
 
     void error();
 
-    void pageRead(uint8_t num);
+    void pageRead(quint8 num);
 
-    void pageWritten(uint8_t num);
+    void pageWritten(quint8 num);
 
     void readCompleted();
 

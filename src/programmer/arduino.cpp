@@ -39,7 +39,7 @@ ArduinoProgrammer::ArduinoProgrammer(QObject *parent) {
 
 ArduinoProgrammer::~ArduinoProgrammer() = default;
 
-void ArduinoProgrammer::init(QString portName, QSerialPort::BaudRate portSpeed) {
+void ArduinoProgrammer::init(const QString &portName, QSerialPort::BaudRate portSpeed) {
     if (serialPort->isOpen())
         return;
 
@@ -59,10 +59,11 @@ void ArduinoProgrammer::init(QString portName, QSerialPort::BaudRate portSpeed) 
         serialPort->waitForReadyRead(ARDUINO_PROGRAMMER_SERIAL_WAIT);
 
     QByteArray data = serialPort->read(1);
+
     if (data.at(0) == ARDUINO_PROGRAMMER_PROTOCOL_READY) {
         ready = true;
         serialPort->clear();
-        emit connected();
+        QMetaObject::invokeMethod(this, &ArduinoProgrammer::connected, Qt::QueuedConnection);
     }
 }
 
@@ -70,7 +71,7 @@ void ArduinoProgrammer::close() {
     if (serialPort->isOpen()) {
         serialPort->clear();
         serialPort->close();
-        emit disconnected();
+        QMetaObject::invokeMethod(this, &ArduinoProgrammer::disconnected, Qt::QueuedConnection);
     }
 
     ready = false;
@@ -86,7 +87,7 @@ void ArduinoProgrammer::errorOccurred(QSerialPort::SerialPortError serialPortErr
 
     qDebug() << "ERROR:" << serialPortError;
 
-    emit error();
+    QMetaObject::invokeMethod(this, &ArduinoProgrammer::error, Qt::QueuedConnection);
 
     close();
 }
@@ -98,14 +99,14 @@ void ArduinoProgrammer::read() {
     QMetaObject::invokeMethod(this, "readEeprom", Qt::QueuedConnection);
 }
 
-void ArduinoProgrammer::write(QByteArray data) {
+void ArduinoProgrammer::write(const QByteArray &data) {
     if (!isReady())
         return;
 
     if (data.length() != ARDUINO_PROGRAMMER_EEPROM_PAGE_SIZE * ARDUINO_PROGRAMMER_EEPROM_PAGE_COUNT)
         return;
 
-    QMetaObject::invokeMethod(this, "writeEeprom", Qt::QueuedConnection, Q_ARG(QByteArray, data));
+    QMetaObject::invokeMethod(this, "writeEeprom", Qt::QueuedConnection, Q_ARG(const QByteArray&, data));
 }
 
 void ArduinoProgrammer::readEeprom() {
@@ -120,12 +121,12 @@ void ArduinoProgrammer::readEeprom() {
     }
 
     if (i == ARDUINO_PROGRAMMER_EEPROM_PAGE_COUNT) {
-        emit eepromRead(QByteArray(eepromData));
-        emit readCompleted();
+        QMetaObject::invokeMethod(this, "eepromRead", Qt::QueuedConnection, Q_ARG(QByteArray, eepromData));
+        QMetaObject::invokeMethod(this, &ArduinoProgrammer::readCompleted, Qt::QueuedConnection);
     }
 }
 
-void ArduinoProgrammer::writeEeprom(QByteArray data) {
+void ArduinoProgrammer::writeEeprom(const QByteArray &data) {
     int i = 0;
 
     while (isReady() && i < ARDUINO_PROGRAMMER_EEPROM_PAGE_COUNT) {
@@ -134,7 +135,7 @@ void ArduinoProgrammer::writeEeprom(QByteArray data) {
         for (int j = 0; j < ARDUINO_PROGRAMMER_EEPROM_PAGE_SIZE; j++)
             pageData.append(data[(ARDUINO_PROGRAMMER_EEPROM_PAGE_SIZE * i) + j]);
 
-        writePage(static_cast<uint8_t>(i), pageData);
+        writePage(static_cast<quint8>(i), pageData);
 
         QThread::msleep(ARDUINO_PROGRAMMER_SERIAL_SLEEP);
 
@@ -142,10 +143,10 @@ void ArduinoProgrammer::writeEeprom(QByteArray data) {
     }
 
     if (i == ARDUINO_PROGRAMMER_EEPROM_PAGE_COUNT)
-            emit writeCompleted();
+        QMetaObject::invokeMethod(this, &ArduinoProgrammer::writeCompleted, Qt::QueuedConnection);
 }
 
-void ArduinoProgrammer::readPage(uint8_t num) {
+void ArduinoProgrammer::readPage(quint8 num) {
     QByteArray cmd;
     cmd.append(ARDUINO_PROGRAMMER_PROTOCOL_READ);
     cmd.append(num);
@@ -158,10 +159,16 @@ void ArduinoProgrammer::readPage(uint8_t num) {
 
     QByteArray pageData = serialPort->read(8);
     eepromData.replace(ARDUINO_PROGRAMMER_EEPROM_PAGE_SIZE * num, ARDUINO_PROGRAMMER_EEPROM_PAGE_SIZE, pageData);
-    emit pageRead(num);
+
+    qDebug()
+            << "Page" << num << "read"
+            << "-"
+            << QByteArray(pageData).toHex();
+
+    QMetaObject::invokeMethod(this, "pageRead", Qt::QueuedConnection, Q_ARG(quint8, num));
 }
 
-void ArduinoProgrammer::writePage(uint8_t num, QByteArray data) {
+void ArduinoProgrammer::writePage(quint8 num, const QByteArray &data) {
     QByteArray cmd;
 
     cmd.append(ARDUINO_PROGRAMMER_PROTOCOL_WRITE);
@@ -174,7 +181,14 @@ void ArduinoProgrammer::writePage(uint8_t num, QByteArray data) {
         serialPort->waitForReadyRead(ARDUINO_PROGRAMMER_SERIAL_WAIT);
 
     QByteArray response = serialPort->read(1);
-    qDebug() << "Write page" << num << " - " << QByteArray(cmd).toHex() << " - " << response;
+
+    qDebug()
+            << "Page" << num << "written"
+            << " - "
+            << QByteArray(cmd).toHex()
+            << " - "
+            << response;
+
     if (response.at(0) == ARDUINO_PROGRAMMER_PROTOCOL_OK)
-            emit pageWritten(num);
+        QMetaObject::invokeMethod(this, "pageWritten", Qt::QueuedConnection, Q_ARG(quint8, num));
 }

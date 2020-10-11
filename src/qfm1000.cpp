@@ -202,8 +202,10 @@ void QFM1000::readArduinoEeprom() {
         QMetaObject::invokeMethod(window, "finish", Qt::QueuedConnection);
     });
 
-    connect(programmer, &ArduinoProgrammer::pageRead, [=](uint8_t num) {
-        QMetaObject::invokeMethod(window, "progress", Qt::QueuedConnection, Q_ARG(int, 256), Q_ARG(int, num));
+    connect(programmer, &ArduinoProgrammer::pageRead, [=](quint8 num) {
+        QMetaObject::invokeMethod(window, "progress", Qt::QueuedConnection,
+                                  Q_ARG(int, 256),
+                                  Q_ARG(int, static_cast<int>(num)));
     });
 
     connect(programmer, &ArduinoProgrammer::readCompleted, [=]() {
@@ -212,7 +214,7 @@ void QFM1000::readArduinoEeprom() {
         QMetaObject::invokeMethod(programmer, "close", Qt::QueuedConnection);
     });
 
-    connect(programmer, &ArduinoProgrammer::eepromRead, [=](QByteArray data) {
+    connect(programmer, &ArduinoProgrammer::eepromRead, [=](const QByteArray &data) {
         eeprom->setData(data);
         status->setEepromLoaded(true);
         status->setCurrentFileName("");
@@ -258,8 +260,10 @@ void QFM1000::writeArduinoEeprom() {
         QMetaObject::invokeMethod(window, "finish", Qt::QueuedConnection);
     });
 
-    connect(programmer, &ArduinoProgrammer::pageWritten, [=](uint8_t num) {
-        QMetaObject::invokeMethod(window, "progress", Qt::QueuedConnection, Q_ARG(int, 256), Q_ARG(int, num));
+    connect(programmer, &ArduinoProgrammer::pageWritten, [=](quint8 num) {
+        QMetaObject::invokeMethod(window, "progress", Qt::QueuedConnection,
+                                  Q_ARG(int, 256),
+                                  Q_ARG(int, static_cast<int>(num)));
     });
 
     connect(programmer, &ArduinoProgrammer::writeCompleted, [=]() {
