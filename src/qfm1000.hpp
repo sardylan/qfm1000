@@ -66,9 +66,9 @@ private slots:
 
     void closeEepromFile();
 
-    void loadEepromFile(QString fileName);
+    void loadEepromFile(const QString& fileName);
 
-    void saveEepromFile(QString fileName);
+    void saveEepromFile(const QString& fileName);
 
     void readArduinoEeprom();
 

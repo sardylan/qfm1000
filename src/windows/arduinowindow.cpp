@@ -49,14 +49,14 @@ void ArduinoWindow::initUi() {
 void ArduinoWindow::start() {
     ui->buttonBox->button(QDialogButtonBox::Close)->setEnabled(false);
     ui->logText->clear();
-    ui->progressBar->setMaximum(256);
+    ui->progressBar->setMaximum(255);
     ui->progressBar->setValue(0);
 }
 
 void ArduinoWindow::finish() {
     ui->buttonBox->button(QDialogButtonBox::Close)->setEnabled(true);
-    ui->progressBar->setMaximum(10);
-    ui->progressBar->setValue(10);
+    ui->progressBar->setMaximum(255);
+    ui->progressBar->setValue(255);
 }
 
 void ArduinoWindow::log(const QString& text) {

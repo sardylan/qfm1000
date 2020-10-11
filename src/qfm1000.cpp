@@ -140,7 +140,7 @@ void QFM1000::closeEepromFile() {
     QMetaObject::invokeMethod(mainWindow, "eepromUpdated");
 }
 
-void QFM1000::loadEepromFile(QString fileName) {
+void QFM1000::loadEepromFile(const QString& fileName) {
     bool result = FileManager::loadFromFile(eeprom, fileName);
     if (!result) {
         QMessageBox messageBox;
@@ -157,7 +157,7 @@ void QFM1000::loadEepromFile(QString fileName) {
     QMetaObject::invokeMethod(mainWindow, "eepromUpdated");
 }
 
-void QFM1000::saveEepromFile(QString fileName) {
+void QFM1000::saveEepromFile(const QString& fileName) {
     bool result = FileManager::saveToFile(eeprom, fileName);
     if (!result) {
         QMessageBox messageBox;
@@ -202,7 +202,7 @@ void QFM1000::readArduinoEeprom() {
         QMetaObject::invokeMethod(window, "finish", Qt::QueuedConnection);
     });
 
-    connect(programmer, &ArduinoProgrammer::pageRead, window, &ArduinoWindow::progress);
+    connect(programmer, &ArduinoProgrammer::pageRead, window, &ArduinoWindow::progress, Qt::QueuedConnection);
 
     connect(programmer, &ArduinoProgrammer::readCompleted, [=]() {
         QMetaObject::invokeMethod(window, "log", Qt::QueuedConnection, Q_ARG(QString, "Read completed"));
@@ -256,7 +256,7 @@ void QFM1000::writeArduinoEeprom() {
         QMetaObject::invokeMethod(window, "finish", Qt::QueuedConnection);
     });
 
-    connect(programmer, &ArduinoProgrammer::pageWritten, window, &ArduinoWindow::progress);
+    connect(programmer, &ArduinoProgrammer::pageWritten, window, &ArduinoWindow::progress, Qt::QueuedConnection);
 
     connect(programmer, &ArduinoProgrammer::writeCompleted, [=]() {
         QMetaObject::invokeMethod(window, "log", Qt::QueuedConnection, Q_ARG(QString, "Write completed"));
