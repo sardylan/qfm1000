@@ -202,11 +202,7 @@ void QFM1000::readArduinoEeprom() {
         QMetaObject::invokeMethod(window, "finish", Qt::QueuedConnection);
     });
 
-    connect(programmer, &ArduinoProgrammer::pageRead, [=](quint8 num) {
-        QMetaObject::invokeMethod(window, "progress", Qt::QueuedConnection,
-                                  Q_ARG(int, 256),
-                                  Q_ARG(int, static_cast<int>(num)));
-    });
+    connect(programmer, &ArduinoProgrammer::pageRead, window, &ArduinoWindow::progress);
 
     connect(programmer, &ArduinoProgrammer::readCompleted, [=]() {
         QMetaObject::invokeMethod(window, "log", Qt::QueuedConnection, Q_ARG(QString, "Read completed"));
@@ -260,11 +256,7 @@ void QFM1000::writeArduinoEeprom() {
         QMetaObject::invokeMethod(window, "finish", Qt::QueuedConnection);
     });
 
-    connect(programmer, &ArduinoProgrammer::pageWritten, [=](quint8 num) {
-        QMetaObject::invokeMethod(window, "progress", Qt::QueuedConnection,
-                                  Q_ARG(int, 256),
-                                  Q_ARG(int, static_cast<int>(num)));
-    });
+    connect(programmer, &ArduinoProgrammer::pageWritten, window, &ArduinoWindow::progress);
 
     connect(programmer, &ArduinoProgrammer::writeCompleted, [=]() {
         QMetaObject::invokeMethod(window, "log", Qt::QueuedConnection, Q_ARG(QString, "Write completed"));

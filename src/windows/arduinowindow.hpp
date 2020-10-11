@@ -38,13 +38,13 @@ public:
 
 public slots:
 
-    Q_INVOKABLE void start();
+    void start();
 
-    Q_INVOKABLE void finish();
+    void finish();
 
-    Q_INVOKABLE void log(QString text);
+    void log(const QString &text);
 
-    Q_INVOKABLE void progress(int maximum, int value);
+    void progress(quint8 value);
 
 private:
     Ui::ArduinoWindow *ui;
@@ -52,11 +52,6 @@ private:
     void signalConnect();
 
     void initUi();
-
-
-private slots:
-
-    void handleClose();
 
 };
 

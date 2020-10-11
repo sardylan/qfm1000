@@ -36,21 +36,20 @@ ArduinoWindow::~ArduinoWindow() {
 }
 
 void ArduinoWindow::signalConnect() {
-    connect(ui->buttonBox->button(QDialogButtonBox::Close), SIGNAL(clicked(bool)), this, SLOT(handleClose()));
+    connect(ui->buttonBox->button(QDialogButtonBox::Close),
+            &QAbstractButton::clicked,
+            this,
+            &ArduinoWindow::close);
 }
 
 void ArduinoWindow::initUi() {
 
 }
 
-void ArduinoWindow::handleClose() {
-    close();
-}
-
 void ArduinoWindow::start() {
     ui->buttonBox->button(QDialogButtonBox::Close)->setEnabled(false);
     ui->logText->clear();
-    ui->progressBar->setMaximum(10);
+    ui->progressBar->setMaximum(256);
     ui->progressBar->setValue(0);
 }
 
@@ -60,14 +59,13 @@ void ArduinoWindow::finish() {
     ui->progressBar->setValue(10);
 }
 
-void ArduinoWindow::log(QString text) {
+void ArduinoWindow::log(const QString& text) {
     QString dateTime = QDateTime::currentDateTime().toString("yyyy-MM-dd HH:mm:ss");
     QString line = QString("<strong>%1</strong> - %2\n").arg(dateTime).arg(text);
     ui->logText->append(line);
     ui->logText->moveCursor(QTextCursor::End);
 }
 
-void ArduinoWindow::progress(int maximum, int value) {
-    ui->progressBar->setMaximum(maximum);
+void ArduinoWindow::progress(quint8 value) {
     ui->progressBar->setValue(value);
 }
