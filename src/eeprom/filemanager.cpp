@@ -80,7 +80,12 @@ bool FileManager::isIntelHex(const QByteArray &rawFile) {
 
 QStringList FileManager::splitInLines(const QByteArray &rawData) {
     QString rawFileString = QString::fromLatin1(rawData);
+
+#if QT_VERSION >= QT_VERSION_CHECK(5, 15, 0)
     QStringList rows = rawFileString.replace('\r', '\n').split('\n', Qt::SkipEmptyParts);
+#else
+    QStringList rows = rawFileString.replace('\r', '\n').split('\n', QString::SkipEmptyParts);
+#endif
     return rows;
 }
 
