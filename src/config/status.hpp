@@ -25,50 +25,59 @@
 
 #include <eeprom.hpp>
 
-class Status {
+using namespace qfm1000::eeprom;
 
-private:
-    Status();
+namespace qfm1000::config {
 
-    static Status *instance;
+    class Status {
 
-    FrequencyBand frequencyBand;
-    QByteArray originalData;
-    QString currentFileName;
-    bool eepromLoaded;
-    bool serialEepromOpened;
-    bool serialRadioOpened;
+    public:
 
-public:
-    static Status *getInstance();
+        static Status *getInstance();
 
-    FrequencyBand getFrequencyBand() const;
+        FrequencyBand getFrequencyBand() const;
 
-    void setFrequencyBand(FrequencyBand frequencyBand);
+        void setFrequencyBand(FrequencyBand frequencyBand);
 
-    void setOriginalData(const QByteArray &originalData);
+        void setOriginalData(const QByteArray &originalData);
 
-    void clearOriginalData();
+        void clearOriginalData();
 
-    const QString &getCurrentFileName() const;
+        const QString &getCurrentFileName() const;
 
-    void setCurrentFileName(const QString &currentFileName);
+        void setCurrentFileName(const QString &currentFileName);
 
-    bool isFileOpened();
+        bool isFileOpened();
 
-    bool isDataDirty(const QByteArray &eepromData);
+        bool isDataDirty(const QByteArray &eepromData);
 
-    bool isEepromLoaded() const;
+        bool isEepromLoaded() const;
 
-    void setEepromLoaded(bool eepromLoaded);
+        void setEepromLoaded(bool eepromLoaded);
 
-    bool isSerialEepromOpened() const;
+        bool isSerialEepromOpened() const;
 
-    void setSerialEepromOpened(bool serialEepromOpened);
+        void setSerialEepromOpened(bool serialEepromOpened);
 
-    bool isSerialRadioOpened() const;
+        bool isSerialRadioOpened() const;
 
-    void setSerialRadioOpened(bool serialRadioOpened);
-};
+        void setSerialRadioOpened(bool serialRadioOpened);
+
+    private:
+
+        Status();
+
+        static Status *instance;
+
+        FrequencyBand frequencyBand;
+        QByteArray originalData;
+        QString currentFileName;
+        bool eepromLoaded;
+        bool serialEepromOpened;
+        bool serialRadioOpened;
+
+    };
+
+}
 
 #endif

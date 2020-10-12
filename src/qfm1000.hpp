@@ -32,6 +32,12 @@
 #include <programmer/arduino.hpp>
 #include <windows/arduinowindow.hpp>
 
+Q_DECLARE_METATYPE(QSerialPort::BaudRate)
+
+using namespace qfm1000::config;
+using namespace qfm1000::eeprom;
+using namespace qfm1000::programmer;
+using namespace qfm1000::windows;
 
 class QFM1000 : public QApplication {
 Q_OBJECT

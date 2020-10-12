@@ -22,6 +22,8 @@
 #include "ctcssdelegate.hpp"
 #include "helper.hpp"
 
+using namespace qfm1000::windows;
+
 CtcssDelegate::CtcssDelegate(QObject *parent) : QStyledItemDelegate(parent) {
 }
 

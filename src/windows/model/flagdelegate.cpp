@@ -21,6 +21,8 @@
 
 #include "flagdelegate.hpp"
 
+using namespace qfm1000::windows;
+
 FlagDelegate::FlagDelegate(QObject *parent) : QStyledItemDelegate(parent) {
 }
 

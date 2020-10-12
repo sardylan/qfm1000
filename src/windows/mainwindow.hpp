@@ -34,112 +34,118 @@
 #include "model/powerdelegate.hpp"
 #include "model/flagdelegate.hpp"
 
+using namespace qfm1000::config;
+
 namespace Ui {
     class MainWindow;
 }
 
-class MainWindow : public QMainWindow {
-Q_OBJECT
+namespace qfm1000::windows {
 
-public:
-    explicit MainWindow(QWidget *parent = nullptr);
+    class MainWindow : public QMainWindow {
+    Q_OBJECT
 
-    ~MainWindow() override;
+    public:
+        explicit MainWindow(QWidget *parent = nullptr);
 
-public slots:
+        ~MainWindow() override;
 
-    void configUpdated();
+    public slots:
 
-    void eepromUpdated();
+        void configUpdated();
 
-private:
+        void eepromUpdated();
 
-    Ui::MainWindow *ui;
+    private:
 
-    Status *status;
-    Config *config;
+        Ui::MainWindow *ui;
 
-    EEPROM *eeprom;
+        Status *status;
+        Config *config;
 
-    StatusBarWidgets *statusBarWidgets;
-    TableModel *tableModel;
+        EEPROM *eeprom;
 
-    ReadOnlyDelegate *offsetDelegate;
-    CtcssDelegate *rxCtcssDelegate;
-    CtcssDelegate *txCtcssDelegate;
-    SquelchDelegate *squelchDelegate;
-    PowerDelegate *powerDelegate;
-    FlagDelegate *selCalFlagDelegate;
-    FlagDelegate *cpuOffsetFlagDelegate;
+        StatusBarWidgets *statusBarWidgets;
+        TableModel *tableModel;
 
-    void signalConnect();
+        ReadOnlyDelegate *offsetDelegate;
+        CtcssDelegate *rxCtcssDelegate;
+        CtcssDelegate *txCtcssDelegate;
+        SquelchDelegate *squelchDelegate;
+        PowerDelegate *powerDelegate;
+        FlagDelegate *selCalFlagDelegate;
+        FlagDelegate *cpuOffsetFlagDelegate;
 
-    void initUi();
+        void signalConnect();
 
-    void initStatusBar();
+        void initUi();
 
-    void showStatusBarMessage(QString message);
+        void initStatusBar();
 
-    void valueReadDefaultChannel();
+        void showStatusBarMessage(QString message);
 
-    void valueReadLowPower();
+        void valueReadDefaultChannel();
 
-    void valueReadFrequencyBand();
+        void valueReadLowPower();
 
-    void updateWidgetEnableStatus();
+        void valueReadFrequencyBand();
 
-    void updateTotValueString();
+        void updateWidgetEnableStatus();
 
-private slots:
+        void updateTotValueString();
 
-    void applicationClose();
+    private slots:
 
-    void newFile();
+        void applicationClose();
 
-    void closeFile();
+        void newFile();
 
-    void openFile();
+        void closeFile();
 
-    void saveFile();
+        void openFile();
 
-    void saveFileAs();
+        void saveFile();
 
-    void showConfigWindow();
+        void saveFileAs();
 
-    void showAboutWindow();
+        void showConfigWindow();
 
-    void updateUiStatus();
+        void showAboutWindow();
 
-    void valueWriteTot();
+        void updateUiStatus();
 
-    void valueWriteDefaultChannel(int newValue);
+        void valueWriteTot();
 
-    void valueWriteLowPower(int newValue);
+        void valueWriteDefaultChannel(int newValue);
 
-    void valueWriteFrequencyBand(int newValue);
+        void valueWriteLowPower(int newValue);
 
-    void eepromRead();
+        void valueWriteFrequencyBand(int newValue);
 
-    void eepromWrite();
+        void eepromRead();
 
-signals:
+        void eepromWrite();
 
-    void actionConfig();
+    signals:
 
-    void actionAbout();
+        void actionConfig();
 
-    void actionNewFile();
+        void actionAbout();
 
-    void actionCloseFile();
+        void actionNewFile();
 
-    void actionLoadFile(QString filename);
+        void actionCloseFile();
 
-    void actionSaveFile(QString filename);
+        void actionLoadFile(QString filename);
 
-    void actionEepromRead();
+        void actionSaveFile(QString filename);
 
-    void actionEepromWrite();
+        void actionEepromRead();
 
-};
+        void actionEepromWrite();
+
+    };
+
+}
 
 #endif

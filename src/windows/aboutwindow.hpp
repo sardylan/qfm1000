@@ -26,26 +26,32 @@ namespace Ui {
     class AboutWindow;
 }
 
-class AboutWindow : public QDialog {
-Q_OBJECT
+namespace qfm1000::windows {
 
-public:
-    explicit AboutWindow(QWidget *parent = nullptr);
+    class AboutWindow : public QDialog {
+    Q_OBJECT
 
-    ~AboutWindow() override;
+    public:
 
-private:
-    Ui::AboutWindow *ui;
+        explicit AboutWindow(QWidget *parent = nullptr);
 
-    void signalConnect();
+        ~AboutWindow() override;
 
-    void initUi();
+    private:
+
+        Ui::AboutWindow *ui;
+
+        void signalConnect();
+
+        void initUi();
 
 
-private slots:
+    private slots:
 
-    void handleClose();
+        void handleClose();
 
-};
+    };
+
+}
 
 #endif

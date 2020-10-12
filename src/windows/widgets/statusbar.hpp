@@ -27,39 +27,46 @@
 #include <config.hpp>
 #include <status.hpp>
 
-class StatusBarWidgets : public QObject {
-Q_OBJECT
+using namespace qfm1000::eeprom;
+using namespace qfm1000::config;
 
-public:
-    explicit StatusBarWidgets(QObject *parent = nullptr);
+namespace qfm1000::windows {
 
-    ~StatusBarWidgets() override;
+    class StatusBarWidgets : public QObject {
+    Q_OBJECT
 
-    QLabel *time;
-    QLabel *arduinoSerial;
+    public:
+        explicit StatusBarWidgets(QObject *parent = nullptr);
 
-public slots:
+        ~StatusBarWidgets() override;
 
-    void updateFromConfig();
+        QLabel *time;
+        QLabel *arduinoSerial;
 
-private:
-    Status *status;
-    Config *config;
-    QTimer *timeTimer;
+    public slots:
 
-    void initLabelStyle(QLabel *label);
+        void updateFromConfig();
 
-    void initTime();
+    private:
+        Status *status;
+        Config *config;
+        QTimer *timeTimer;
 
-    void initTimeTimer();
+        void initLabelStyle(QLabel *label);
 
-    static QString serialPortParams(QSerialPort::DataBits dataBits,
-                                    QSerialPort::Parity parity,
-                                    QSerialPort::StopBits stopBits);
+        void initTime();
 
-private slots:
+        void initTimeTimer();
 
-    void updateTime();
-};
+        static QString serialPortParams(QSerialPort::DataBits dataBits,
+                                        QSerialPort::Parity parity,
+                                        QSerialPort::StopBits stopBits);
+
+    private slots:
+
+        void updateTime();
+    };
+
+}
 
 #endif

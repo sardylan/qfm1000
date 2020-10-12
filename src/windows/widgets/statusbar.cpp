@@ -21,6 +21,8 @@
 
 #include "statusbar.hpp"
 
+using namespace qfm1000::windows;
+
 StatusBarWidgets::StatusBarWidgets(QObject *parent) : QObject(parent) {
     status = Status::getInstance();
     config = Config::getInstance();

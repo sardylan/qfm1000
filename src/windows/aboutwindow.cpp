@@ -22,6 +22,8 @@
 
 #include <QtWidgets>
 
+using namespace qfm1000::windows;
+
 AboutWindow::AboutWindow(QWidget *parent) : QDialog(parent), ui(new Ui::AboutWindow) {
     ui->setupUi(this);
 

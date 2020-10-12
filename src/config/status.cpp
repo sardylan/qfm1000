@@ -20,6 +20,8 @@
 #include <QtCore/QString>
 #include "status.hpp"
 
+using namespace qfm1000::config;
+
 Status *Status::instance = nullptr;
 
 Status *Status::getInstance() {

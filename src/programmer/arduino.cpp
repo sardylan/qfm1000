@@ -25,6 +25,8 @@
 #define ARDUINO_PROGRAMMER_SERIAL_WAIT 30000
 #define ARDUINO_PROGRAMMER_SERIAL_SLEEP 25
 
+using namespace qfm1000::programmer;
+
 ArduinoProgrammer::ArduinoProgrammer(QObject *parent) {
     serialPort = new QSerialPort(this);
 

@@ -23,6 +23,8 @@
 #include "tablemodel.hpp"
 #include "helper.hpp"
 
+using namespace qfm1000::windows;
+
 TableModel::TableModel(QObject *parent) : QAbstractTableModel(parent) {
     eeprom = EEPROM::getInstance();
     status = Status::getInstance();

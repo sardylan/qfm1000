@@ -23,25 +23,31 @@
 #include <QStyledItemDelegate>
 #include <QComboBox>
 
-class CtcssDelegate : public QStyledItemDelegate {
-Q_OBJECT
+namespace qfm1000::windows {
 
-public:
-    explicit CtcssDelegate(QObject *parent = nullptr);
+    class CtcssDelegate : public QStyledItemDelegate {
+    Q_OBJECT
 
-    QWidget *createEditor(QWidget *parent, const QStyleOptionViewItem &option, const QModelIndex &index) const override;
+    public:
+        explicit CtcssDelegate(QObject *parent = nullptr);
 
-    void setEditorData(QWidget *editor, const QModelIndex &index) const override;
+        QWidget *
+        createEditor(QWidget *parent, const QStyleOptionViewItem &option, const QModelIndex &index) const override;
 
-    void setModelData(QWidget *editor, QAbstractItemModel *model, const QModelIndex &index) const override;
+        void setEditorData(QWidget *editor, const QModelIndex &index) const override;
 
-    void
-    updateEditorGeometry(QWidget *editor, const QStyleOptionViewItem &option, const QModelIndex &index) const override;
+        void setModelData(QWidget *editor, QAbstractItemModel *model, const QModelIndex &index) const override;
 
-private:
+        void
+        updateEditorGeometry(QWidget *editor, const QStyleOptionViewItem &option,
+                             const QModelIndex &index) const override;
 
-    static QComboBox *createCtcssComboBox(QWidget *parent);
+    private:
 
-};
+        static QComboBox *createCtcssComboBox(QWidget *parent);
+
+    };
+
+}
 
 #endif

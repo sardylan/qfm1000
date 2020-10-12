@@ -23,6 +23,8 @@
 #include <QStyledItemDelegate>
 #include <QComboBox>
 
+namespace qfm1000::windows {
+
 class PowerDelegate : public QStyledItemDelegate {
 Q_OBJECT
 
@@ -43,5 +45,7 @@ private:
     static QComboBox *createPowerComboBox(QWidget *parent);
 
 };
+
+}
 
 #endif

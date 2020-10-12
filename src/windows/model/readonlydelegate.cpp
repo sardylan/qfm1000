@@ -21,6 +21,8 @@
 
 #include "readonlydelegate.hpp"
 
+using namespace qfm1000::windows;
+
 ReadOnlyDelegate::ReadOnlyDelegate(QObject *parent) : QStyledItemDelegate(parent) {
 }
 

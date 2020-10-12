@@ -24,7 +24,7 @@
 #include "config.hpp"
 #include "default.hpp"
 
-Q_DECLARE_METATYPE(QSerialPort::BaudRate);
+using namespace qfm1000::config;
 
 void ConfigManager::load() {
     Config *config = Config::getInstance();

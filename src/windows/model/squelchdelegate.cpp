@@ -22,6 +22,8 @@
 #include "squelchdelegate.hpp"
 #include "helper.hpp"
 
+using namespace qfm1000::windows;
+
 SquelchDelegate::SquelchDelegate(QObject *parent) : QStyledItemDelegate(parent) {
 }
 

@@ -23,21 +23,27 @@
 #include <QStyledItemDelegate>
 #include <QCheckBox>
 
-class FlagDelegate : public QStyledItemDelegate {
-Q_OBJECT
+namespace qfm1000::windows {
 
-public:
-    explicit FlagDelegate(QObject *parent = nullptr);
+    class FlagDelegate : public QStyledItemDelegate {
+    Q_OBJECT
 
-    QWidget *createEditor(QWidget *parent, const QStyleOptionViewItem &option, const QModelIndex &index) const override;
+    public:
+        explicit FlagDelegate(QObject *parent = nullptr);
 
-    void setEditorData(QWidget *editor, const QModelIndex &index) const override;
+        QWidget *
+        createEditor(QWidget *parent, const QStyleOptionViewItem &option, const QModelIndex &index) const override;
 
-    void setModelData(QWidget *editor, QAbstractItemModel *model, const QModelIndex &index) const override;
+        void setEditorData(QWidget *editor, const QModelIndex &index) const override;
 
-    void
-    updateEditorGeometry(QWidget *editor, const QStyleOptionViewItem &option, const QModelIndex &index) const override;
+        void setModelData(QWidget *editor, QAbstractItemModel *model, const QModelIndex &index) const override;
 
-};
+        void
+        updateEditorGeometry(QWidget *editor, const QStyleOptionViewItem &option,
+                             const QModelIndex &index) const override;
+
+    };
+
+}
 
 #endif

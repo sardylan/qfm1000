@@ -21,6 +21,15 @@
 
 using namespace qfm1000::eeprom;
 
+EEPROM *EEPROM::instance = nullptr;
+
+EEPROM *EEPROM::getInstance() {
+    if (EEPROM::instance == nullptr)
+        EEPROM::instance = new EEPROM();
+
+    return instance;
+}
+
 EEPROM::EEPROM() {
     clear();
 }

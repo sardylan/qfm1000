@@ -23,25 +23,31 @@
 #include <QStyledItemDelegate>
 #include <QComboBox>
 
-class SquelchDelegate : public QStyledItemDelegate {
-Q_OBJECT
+namespace qfm1000::windows {
 
-public:
-    explicit SquelchDelegate(QObject *parent = nullptr);
+    class SquelchDelegate : public QStyledItemDelegate {
+    Q_OBJECT
 
-    QWidget *createEditor(QWidget *parent, const QStyleOptionViewItem &option, const QModelIndex &index) const override;
+    public:
+        explicit SquelchDelegate(QObject *parent = nullptr);
 
-    void setEditorData(QWidget *editor, const QModelIndex &index) const override;
+        QWidget *
+        createEditor(QWidget *parent, const QStyleOptionViewItem &option, const QModelIndex &index) const override;
 
-    void setModelData(QWidget *editor, QAbstractItemModel *model, const QModelIndex &index) const override;
+        void setEditorData(QWidget *editor, const QModelIndex &index) const override;
 
-    void
-    updateEditorGeometry(QWidget *editor, const QStyleOptionViewItem &option, const QModelIndex &index) const override;
+        void setModelData(QWidget *editor, QAbstractItemModel *model, const QModelIndex &index) const override;
 
-private:
+        void
+        updateEditorGeometry(QWidget *editor, const QStyleOptionViewItem &option,
+                             const QModelIndex &index) const override;
 
-    static QComboBox *createSquelchComboBox(QWidget *parent);
+    private:
 
-};
+        static QComboBox *createSquelchComboBox(QWidget *parent);
+
+    };
+
+}
 
 #endif

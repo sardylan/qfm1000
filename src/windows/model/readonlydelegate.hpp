@@ -23,18 +23,23 @@
 #include <QStyledItemDelegate>
 #include <QComboBox>
 
-class ReadOnlyDelegate : public QStyledItemDelegate {
-Q_OBJECT
+namespace qfm1000::windows {
 
-public:
-    explicit ReadOnlyDelegate(QObject *parent = nullptr);
+    class ReadOnlyDelegate : public QStyledItemDelegate {
+    Q_OBJECT
 
-    QWidget *createEditor(QWidget *parent, const QStyleOptionViewItem &option, const QModelIndex &index) const override;
+    public:
+        explicit ReadOnlyDelegate(QObject *parent = nullptr);
 
-protected:
-    bool editorEvent(QEvent *event, QAbstractItemModel *model, const QStyleOptionViewItem &option,
-                     const QModelIndex &index) override;
+        QWidget *
+        createEditor(QWidget *parent, const QStyleOptionViewItem &option, const QModelIndex &index) const override;
 
-};
+    protected:
+        bool editorEvent(QEvent *event, QAbstractItemModel *model, const QStyleOptionViewItem &option,
+                         const QModelIndex &index) override;
+
+    };
+
+}
 
 #endif

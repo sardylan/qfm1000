@@ -22,6 +22,8 @@
 
 #include <QtWidgets>
 
+using namespace qfm1000::windows;
+
 ArduinoWindow::ArduinoWindow(QWidget *parent) : QDialog(parent), ui(new Ui::ArduinoWindow) {
     ui->setupUi(this);
 

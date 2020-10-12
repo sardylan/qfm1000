@@ -24,7 +24,7 @@
 #include <QtWidgets>
 #include <QSerialPortInfo>
 
-Q_DECLARE_METATYPE(QSerialPort::BaudRate);
+using namespace qfm1000::windows;
 
 ConfigWindow::ConfigWindow(QWidget *parent) : QDialog(parent), ui(new Ui::ConfigWindow) {
     ui->setupUi(this);

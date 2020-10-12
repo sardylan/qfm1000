@@ -20,6 +20,8 @@
 #include "config.hpp"
 #include "default.hpp"
 
+using namespace qfm1000::config;
+
 Config *Config::instance = nullptr;
 
 Config *Config::getInstance() {

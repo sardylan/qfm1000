@@ -20,13 +20,17 @@
 #ifndef __QFM1000_CONFIG_MANAGER_H
 #define __QFM1000_CONFIG_MANAGER_H
 
-class ConfigManager {
+namespace qfm1000::config {
 
-public:
-    static void load();
+    class ConfigManager {
 
-    static void save();
+    public:
+        static void load();
 
-};
+        static void save();
+
+    };
+
+}
 
 #endif

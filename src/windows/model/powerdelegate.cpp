@@ -22,6 +22,8 @@
 #include "powerdelegate.hpp"
 #include "helper.hpp"
 
+using namespace qfm1000::windows;
+
 PowerDelegate::PowerDelegate(QObject *parent) : QStyledItemDelegate(parent) {
 }
 

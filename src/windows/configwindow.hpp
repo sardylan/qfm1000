@@ -25,42 +25,51 @@
 #include <config.hpp>
 #include <status.hpp>
 
+using namespace qfm1000::config;
+
 namespace Ui {
     class ConfigWindow;
 }
 
-class ConfigWindow : public QDialog {
-Q_OBJECT
+namespace qfm1000::windows {
 
-public:
-    explicit ConfigWindow(QWidget *parent = nullptr);
+    class ConfigWindow : public QDialog {
+    Q_OBJECT
 
-    ~ConfigWindow() override;
+    public:
 
-private:
-    Ui::ConfigWindow *ui;
-    Status *status;
-    Config *config;
+        explicit ConfigWindow(QWidget *parent = nullptr);
 
-    void signalConnect();
+        ~ConfigWindow() override;
 
-    void initUi();
+    private:
 
-    void initEnableStatus();
+        Ui::ConfigWindow *ui;
 
-    void load();
+        Status *status;
+        Config *config;
 
-    void save();
+        void signalConnect();
 
-private slots:
+        void initUi();
 
-    void handleOK();
+        void initEnableStatus();
 
-    void handleApply();
+        void load();
 
-    void handleClose();
+        void save();
 
-    void handleReset();
-};
+    private slots:
+
+        void handleOK();
+
+        void handleApply();
+
+        void handleClose();
+
+        void handleReset();
+    };
+
+}
 
 #endif

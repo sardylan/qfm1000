@@ -61,6 +61,8 @@ namespace qfm1000::eeprom {
 
     public:
 
+        static EEPROM *getInstance();
+
         EEPROM();
 
         ~EEPROM();
@@ -116,6 +118,8 @@ namespace qfm1000::eeprom {
         void setLowPower(int lowPower);
 
     private:
+
+        static EEPROM *instance;
 
         QByteArray data;
 

@@ -27,6 +27,8 @@
 #include "mainwindow.hpp"
 #include "ui_mainwindow.h"
 
+using namespace qfm1000::windows;
+
 MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWindow) {
     ui->setupUi(this);
 

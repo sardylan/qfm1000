@@ -26,31 +26,35 @@ namespace Ui {
     class ArduinoWindow;
 }
 
-class ArduinoWindow : public QDialog {
-Q_OBJECT
+namespace qfm1000::windows {
 
-public:
-    explicit ArduinoWindow(QWidget *parent = nullptr);
+    class ArduinoWindow : public QDialog {
+    Q_OBJECT
 
-    ~ArduinoWindow() override;
+    public:
+        explicit ArduinoWindow(QWidget *parent = nullptr);
 
-public slots:
+        ~ArduinoWindow() override;
 
-    void start();
+    public slots:
 
-    void finish();
+        void start();
 
-    void log(const QString &text);
+        void finish();
 
-    void progress(quint8 value);
+        void log(const QString &text);
 
-private:
-    Ui::ArduinoWindow *ui;
+        void progress(quint8 value);
 
-    void signalConnect();
+    private:
+        Ui::ArduinoWindow *ui;
 
-    void initUi();
+        void signalConnect();
 
-};
+        void initUi();
+
+    };
+
+}
 
 #endif

@@ -23,36 +23,43 @@
 #include <QtCore/QString>
 #include <QtSerialPort/QSerialPort>
 
-class Config {
+namespace qfm1000::config {
 
-private:
-    Config();
+    class Config {
 
-    static Config *instance;
+    public:
 
-    QString arduinoPortName;
-    QSerialPort::BaudRate arduinoPortSpeed;
-    QString radioPortName;
-    QSerialPort::BaudRate radioPortSpeed;
+        static Config *getInstance();
 
-public:
-    static Config *getInstance();
+        const QString &getArduinoPortName() const;
 
-    const QString &getArduinoPortName() const;
+        void setArduinoPortName(const QString &arduinoPortName);
 
-    void setArduinoPortName(const QString &arduinoPortName);
+        QSerialPort::BaudRate getArduinoPortSpeed() const;
 
-    QSerialPort::BaudRate getArduinoPortSpeed() const;
+        void setArduinoPortSpeed(QSerialPort::BaudRate arduinoPortSpeed);
 
-    void setArduinoPortSpeed(QSerialPort::BaudRate arduinoPortSpeed);
+        const QString &getRadioPortName() const;
 
-    const QString &getRadioPortName() const;
+        void setRadioPortName(const QString &radioPortName);
 
-    void setRadioPortName(const QString &radioPortName);
+        QSerialPort::BaudRate getRadioPortSpeed() const;
 
-    QSerialPort::BaudRate getRadioPortSpeed() const;
+        void setRadioPortSpeed(QSerialPort::BaudRate radioPortSpeed);
 
-    void setRadioPortSpeed(QSerialPort::BaudRate radioPortSpeed);
-};
+    private:
+
+        Config();
+
+        static Config *instance;
+
+        QString arduinoPortName;
+        QSerialPort::BaudRate arduinoPortSpeed;
+        QString radioPortName;
+        QSerialPort::BaudRate radioPortSpeed;
+
+    };
+
+}
 
 #endif

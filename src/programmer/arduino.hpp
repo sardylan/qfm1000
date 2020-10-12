@@ -35,60 +35,67 @@
 #define ARDUINO_PROGRAMMER_PROTOCOL_READ 'R'
 #define ARDUINO_PROGRAMMER_PROTOCOL_WRITE 'W'
 
-class ArduinoProgrammer : public QObject {
-Q_OBJECT
+namespace qfm1000::programmer {
 
-public:
-    explicit ArduinoProgrammer(QObject *parent = nullptr);
+    class ArduinoProgrammer : public QObject {
+    Q_OBJECT
 
-    ~ArduinoProgrammer() override;
+    public:
 
-    bool isReady() const;
+        explicit ArduinoProgrammer(QObject *parent = nullptr);
 
-public slots:
+        ~ArduinoProgrammer() override;
 
-    void init(const QString& portName, QSerialPort::BaudRate portSpeed);
+        bool isReady() const;
 
-    void close();
+    public slots:
 
-    void read();
+        void init(const QString &portName, QSerialPort::BaudRate portSpeed);
 
-    void write(const QByteArray &data);
+        void close();
 
-private:
-    QSerialPort *serialPort;
-    bool ready;
-    QByteArray eepromData;
+        void read();
 
-    void readPage(quint8 num);
+        void write(const QByteArray &data);
 
-    void writePage(quint8 num, const QByteArray &data);
+    private:
 
-private slots:
+        QSerialPort *serialPort;
+        bool ready;
+        QByteArray eepromData;
 
-    void readEeprom();
+        void readPage(quint8 num);
 
-    void writeEeprom(const QByteArray &data);
+        void writePage(quint8 num, const QByteArray &data);
 
-    void errorOccurred(QSerialPort::SerialPortError serialPortError);
+    private slots:
 
-signals:
+        void readEeprom();
 
-    void connected();
+        void writeEeprom(const QByteArray &data);
 
-    void disconnected();
+        void errorOccurred(QSerialPort::SerialPortError serialPortError);
 
-    void error();
+    signals:
 
-    void pageRead(quint8 num);
+        void connected();
 
-    void pageWritten(quint8 num);
+        void disconnected();
 
-    void readCompleted();
+        void error();
 
-    void writeCompleted();
+        void pageRead(quint8 num);
 
-    void eepromRead(QByteArray data);
-};
+        void pageWritten(quint8 num);
+
+        void readCompleted();
+
+        void writeCompleted();
+
+        void eepromRead(QByteArray data);
+
+    };
+
+}
 
 #endif
