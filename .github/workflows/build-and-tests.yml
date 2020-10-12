@@ -23,6 +23,7 @@ jobs:
         run: sudo apt install qt5-default libqt5svg5-dev libqt5serialport5-dev
       - name: Downloading SonarQube Build Wrapper
         shell: bash
+        working-directory: ${{runner.workspace}}
         run: wget "https://sonarcloud.io/static/cpp/build-wrapper-linux-x86.zip" && unzip build-wrapper-linux-x86.zip && chmod 0755 build-wrapper-linux-x86/build-wrapper-linux-x86-64
       - name: Create Build Environment
         run: cmake -E make_directory ${{runner.workspace}}/build
@@ -33,7 +34,7 @@ jobs:
       - name: Build
         working-directory: ${{runner.workspace}}/build
         shell: bash
-        run: ../build-wrapper-linux-x86/build-wrapper-linux-x86-64 cmake --build . --config $BUILD_TYPE
+        run: ${{runner.workspace}}/build-wrapper-linux-x86/build-wrapper-linux-x86-64 cmake --build . --config $BUILD_TYPE
       - name: Test
         working-directory: ${{runner.workspace}}/build
         shell: bash
