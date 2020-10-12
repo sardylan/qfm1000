@@ -13,7 +13,6 @@ jobs:
     env:
       SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
       GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      PATH: ${{runner.workspace}}/build-wrapper-linux-x86:$PATH
     steps:
       - name: Checkout
         uses: actions/checkout@v2
@@ -34,7 +33,7 @@ jobs:
       - name: Build
         working-directory: ${{runner.workspace}}/build
         shell: bash
-        run: build-wrapper-linux-x86-64 cmake --build . --config $BUILD_TYPE
+        run: ../build-wrapper-linux-x86/build-wrapper-linux-x86-64 cmake --build . --config $BUILD_TYPE
       - name: Test
         working-directory: ${{runner.workspace}}/build
         shell: bash
