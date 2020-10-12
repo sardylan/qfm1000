@@ -24,7 +24,7 @@ jobs:
       - name: Downloading SonarQube Build Wrapper
         shell: bash
         working-directory: ${{runner.workspace}}
-        run: wget "https://sonarcloud.io/static/cpp/build-wrapper-linux-x86.zip" && unzip build-wrapper-linux-x86.zip && chmod 0755 build-wrapper-linux-x86/build-wrapper-linux-x86-64
+        run: wget "https://sonarcloud.io/static/cpp/build-wrapper-linux-x86.zip" && unzip build-wrapper-linux-x86.zip && chmod 0755 build-wrapper-linux-x86/build-wrapper-linux-x86-64 && ln -sv ${{runner.workspace}} ${{runner.workspace}}/qfm1000
       - name: Create Build Environment
         run: cmake -E make_directory ${{runner.workspace}}/build
       - name: Configure CMake
@@ -41,8 +41,6 @@ jobs:
         run: ctest -C $BUILD_TYPE
       - name: SonarCloud Scan
         uses: SonarSource/sonarcloud-github-action@master
-        with:
-          projectBaseDir: ${{runner.workspace}}
       - name: Send reports to CodeCov
         shell: bash
         run: bash <(curl -s https://codecov.io/bash)
