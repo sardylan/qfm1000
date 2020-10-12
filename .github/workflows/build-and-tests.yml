@@ -34,7 +34,7 @@ jobs:
       - name: Build
         working-directory: ${{runner.workspace}}/build
         shell: bash
-        run: ${{runner.workspace}}/build-wrapper-linux-x86/build-wrapper-linux-x86-64 --out-dir ${{runner.workspace}}/build cmake --build . --config $BUILD_TYPE
+        run: ${{runner.workspace}}/build-wrapper-linux-x86/build-wrapper-linux-x86-64 --out-dir ${{runner.workspace}}/qfm1000 cmake --build . --config $BUILD_TYPE
       - name: Test
         working-directory: ${{runner.workspace}}/build
         shell: bash
