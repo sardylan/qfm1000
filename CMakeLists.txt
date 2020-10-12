@@ -18,14 +18,10 @@ set(QT5_PREFIX "$ENV{QTDIR}" CACHE PATH "Qt5 prefix path")
 
 find_program(QT5_QMAKE_BIN
         qmake
-        PATHS "${QT5_PREFIX}/bin"
-        NO_CMAKE_PATH
-        NO_CMAKE_ENVIRONMENT_PATH
-        NO_SYSTEM_ENVIRONMENT_PATH
-        NO_CMAKE_SYSTEM_PATH)
+        PATHS "${QT5_PREFIX}/bin")
 
 if (NOT QT5_QMAKE_BIN)
-    message(FATAL_ERROR "Wrong Qt5 directory: ${QT5_PREFIX}")
+    message(FATAL_ERROR "Qt5 QMake not found")
 endif ()
 
 set(CMAKE_PREFIX_PATH "${QT5_PREFIX}/lib/cmake")
@@ -34,23 +30,15 @@ if (WIN32 OR APPLE)
     if (WIN32)
         find_program(QT5_DEPLOYQT_BIN
                 windeployqt
-                PATHS "${QT5_PREFIX}/bin"
-                NO_CMAKE_PATH
-                NO_CMAKE_ENVIRONMENT_PATH
-                NO_SYSTEM_ENVIRONMENT_PATH
-                NO_CMAKE_SYSTEM_PATH)
+                PATHS "${QT5_PREFIX}/bin")
     elseif (APPLE)
         find_program(QT5_DEPLOYQT_BIN
                 macdeployqt
-                PATHS "${QT5_PREFIX}/bin"
-                NO_CMAKE_PATH
-                NO_CMAKE_ENVIRONMENT_PATH
-                NO_SYSTEM_ENVIRONMENT_PATH
-                NO_CMAKE_SYSTEM_PATH)
+                PATHS "${QT5_PREFIX}/bin")
     endif ()
 
     if (NOT QT5_DEPLOYQT_BIN)
-        message(FATAL_ERROR "No Qt Deploy command found in : ${QT5_PREFIX}/bin")
+        message(FATAL_ERROR "No Qt Deploy command found")
     endif ()
 endif ()
 
