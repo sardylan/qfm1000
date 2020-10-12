@@ -13,6 +13,7 @@ jobs:
     env:
       SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
       GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      PATH: ${{runner.workspace}}/build-wrapper-linux-x86:$PATH
     steps:
       - name: Checkout
         uses: actions/checkout@v2
@@ -21,6 +22,9 @@ jobs:
       - name: Install Qt
         shell: bash
         run: sudo apt install qt5-default libqt5svg5-dev libqt5serialport5-dev
+      - name: Downloading SonarQube Build Wrapper
+        shell: bash
+        run: wget "https://sonarcloud.io/static/cpp/build-wrapper-linux-x86.zip" && unzip build-wrapper-linux-x86.zip
       - name: Create Build Environment
         run: cmake -E make_directory ${{runner.workspace}}/build
       - name: Configure CMake
@@ -30,7 +34,7 @@ jobs:
       - name: Build
         working-directory: ${{runner.workspace}}/build
         shell: bash
-        run: cmake --build . --config $BUILD_TYPE
+        run: build-wrapper-linux-x86-64 cmake --build . --config $BUILD_TYPE
       - name: Test
         working-directory: ${{runner.workspace}}/build
         shell: bash
