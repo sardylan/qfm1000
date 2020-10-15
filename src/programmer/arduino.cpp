@@ -17,7 +17,7 @@
  *
  */
 
-#include <QDebug>
+#include <QtCore/QDebug>
 #include <QtCore/QThread>
 
 #include "arduino.hpp"
@@ -143,7 +143,7 @@ void ArduinoProgrammer::writeEeprom(const QByteArray &data) {
     }
 
     if (i == ARDUINO_PROGRAMMER_EEPROM_PAGE_COUNT)
-        QMetaObject::invokeMethod(this, &ArduinoProgrammer::writeCompleted, Qt::QueuedConnection);
+        QMetaObject::invokeMethod(this, &ArduinoProgrammer::writeCompleted, Qt::DirectConnection);
 }
 
 void ArduinoProgrammer::readPage(quint8 num) {

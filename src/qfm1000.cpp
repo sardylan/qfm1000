@@ -200,7 +200,10 @@ void QFM1000::readArduinoEeprom() {
         QMetaObject::invokeMethod(window, "finish", Qt::QueuedConnection);
     });
 
-    connect(programmer, &ArduinoProgrammer::pageRead, window, &ArduinoWindow::progress, Qt::QueuedConnection);
+    connect(programmer, &ArduinoProgrammer::pageRead, [=](quint8 num) {
+        qDebug() << num;
+        QMetaObject::invokeMethod(window, "progress", Qt::QueuedConnection, Q_ARG(quint8, num));
+    });
 
     connect(programmer, &ArduinoProgrammer::readCompleted, [=]() {
         QMetaObject::invokeMethod(window, "log", Qt::QueuedConnection, Q_ARG(QString, "Read completed"));
@@ -208,7 +211,7 @@ void QFM1000::readArduinoEeprom() {
         QMetaObject::invokeMethod(programmer, "close", Qt::QueuedConnection);
     });
 
-    connect(programmer, &ArduinoProgrammer::eepromRead, [=](const QByteArray &data) {
+    connect(programmer, &ArduinoProgrammer::eepromRead, [this](const QByteArray &data) {
         eeprom->setData(data);
         status->setEepromLoaded(true);
         status->setCurrentFileName("");
@@ -243,20 +246,20 @@ void QFM1000::writeArduinoEeprom() {
         thread->deleteLater();
     });
 
-    connect(programmer, &ArduinoProgrammer::connected, [=]() {
+    connect(programmer, &ArduinoProgrammer::connected, [&window, &programmer, this]() {
         QMetaObject::invokeMethod(window, "log", Qt::QueuedConnection, Q_ARG(QString, "Connected"));
         QMetaObject::invokeMethod(window, "log", Qt::QueuedConnection, Q_ARG(QString, "Writing EEPROM..."));
         QMetaObject::invokeMethod(programmer, "write", Qt::QueuedConnection, Q_ARG(QByteArray, eeprom->getData()));
     });
 
-    connect(programmer, &ArduinoProgrammer::disconnected, [=]() {
+    connect(programmer, &ArduinoProgrammer::disconnected, [&window]() {
         QMetaObject::invokeMethod(window, "log", Qt::QueuedConnection, Q_ARG(QString, "Disconnected"));
         QMetaObject::invokeMethod(window, "finish", Qt::QueuedConnection);
     });
 
     connect(programmer, &ArduinoProgrammer::pageWritten, window, &ArduinoWindow::progress, Qt::QueuedConnection);
 
-    connect(programmer, &ArduinoProgrammer::writeCompleted, [=]() {
+    connect(programmer, &ArduinoProgrammer::writeCompleted, [&window, &programmer]() {
         QMetaObject::invokeMethod(window, "log", Qt::QueuedConnection, Q_ARG(QString, "Write completed"));
         QMetaObject::invokeMethod(window, "finish", Qt::QueuedConnection);
         QMetaObject::invokeMethod(programmer, "close", Qt::QueuedConnection);

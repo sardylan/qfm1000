@@ -14,6 +14,7 @@ add_library(programmer
         ${QFM1000_PROGRAMMER_HEADERS})
 
 target_link_libraries(programmer
+        pthread
         config
         Qt5::Core
         Qt5::SerialPort
