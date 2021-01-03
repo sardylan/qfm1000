@@ -1,13 +1,11 @@
 /*
  * qFM1000
- * Copyright (C) 2017  Luca Cireddu
- * sardylan@gmail.com
- * http://www.lucacireddu.it
+ * Copyright (C) 2021  Luca Cireddu - IS0GVH
+ * sardylan@gmail.com - is0gvh@gmail.com
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
+ * the Free Software Foundation, either version 3 of the License.
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -19,68 +17,39 @@
  *
  */
 
+
+#include <QtCore/QDebug>
+
 #include "eeprom.hpp"
 
-EEPROM *EEPROM::instance = nullptr;
+using namespace qfm1000::eeprom;
 
-EEPROM *EEPROM::getInstance() {
-    if (instance == nullptr)
-        instance = new EEPROM();
+EEPROM::EEPROM() : data(EEPROM_SIZE, '\0') {
 
-    return instance;
 }
 
-EEPROM::EEPROM() {
-    clear();
-}
+EEPROM::~EEPROM() = default;
 
 void EEPROM::clear() {
-    data.clear();
     for (int i = 0; i < EEPROM_SIZE; i++)
-        data.append((char) '\0');
+        data[i] = '\0';
 }
 
 const QByteArray &EEPROM::getData() {
     return data;
 }
 
-void EEPROM::setData(const QByteArray &data) {
-    EEPROM::data = data;
-}
-
-bool EEPROM::isValidChannelNumber(int channel) {
-    return channel >= 0 && channel < CHANNELS_COUNT;
-}
-
-unsigned int EEPROM::wordToFrequency(uint16_t word, FrequencyBand frequencyBand) {
-    switch (frequencyBand) {
-        case B0:
-        case A9:
-            return (unsigned int) (word * 6250);
-        case TM:
-        case T4:
-        case U0:
-            return (unsigned int) ((word + 48000) * 6250);
-        default:
-            return 0;
+bool EEPROM::setData(const QByteArray &newValue) {
+    if (newValue.size() != EEPROM_SIZE) {
+        qCritical() << "Wrong Data size" << "(" << newValue.size() << "instead" << EEPROM_SIZE << ")";
+        return false;
     }
+
+    EEPROM::data = newValue;
+    return true;
 }
 
-uint16_t EEPROM::frequencyToWord(unsigned int frequency, FrequencyBand frequencyBand) {
-    switch (frequencyBand) {
-        case B0:
-        case A9:
-            return (uint16_t) (frequency / 6250);
-        case TM:
-        case T4:
-        case U0:
-            return (uint16_t) ((frequency / 6250) - 48000);
-        default:
-            return 0;
-    }
-}
-
-unsigned int EEPROM::getChannelRxFreq(int channel, FrequencyBand frequencyBand) {
+Frequency EEPROM::getChannelRxFreq(Channel channel, FrequencyBand frequencyBand) {
     if (!isValidChannelNumber(channel))
         return 0;
 
@@ -89,7 +58,7 @@ unsigned int EEPROM::getChannelRxFreq(int channel, FrequencyBand frequencyBand) 
     return wordToFrequency(rxFreqBits, frequencyBand);
 }
 
-void EEPROM::setChannelRxFreq(int channel, unsigned int freq, FrequencyBand frequencyBand) {
+void EEPROM::setChannelRxFreq(Channel channel, Frequency freq, FrequencyBand frequencyBand) {
     if (!isValidChannelNumber(channel))
         return;
 
@@ -99,7 +68,7 @@ void EEPROM::setChannelRxFreq(int channel, unsigned int freq, FrequencyBand freq
     assign(offset + 1, (uint8_t) (rxValue & 0xff));
 }
 
-unsigned int EEPROM::getChannelTxFreq(int channel, FrequencyBand frequencyBand) {
+Frequency EEPROM::getChannelTxFreq(Channel channel, FrequencyBand frequencyBand) {
     if (!isValidChannelNumber(channel))
         return 0;
 
@@ -108,7 +77,7 @@ unsigned int EEPROM::getChannelTxFreq(int channel, FrequencyBand frequencyBand) 
     return wordToFrequency(rxFreqBits, frequencyBand);
 }
 
-void EEPROM::setChannelTxFreq(int channel, unsigned int freq, FrequencyBand frequencyBand) {
+void EEPROM::setChannelTxFreq(Channel channel, Frequency freq, FrequencyBand frequencyBand) {
     if (!isValidChannelNumber(channel))
         return;
 
@@ -118,7 +87,7 @@ void EEPROM::setChannelTxFreq(int channel, unsigned int freq, FrequencyBand freq
     assign(offset + 3, (uint8_t) (txValue & 0xff));
 }
 
-uint8_t EEPROM::getChannelRxCtcss(int channel) {
+uint8_t EEPROM::getChannelRxCtcss(Channel channel) {
     if (!isValidChannelNumber(channel))
         return 0;
 
@@ -126,7 +95,7 @@ uint8_t EEPROM::getChannelRxCtcss(int channel) {
     return (uint8_t) data[offset + 4];
 }
 
-void EEPROM::setChannelRxCtcss(int channel, int ctcss) {
+void EEPROM::setChannelRxCtcss(Channel channel, CTCSS ctcss) {
     if (!isValidChannelNumber(channel))
         return;
 
@@ -134,7 +103,7 @@ void EEPROM::setChannelRxCtcss(int channel, int ctcss) {
     assign(offset + 4, (uint8_t) ctcss);
 }
 
-uint8_t EEPROM::getChannelTxCtcss(int channel) {
+uint8_t EEPROM::getChannelTxCtcss(Channel channel) {
     if (!isValidChannelNumber(channel))
         return 0;
 
@@ -143,7 +112,7 @@ uint8_t EEPROM::getChannelTxCtcss(int channel) {
     return (uint8_t) b;
 }
 
-void EEPROM::setChannelTxCtcss(int channel, int ctcss) {
+void EEPROM::setChannelTxCtcss(Channel channel, CTCSS ctcss) {
     if (!isValidChannelNumber(channel))
         return;
 
@@ -151,7 +120,7 @@ void EEPROM::setChannelTxCtcss(int channel, int ctcss) {
     assign(offset + 5, (uint8_t) ctcss);
 }
 
-unsigned int EEPROM::getChannelPower(int channel) {
+Power EEPROM::getChannelPower(Channel channel) {
     if (!isValidChannelNumber(channel))
         return 0;
 
@@ -162,7 +131,7 @@ unsigned int EEPROM::getChannelPower(int channel) {
     return value;
 }
 
-void EEPROM::setChannelPower(int channel, unsigned int power) {
+void EEPROM::setChannelPower(Channel channel, Power power) {
     if (!isValidChannelNumber(channel))
         return;
 
@@ -197,7 +166,7 @@ void EEPROM::setChannelPower(int channel, unsigned int power) {
     assign(offset + 6, byte);
 }
 
-unsigned int EEPROM::getChannelSquelch(int channel) {
+Power EEPROM::getChannelSquelch(Channel channel) {
     if (!isValidChannelNumber(channel))
         return 0;
 
@@ -210,7 +179,7 @@ unsigned int EEPROM::getChannelSquelch(int channel) {
     return value;
 }
 
-void EEPROM::setChannelSquelch(int channel, unsigned int power) {
+void EEPROM::setChannelSquelch(Channel channel, Power power) {
     if (!isValidChannelNumber(channel))
         return;
 
@@ -249,7 +218,7 @@ void EEPROM::setChannelSquelch(int channel, unsigned int power) {
     assign(offset + 7, byte);
 }
 
-bool EEPROM::getChannelSelectiveCalling(int channel) {
+bool EEPROM::getChannelSelectiveCalling(Channel channel) {
     if (!isValidChannelNumber(channel))
         return false;
 
@@ -258,7 +227,7 @@ bool EEPROM::getChannelSelectiveCalling(int channel) {
     return (bool) (configBit & 0b00000010);
 }
 
-void EEPROM::setChannelSelectiveCalling(int channel, bool selectiveCalling) {
+void EEPROM::setChannelSelectiveCalling(Channel channel, bool selectiveCalling) {
     if (!isValidChannelNumber(channel))
         return;
 
@@ -273,7 +242,7 @@ void EEPROM::setChannelSelectiveCalling(int channel, bool selectiveCalling) {
     assign(offset + 7, byte);
 }
 
-bool EEPROM::getChannelCpuOffset(int channel) {
+bool EEPROM::getChannelCpuOffset(Channel channel) {
     if (!isValidChannelNumber(channel))
         return false;
 
@@ -282,7 +251,7 @@ bool EEPROM::getChannelCpuOffset(int channel) {
     return (bool) (configBit & 0b00000001);
 }
 
-void EEPROM::setChannelCpuOffset(int channel, bool cpuOffset) {
+void EEPROM::setChannelCpuOffset(Channel channel, bool cpuOffset) {
     if (!isValidChannelNumber(channel))
         return;
 
@@ -297,13 +266,13 @@ void EEPROM::setChannelCpuOffset(int channel, bool cpuOffset) {
     assign(offset + 7, byte);
 }
 
-int EEPROM::getDefaultChannel() {
+Channel EEPROM::getDefaultChannel() {
     return (int) data[OFFSET_STARTUP_CHANNEL] >= 0 && (int) data[OFFSET_STARTUP_CHANNEL] < CHANNELS_COUNT
            ? (int) data[OFFSET_STARTUP_CHANNEL]
            : -1;
 }
 
-void EEPROM::setDefaultChannel(int defaultChannel) {
+void EEPROM::setDefaultChannel(Channel defaultChannel) {
     if (!isValidChannelNumber(defaultChannel))
         return;
 
@@ -313,22 +282,22 @@ void EEPROM::setDefaultChannel(int defaultChannel) {
     assign(OFFSET_STARTUP_CHANNEL, byte);
 }
 
-uint8_t EEPROM::getTot() {
+TOT EEPROM::getTot() {
     return (uint8_t) data[OFFSET_TOT];
 }
 
-void EEPROM::setTot(int tot) {
+void EEPROM::setTot(TOT tot) {
     if (tot < 0 || tot > 255)
         return;
 
     assign(OFFSET_TOT, (uint8_t) tot);
 }
 
-int EEPROM::getLowPower() {
+Power EEPROM::getLowPower() {
     return (int) data[OFFSET_LOW_POWER];
 }
 
-void EEPROM::setLowPower(int lowPower) {
+void EEPROM::setLowPower(Power lowPower) {
     if (lowPower <= 0 || lowPower >= 5)
         return;
 
@@ -337,4 +306,36 @@ void EEPROM::setLowPower(int lowPower) {
 
 void EEPROM::assign(int pos, uint8_t value) {
     data.replace(pos, 1, (const char *) &value, 1);
+}
+
+bool EEPROM::isValidChannelNumber(Channel channel) {
+    return channel >= 0 && channel < CHANNELS_COUNT;
+}
+
+Frequency EEPROM::wordToFrequency(uint16_t word, FrequencyBand frequencyBand) {
+    switch (frequencyBand) {
+        case B0:
+        case A9:
+            return (Frequency) (word * 6250);
+        case TM:
+        case T4:
+        case U0:
+            return (Frequency) ((word + 48000) * 6250);
+        default:
+            return 0;
+    }
+}
+
+uint16_t EEPROM::frequencyToWord(Frequency frequency, FrequencyBand frequencyBand) {
+    switch (frequencyBand) {
+        case B0:
+        case A9:
+            return (uint16_t) (frequency / 6250);
+        case TM:
+        case T4:
+        case U0:
+            return (uint16_t) ((frequency / 6250) - 48000);
+        default:
+            return 0;
+    }
 }

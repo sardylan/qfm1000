@@ -19,6 +19,7 @@
  *
  */
 
+#include <QtCore/QDebug>
 #include <QRegExp>
 #include <QtMath>
 
@@ -60,14 +61,58 @@ QVariant TableModel::data(const QModelIndex &index, int role) const {
                 unsigned int rxFreq = eeprom->getChannelRxFreq(channel, status->getFrequencyBand());
                 return shiftToStr(txFreq, rxFreq);
             }
-            case 3:
-                return ctcssValues[eeprom->getChannelRxCtcss(channel)];
-            case 4:
-                return ctcssValues[eeprom->getChannelTxCtcss(channel)];
-            case 5:
-                return squelchValues[eeprom->getChannelSquelch(channel)];
-            case 6:
-                return powerValues[eeprom->getChannelPower(channel)];
+            case 3: {
+                uint8_t rxCtcss = eeprom->getChannelRxCtcss(channel);
+
+                if (rxCtcss >= ctcssValues.size()) {
+                    qCritical() << "Channel" << channel << "-"
+                                << "RX CTCSS value out of range:"
+                                << rxCtcss
+                                << ctcssValues.size();
+                    rxCtcss = 0;
+                }
+
+                return ctcssValues[rxCtcss];
+            }
+            case 4: {
+                uint8_t txCtcss = eeprom->getChannelTxCtcss(channel);
+
+                if (txCtcss >= ctcssValues.size()) {
+                    qCritical() << "Channel" << channel << "-"
+                                << "TX CTCSS value out of range"
+                                << txCtcss
+                                << ctcssValues.size();
+                    txCtcss = 0;
+                }
+
+                return ctcssValues[txCtcss];
+            }
+            case 5: {
+                unsigned int channelSquelch = eeprom->getChannelSquelch(channel);
+
+                if (channelSquelch >= squelchValues.size()) {
+                    qCritical() << "Channel" << channel << "-"
+                                << "Squelch value out of range:"
+                                << channelSquelch
+                                << squelchValues.size();
+                    channelSquelch = 0;
+                }
+
+                return squelchValues[channelSquelch];
+            }
+            case 6: {
+                unsigned int channelPower = eeprom->getChannelPower(channel);
+
+                if (channelPower >= powerValues.size()) {
+                    qCritical() << "Channel" << channel << "-"
+                                << "Power value out of range:"
+                                << channelPower
+                                << powerValues.size();
+                    channelPower = 0;
+                }
+
+                return powerValues[channelPower];
+            }
             case 7:
                 return boolToStr(eeprom->getChannelSelectiveCalling(channel));
             case 8:

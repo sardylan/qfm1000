@@ -1,13 +1,11 @@
 /*
  * qFM1000
- * Copyright (C) 2017  Luca Cireddu
- * sardylan@gmail.com
- * http://www.lucacireddu.it
+ * Copyright (C) 2021  Luca Cireddu - IS0GVH
+ * sardylan@gmail.com - is0gvh@gmail.com
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
+ * the Free Software Foundation, either version 3 of the License.
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -19,11 +17,12 @@
  *
  */
 
-#ifndef __QFM1000_EEPROM_EEPROM_H
-#define __QFM1000_EEPROM_EEPROM_H
 
-#include <QVector>
-#include <QByteArray>
+#ifndef __QFM1000__EEPROM__EEPROM__H
+#define __QFM1000__EEPROM__EEPROM__H
+
+#include <QtCore/QtGlobal>
+#include <QtCore/QByteArray>
 
 #define EEPROM_SIZE 2048
 
@@ -38,92 +37,104 @@
 #define OFFSET_LAST_USED_CHANNEL 0x1
 #define OFFSET_LAST_USED_CTCSS 0x2
 
-enum FrequencyBand {
-    E0,
-    B0,
-    A9,
-    K1,
-    K2,
-    K8,
-    K9,
-    TD,
-    TM,
-    TZ,
-    T4,
-    U0,
-    W1,
-    W4
-};
+namespace qfm1000::eeprom {
 
-class EEPROM {
+    typedef quint8 Channel;
+    typedef quint32 Frequency;
+    typedef quint8 CTCSS;
+    typedef quint8 TOT;
+    typedef quint8 Power;
+    typedef quint8 Squelch;
 
-private:
-    EEPROM();
+    enum FrequencyBand {
+        E0,
+        B0,
+        A9,
+        K1,
+        K2,
+        K8,
+        K9,
+        TD,
+        TM,
+        TZ,
+        T4,
+        U0,
+        W1,
+        W4
+    };
 
-    static EEPROM *instance;
+    class EEPROM {
 
-    QByteArray data;
+    public:
 
-    void assign(int pos, uint8_t value);
+        EEPROM();
 
-    bool isValidChannelNumber(int channel);
+        ~EEPROM();
 
-    unsigned int wordToFrequency(uint16_t word, FrequencyBand frequencyBand);
+        void clear();
 
-    uint16_t frequencyToWord(unsigned int frequency, FrequencyBand frequencyBand);
+        const QByteArray &getData();
 
-public:
-    static EEPROM *getInstance();
+        bool setData(const QByteArray &newValue);
 
-    void clear();
+        Frequency getChannelRxFreq(Channel channel, FrequencyBand frequencyBand);
 
-    const QByteArray &getData();
+        void setChannelRxFreq(Channel channel, Frequency freq, FrequencyBand frequencyBand);
 
-    void setData(const QByteArray &data);
+        Frequency getChannelTxFreq(Channel channel, FrequencyBand frequencyBand);
 
-    unsigned int getChannelRxFreq(int channel, FrequencyBand frequencyBand);
+        void setChannelTxFreq(Channel channel, Frequency freq, FrequencyBand frequencyBand);
 
-    void setChannelRxFreq(int channel, unsigned int freq, FrequencyBand frequencyBand);
+        CTCSS getChannelRxCtcss(Channel channel);
 
-    unsigned int getChannelTxFreq(int channel, FrequencyBand frequencyBand);
+        void setChannelRxCtcss(Channel channel, CTCSS ctcss);
 
-    void setChannelTxFreq(int channel, unsigned int freq, FrequencyBand frequencyBand);
+        CTCSS getChannelTxCtcss(Channel channel);
 
-    uint8_t getChannelRxCtcss(int channel);
+        void setChannelTxCtcss(Channel channel, CTCSS ctcss);
 
-    void setChannelRxCtcss(int channel, int ctcss);
+        Power getChannelPower(Channel channel);
 
-    uint8_t getChannelTxCtcss(int channel);
+        void setChannelPower(Channel channel, Power power);
 
-    void setChannelTxCtcss(int channel, int ctcss);
+        Squelch getChannelSquelch(Channel channel);
 
-    unsigned int getChannelPower(int channel);
+        void setChannelSquelch(Channel channel, Squelch squelch);
 
-    void setChannelPower(int channel, unsigned int power);
+        bool getChannelSelectiveCalling(Channel channel);
 
-    unsigned int getChannelSquelch(int channel);
+        void setChannelSelectiveCalling(Channel channel, bool selectiveCalling);
 
-    void setChannelSquelch(int channel, unsigned int squelch);
+        bool getChannelCpuOffset(Channel channel);
 
-    bool getChannelSelectiveCalling(int channel);
+        void setChannelCpuOffset(Channel channel, bool cpuOffset);
 
-    void setChannelSelectiveCalling(int channel, bool selectiveCalling);
+        Channel getDefaultChannel();
 
-    bool getChannelCpuOffset(int channel);
+        void setDefaultChannel(Channel defaultChannel);
 
-    void setChannelCpuOffset(int channel, bool cpuOffset);
+        TOT getTot();
 
-    int getDefaultChannel();
+        void setTot(TOT tot);
 
-    void setDefaultChannel(int defaultChannel);
+        Power getLowPower();
 
-    uint8_t getTot();
+        void setLowPower(Power lowPower);
 
-    void setTot(int tot);
+    private:
 
-    int getLowPower();
+        QByteArray data;
 
-    void setLowPower(int lowPower);
-};
+        void assign(int pos, quint8 value);
+
+        static bool isValidChannelNumber(Channel channel);
+
+        static Frequency wordToFrequency(quint16 word, FrequencyBand frequencyBand);
+
+        static quint16 frequencyToWord(Frequency frequency, FrequencyBand frequencyBand);
+
+    };
+
+}
 
 #endif

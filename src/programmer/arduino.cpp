@@ -158,6 +158,9 @@ void ArduinoProgrammer::readPage(uint8_t num) {
 
     QByteArray pageData = serialPort->read(8);
     eepromData.replace(ARDUINO_PROGRAMMER_EEPROM_PAGE_SIZE * num, ARDUINO_PROGRAMMER_EEPROM_PAGE_SIZE, pageData);
+
+    qDebug() << "Read page" << num << " - " << pageData.toHex();
+
     emit pageRead(num);
 }
 
@@ -174,7 +177,9 @@ void ArduinoProgrammer::writePage(uint8_t num, QByteArray data) {
         serialPort->waitForReadyRead(ARDUINO_PROGRAMMER_SERIAL_WAIT);
 
     QByteArray response = serialPort->read(1);
+
     qDebug() << "Write page" << num << " - " << QByteArray(cmd).toHex() << " - " << response;
+
     if (response.at(0) == ARDUINO_PROGRAMMER_PROTOCOL_OK)
             emit pageWritten(num);
 }
