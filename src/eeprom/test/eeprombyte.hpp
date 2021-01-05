@@ -45,7 +45,9 @@ namespace qfm1000::eeprom {
 
         [[maybe_unused]] void cleanup();
 
-        [[maybe_unused]] void testSimpleBitwise();
+//        [[maybe_unused]] void testSimpleBitwise_data();
+
+//        [[maybe_unused]] void testSimpleBitwise();
 
         [[maybe_unused]] void testSimpleQByteArray();
 

@@ -50,43 +50,36 @@ QTEST_MAIN(EEPROMByteTest)
     eeprom->clear();
 }
 
-#pragma clang diagnostic push
-#pragma ide diagnostic ignored "readability-convert-member-functions-to-static"
+//[[maybe_unused]] void EEPROMByteTest::testSimpleBitwise_data() {
+//    QTest::addColumn<quint8>("data");
+//    QTest::addColumn<QString>("op");
+//    QTest::addColumn<quint8>("bitwise");
+//    QTest::addColumn<quint8>("expected");
+//
+//    QTest::newRow("OR with zeroes") << (quint8) 0b00000000 << "|" << (quint8) 0b001100111 << (quint8) 0b001100111;
+//    QTest::newRow("AND with ones") << (quint8) 0b11111111 << "&" << (quint8) 0b001100111 << (quint8) 0b001100111;
+//    QTest::newRow("OR with only one true") << (quint8) 0b01010101 << "|" << (quint8) 0b00000010 << (quint8) 0b01010111;
+//    QTest::newRow("AND") << (quint8) 0b01010111 << "&" << (quint8) 0b11111101 << (quint8) 0b01010101;
+//    QTest::newRow("And with all true") << (quint8) 0b01010111 << "&" << (quint8) 0b11111111 << (quint8) 0b01010111;
+//}
 
-[[maybe_unused]] void EEPROMByteTest::testSimpleBitwise() {
-    quint8 input;
-    quint8 expected;
-
-    input = 0b00000000;
-    expected = 0b001100111;
-    input |= 0b001100111;
-    QCOMPARE(input, expected);
-
-    input = 0b11111111;
-    expected = 0b001100111;
-    input &= 0b001100111;
-    QCOMPARE(input, expected);
-
-    input = 0b01010101;
-    expected = 0b01010111;
-    input |= 0b00000010;
-    QCOMPARE(input, expected);
-
-    input = 0b01010111;
-    expected = 0b01010101;
-    input &= 0b11111101;
-    QCOMPARE(input, expected);
-
-    input = 0b01010111;
-    expected = 0b01010111;
-    input &= 0b11111111;
-    QCOMPARE(input, expected);
-}
-
-#pragma clang diagnostic pop
-
-#pragma clang diagnostic push
-#pragma ide diagnostic ignored "readability-convert-member-functions-to-static"
+//[[maybe_unused]] void EEPROMByteTest::testSimpleBitwise() {
+//    quint8 actual;
+//
+//    QFETCH(quint8, input_data);
+//    QFETCH(QString, op);
+//    QFETCH(quint8, input_bitwise);
+//    QFETCH(quint8, expected);
+//
+//    if (op == "|")
+//        actual = input_data | input_bitwise;
+//    else if (op == "&")
+//        actual = input_data & input_bitwise;
+//    else
+//        QFAIL("Operator not implemented in tests");
+//
+//    QCOMPARE(actual, expected);
+//}
 
 [[maybe_unused]] void EEPROMByteTest::testSimpleQByteArray() {
     QByteArray data;
@@ -102,8 +95,6 @@ QTEST_MAIN(EEPROMByteTest)
     byte = data[10];
     QCOMPARE(byte, (quint8) 0x30);
 }
-
-#pragma clang diagnostic pop
 
 [[maybe_unused]] void EEPROMByteTest::testEepromQByteArray() {
     quint8 byte = eeprom->getData()[10];
