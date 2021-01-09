@@ -2,7 +2,7 @@
 
 > Simple tool for editing channels and configuration parameters of Philips FM1000 radio.
 
-[![Build status Shippable (Linux)](https://api.shippable.com/projects/5b90607f6217c20600d0beaa/badge?branch=master)](https://app.shippable.com/github/sardylan/qfm1000)
+[![Build status Shippable (Linux)](https://api.shippable.com/projects/5b90607f6217c20600d0beaa/badge?branch=master)](https://mainApplication.shippable.com/github/sardylan/qfm1000)
 [![Build status Travis (MacOS)](https://travis-ci.org/sardylan/qfm1000.svg?branch=master)](https://travis-ci.org/sardylan/qfm1000)
 [![Build status AppVeyor (Windows)](https://ci.appveyor.com/api/projects/status/hysni857ux6k3wyg?svg=true)](https://ci.appveyor.com/project/sardylan/qfm1000)
 [![Coverity Scan Build Status](https://scan.coverity.com/projects/13866/badge.svg)](https://scan.coverity.com/projects/sardylan-qfm1000)

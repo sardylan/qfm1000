@@ -1,0 +1,38 @@
+<RCC>
+
+    <qresource prefix="/files/eeprom">
+        <file alias="new">../../resources/eeprom_new.bin</file>
+    </qresource>
+
+    <qresource prefix="/action/application">
+        <file alias="exit">../../icons/action/application-exit.svg</file>
+        <file alias="configure">../../icons/action/configure.svg</file>
+        <file alias="about">../../icons/action/dialog-information.svg</file>
+    </qresource>
+
+    <qresource prefix="/action/document">
+        <file alias="open">../../icons/action/folder-open.svg</file>
+        <file alias="close">../../icons/action/document-close.svg</file>
+        <file alias="edit">../../icons/action/document-edit.svg</file>
+        <file alias="new">../../icons/action/document-new.svg</file>
+        <file alias="print">../../icons/action/document-print.svg</file>
+        <file alias="save">../../icons/action/document-save.svg</file>
+        <file alias="saveas">../../icons/action/document-save-as.svg</file>
+    </qresource>
+
+    <qresource prefix="/action/edit">
+        <file alias="clear">../../icons/action/edit-clear.svg</file>
+        <file alias="copy">../../icons/action/edit-copy.svg</file>
+        <file alias="cut">../../icons/action/edit-cut.svg</file>
+        <file alias="delete">../../icons/action/edit-delete.svg</file>
+        <file alias="paste">../../icons/action/edit-paste.svg</file>
+        <file alias="redo">../../icons/action/edit-redo.svg</file>
+        <file alias="undo">../../icons/action/edit-undo.svg</file>
+    </qresource>
+
+    <qresource prefix="/action/eeprom">
+        <file alias="read">../../icons/action/eeprom-read.svg</file>
+        <file alias="write">../../icons/action/eeprom-write.svg</file>
+    </qresource>
+
+</RCC>
