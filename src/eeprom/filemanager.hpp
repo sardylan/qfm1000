@@ -21,19 +21,26 @@
 #ifndef __QFM1000__EEPROM__FILEMANAGER__H
 #define __QFM1000__EEPROM__FILEMANAGER__H
 
-#include <QString>
+#include <QtCore/QByteArray>
+#include <QtCore/QString>
 
 #include "eeprom.hpp"
 
 namespace qfm1000::eeprom {
 
+    enum class FileFormat {
+        FORMAT_BINARY,
+        FORMAT_INTEL_HEX
+    };
+
     class FileManager {
 
     public:
 
-        static bool loadFromFile(EEPROM *eeprom, const QString& filename);
+        static bool loadFromFile(EEPROM *eeprom, const QString &filename);
 
-        static bool saveToFile(EEPROM *eeprom, const QString& filename);
+        static bool
+        saveToFile(EEPROM *eeprom, const QString &filename, const FileFormat &fileFormat = FileFormat::FORMAT_BINARY);
 
     private:
 
@@ -44,6 +51,8 @@ namespace qfm1000::eeprom {
         static QStringList splitInLines(const QByteArray &rawData);
 
         static QByteArray intelHexToByteArray(const QByteArray &rawData);
+
+        static QByteArray byteArrayToIntelHex(const QByteArray &rawData);
     };
 
 }

@@ -18,13 +18,15 @@
  */
 
 
-#include <QFile>
+#include <QtCore/QIODevice>
+#include <QtCore/QFile>
+#include <QtCore/QStringList>
 
 #include "filemanager.hpp"
 
 using namespace qfm1000::eeprom;
 
-bool FileManager::loadFromFile(EEPROM *eeprom, const QString& filename) {
+bool FileManager::loadFromFile(EEPROM *eeprom, const QString &filename) {
     QFile file(filename);
     if (!file.exists())
         return false;
@@ -36,7 +38,7 @@ bool FileManager::loadFromFile(EEPROM *eeprom, const QString& filename) {
     QByteArray data = parseFile(rawData);
     file.close();
 
-    if (data.length() != 2048)
+    if (data.length() != EEPROM_SIZE)
         return false;
 
     eeprom->setData(data);
@@ -44,13 +46,25 @@ bool FileManager::loadFromFile(EEPROM *eeprom, const QString& filename) {
     return true;
 }
 
-bool FileManager::saveToFile(EEPROM *eeprom, const QString& filename) {
+bool FileManager::saveToFile(EEPROM *eeprom, const QString &filename, const FileFormat &fileFormat) {
     QFile file(filename);
     if (!file.open(QIODevice::ReadWrite))
         return false;
 
     QByteArray data = eeprom->getData();
-    file.write(data);
+
+    switch (fileFormat) {
+
+        case FileFormat::FORMAT_BINARY:
+            file.write(data);
+            break;
+
+        case FileFormat::FORMAT_INTEL_HEX:
+            QByteArray hexData = byteArrayToIntelHex(data);
+            file.write(hexData);
+            break;
+    }
+
     file.close();
 
     return true;
@@ -59,7 +73,7 @@ bool FileManager::saveToFile(EEPROM *eeprom, const QString& filename) {
 QByteArray FileManager::parseFile(const QByteArray &rawData) {
     QByteArray data;
 
-    if (rawData.size() == 2048) {
+    if (rawData.size() == EEPROM_SIZE) {
         data = rawData;
     } else if (isIntelHex(rawData)) {
         data = intelHexToByteArray(rawData);
@@ -75,8 +89,8 @@ bool FileManager::isIntelHex(const QByteArray &rawFile) {
         if (!row.startsWith(":"))
             return false;
 
+    // TODO: Check hardcoded value
     return rows.length() > 0 && rows.last() == ":00000001FF";
-
 }
 
 QStringList FileManager::splitInLines(const QByteArray &rawData) {
@@ -116,7 +130,6 @@ QByteArray FileManager::intelHexToByteArray(const QByteArray &rawData) {
 
         previousOffest = offset + size;
 
-
         if (lineData.size() != size)
             return QByteArray();
 
@@ -124,4 +137,9 @@ QByteArray FileManager::intelHexToByteArray(const QByteArray &rawData) {
     }
 
     return data;
+}
+
+QByteArray FileManager::byteArrayToIntelHex(const QByteArray &rawData) {
+    // TODO: To implement
+    return QByteArray(rawData);
 }
