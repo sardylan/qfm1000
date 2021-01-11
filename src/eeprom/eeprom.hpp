@@ -22,6 +22,7 @@
 #define __QFM1000__EEPROM__EEPROM__H
 
 #include <QtCore/QtGlobal>
+#include <QtCore/QObject>
 #include <QtCore/QByteArray>
 
 #define EEPROM_SIZE 2048
@@ -41,12 +42,9 @@ namespace qfm1000::eeprom {
 
     typedef quint8 Channel;
     typedef quint32 Frequency;
-    typedef quint8 CTCSS;
     typedef quint8 TOT;
-    typedef quint8 Power;
-    typedef quint8 Squelch;
 
-    enum FrequencyBand {
+    enum class FrequencyBand {
         E0,
         B0,
         A9,
@@ -63,13 +61,80 @@ namespace qfm1000::eeprom {
         W4
     };
 
-    class EEPROM {
+    enum class Flag : bool {
+        ENABLED = true,
+        DISABLED = false
+    };
+
+    enum class CTCSS : quint8 {
+        TONE_OFF = 0,
+        TONE_67_0 = 1,
+        TONE_71_9 = 2,
+        TONE_74_4 = 3,
+        TONE_77_0 = 4,
+        TONE_79_7 = 5,
+        TONE_82_5 = 6,
+        TONE_85_4 = 7,
+        TONE_88_5 = 8,
+        TONE_91_5 = 9,
+        TONE_94_8 = 10,
+        TONE_97_4 = 11,
+        TONE_100_0 = 12,
+        TONE_103_5 = 13,
+        TONE_107_2 = 14,
+        TONE_110_9 = 15,
+        TONE_114_8 = 16,
+        TONE_118_8 = 17,
+        TONE_123_0 = 18,
+        TONE_127_3 = 19,
+        TONE_131_8 = 20,
+        TONE_136_5 = 21,
+        TONE_141_3 = 22,
+        TONE_146_2 = 23,
+        TONE_151_4 = 24,
+        TONE_156_7 = 25,
+        TONE_162_2 = 26,
+        TONE_167_9 = 27,
+        TONE_173_8 = 28,
+        TONE_179_9 = 29,
+        TONE_186_2 = 30,
+        TONE_192_8 = 31,
+        TONE_203_5 = 32,
+        TONE_210_7 = 33,
+        TONE_218_1 = 34,
+        TONE_225_7 = 35,
+        TONE_233_6 = 36,
+        TONE_241_8 = 37,
+        TONE_250_3 = 38
+    };
+
+    enum class Power : quint8 {
+        DISABLED = 0,
+        WATT_1 = 1,
+        WATT_6 = 2,
+        WATT_10 = 3,
+        WATT_15 = 4,
+        WATT_25 = 5
+    };
+
+    enum class Squelch : quint8 {
+        OPEN = 0,
+        SINAD_9DB = 1,
+        SINAD_12DB = 2,
+        SINAD_15DB = 3,
+        SINAD_18DB = 4,
+        SINAD_21DB = 5,
+        SINAD_24DB = 6
+    };
+
+    class EEPROM : public QObject {
+    Q_OBJECT
 
     public:
 
-        EEPROM();
+        explicit EEPROM(QObject *parent = nullptr);
 
-        ~EEPROM();
+        ~EEPROM() override;
 
         void clear();
 
@@ -101,13 +166,13 @@ namespace qfm1000::eeprom {
 
         void setChannelSquelch(Channel channel, Squelch squelch);
 
-        bool getChannelSelectiveCalling(Channel channel);
+        Flag getChannelSelectiveCalling(Channel channel);
 
-        void setChannelSelectiveCalling(Channel channel, bool selectiveCalling);
+        void setChannelSelectiveCalling(Channel channel, Flag selectiveCalling);
 
-        bool getChannelCpuOffset(Channel channel);
+        Flag getChannelCpuOffset(Channel channel);
 
-        void setChannelCpuOffset(Channel channel, bool cpuOffset);
+        void setChannelCpuOffset(Channel channel, Flag cpuOffset);
 
         Channel getDefaultChannel();
 
@@ -127,11 +192,17 @@ namespace qfm1000::eeprom {
 
         void assign(int pos, quint8 value);
 
+        static int computeOffset(Channel channel);
+
         static bool isValidChannelNumber(Channel channel);
 
         static Frequency wordToFrequency(quint16 word, FrequencyBand frequencyBand);
 
         static quint16 frequencyToWord(Frequency frequency, FrequencyBand frequencyBand);
+
+    signals:
+
+        void byteUpdated(int pos, quint8 value);
 
     };
 

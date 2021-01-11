@@ -4,7 +4,7 @@ find_package(Qt5 REQUIRED COMPONENTS
 add_library(eeprom
         eeprom.cpp eeprom.hpp
         filemanager.cpp filemanager.hpp
-        values.hpp)
+        values.cpp values.hpp)
 
 target_link_libraries(eeprom
         Qt5::Core)
