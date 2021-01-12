@@ -18,22 +18,23 @@
  */
 
 
-#ifndef __QFM1000__EEPROM__EEPROM__TEST_H
-#define __QFM1000__EEPROM__EEPROM__TEST_H
+#ifndef __QFM1000__EEPROM__TEST__EEPROM__H
+#define __QFM1000__EEPROM__TEST__EEPROM__H
 
-#include <QtTest>
+#include <QtTest/QtTest>
+#include <QtTest/QSignalSpy>
 
 #include "../eeprom.hpp"
 
 namespace qfm1000::eeprom {
 
     class EEPROMTest : public QObject {
-
     Q_OBJECT
 
     private:
 
         EEPROM *eeprom;
+        QSignalSpy *eepromSignalSpyByteUpdated;
 
     private slots:
 
@@ -45,29 +46,57 @@ namespace qfm1000::eeprom {
 
         [[maybe_unused]] void cleanup();
 
-        [[maybe_unused]] void testClear();
+        [[maybe_unused]] void clear();
 
-        [[maybe_unused]] void testChannelRxFreq();
+        [[maybe_unused]] void frequencyBand();
 
-        [[maybe_unused]] void testChannelTxFreq();
+        [[maybe_unused]] void channelRxFreq();
 
-        [[maybe_unused]] void testChannelRxCtcss();
+        [[maybe_unused]] void channelRxFreqBytes();
 
-        [[maybe_unused]] void testChannelTxCtcss();
+        [[maybe_unused]] void channelTxFreq();
 
-        [[maybe_unused]] void testChannelPower();
+        [[maybe_unused]] void channelTxFreqBytes();
 
-        [[maybe_unused]] void testChannelSquelch();
+        [[maybe_unused]] void channelRxCtcss();
 
-        [[maybe_unused]] void testChannelSelectiveCalling();
+        [[maybe_unused]] void channelRxCtcssBytes();
 
-        [[maybe_unused]] void testChannelCpuOffset();
+        [[maybe_unused]] void channelTxCtcss();
 
-        [[maybe_unused]] void testDefaultChannel();
+        [[maybe_unused]] void channelTxCtcssBytes();
 
-        [[maybe_unused]] void testTot();
+        [[maybe_unused]] void channelPower();
 
-        [[maybe_unused]] void testLowPower();
+        [[maybe_unused]] void channelPowerBytes();
+
+        [[maybe_unused]] void channelSquelch();
+
+        [[maybe_unused]] void channelSquelchBytes();
+
+        [[maybe_unused]] void channelSelectiveCalling();
+
+        [[maybe_unused]] void channelSelectiveCallingBytes();
+
+        [[maybe_unused]] void channelCpuOffset();
+
+        [[maybe_unused]] void channelCpuOffsetBytes();
+
+        [[maybe_unused]] void startupChannel();
+
+        [[maybe_unused]] void startupChannelBytes();
+
+        [[maybe_unused]] void keyBeep();
+
+        [[maybe_unused]] void keyBeepBytes();
+
+        [[maybe_unused]] void tot();
+
+        [[maybe_unused]] void totBytes();
+
+        [[maybe_unused]] void lowPower();
+
+        [[maybe_unused]] void lowPowerBytes();
 
     };
 

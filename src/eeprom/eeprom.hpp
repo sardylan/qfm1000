@@ -31,11 +31,11 @@
 
 #define OFFSET_CHANNEL_FIRST 0x26
 #define OFFSET_CHANNEL_FIRST_ALTERNATIVE 0x21
-#define OFFSET_TOT 0x719
 #define OFFSET_STARTUP_CHANNEL 0x6D7
 #define OFFSET_KEY_BEEP 0x6EB
-#define OFFSET_BUTTONS 0x729
+#define OFFSET_TOT 0x719
 #define OFFSET_LOW_POWER 0x71E
+#define OFFSET_BUTTONS 0x729
 
 #define OFFSET_LAST_USED_CHANNEL 0x1
 #define OFFSET_LAST_USED_CTCSS 0x2
@@ -184,9 +184,13 @@ namespace qfm1000::eeprom {
 
         void setChannelCpuOffset(Channel channel, Flag cpuOffset);
 
-        Channel getDefaultChannel();
+        Channel getStartupChannel();
 
-        void setDefaultChannel(Channel defaultChannel);
+        void setStartupChannel(Channel startupChannel);
+
+        Flag getKeyBeep();
+
+        void setKeyBeep(Flag keyBeep);
 
         TOT getTot();
 
@@ -195,6 +199,8 @@ namespace qfm1000::eeprom {
         Power getLowPower();
 
         void setLowPower(Power lowPower);
+
+        [[nodiscard]] int computeOffset(Channel channel) const;
 
     private:
 
@@ -208,8 +214,6 @@ namespace qfm1000::eeprom {
         bool detectRadioType();
 
         void assign(int pos, quint8 value);
-
-        [[nodiscard]] int computeOffset(Channel channel) const;
 
         [[nodiscard]] Frequency wordToFrequency(quint16 word) const;
 

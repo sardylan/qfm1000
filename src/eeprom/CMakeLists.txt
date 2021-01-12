@@ -11,24 +11,11 @@ target_link_libraries(eeprom
 
 target_include_directories(eeprom PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
 
-add_executable(testeeprom
-        test/eeprom.hpp
-        test/eeprom.cpp)
+add_executable(eeprom-test
+        test/eeprom.cpp test/eeprom.hpp)
 
-target_link_libraries(testeeprom
+target_link_libraries(eeprom-test
         eeprom Qt5::Core Qt5::Test)
 
-add_test(TestEEPROM
-        testeeprom -o testresult-testeeprom.xml,xunitxml)
-
-add_executable(testeeprombyte
-        test/eeprombyte.hpp
-        test/eeprombyte.cpp)
-
-target_link_libraries(testeeprombyte
-        eeprom
-        Qt5::Core
-        Qt5::Test)
-
-add_test(TestEEPROMByte
-        testeeprombyte -o testresult-testeeprombyte.xml,xunitxml)
+add_test(eeprom-test
+        eeprom-test -o test-result-eeprom.xml,xunitxml)

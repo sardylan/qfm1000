@@ -113,11 +113,11 @@ void EEPROM::setChannelRxFreq(Channel channel, Frequency freq) {
 
 Frequency EEPROM::getChannelTxFreq(Channel channel) {
     if (!isValidChannelNumber(channel))
-        return wordToFrequency(0);;
+        return wordToFrequency(0);
 
     int offset = computeOffset(channel);
 
-    quint16 rxFreqBits = static_cast<quint8>(data[offset + 2] << 8) | static_cast<quint8>(data[offset + 3]);
+    quint16 rxFreqBits = static_cast<quint8>(data[offset + 2]) << 8 | static_cast<quint8>(data[offset + 3]);
     return wordToFrequency(rxFreqBits);
 }
 
@@ -177,7 +177,7 @@ Power EEPROM::getChannelPower(Channel channel) {
     int offset = computeOffset(channel);
 
     auto txPowerByte = static_cast<quint8>(data[offset + 6]);
-    auto value = static_cast<unsigned int>((txPowerByte & 0b00111000) >> 3);
+    auto value = static_cast<quint8>((txPowerByte & 0b00111000) >> 3);
 
     return static_cast<Power>(value);
 }
@@ -293,8 +293,8 @@ Flag EEPROM::getChannelSelectiveCalling(Channel channel) {
 
     int offset = computeOffset(channel);
 
-    auto configBit = (quint8) data[offset + 7];
-    bool value = (bool) (configBit & 0b00000010);
+    auto configBit = static_cast<quint8>(data[offset + 7]);
+    auto value = static_cast<bool>(configBit & 0b00000010);
     return static_cast<Flag>(value);
 }
 
@@ -304,7 +304,7 @@ void EEPROM::setChannelSelectiveCalling(Channel channel, Flag selectiveCalling) 
 
     int offset = computeOffset(channel);
 
-    auto byte = (quint8) data[offset + 7];
+    auto byte = static_cast<quint8>(data[offset + 7]);
     byte &= 0b00000011;
     byte |= 0b00100100;
 
@@ -329,8 +329,8 @@ Flag EEPROM::getChannelCpuOffset(Channel channel) {
 
     int offset = computeOffset(channel);
 
-    auto configBit = (quint8) data[offset + 7];
-    bool value = (bool) (configBit & 0b00000001);
+    auto configBit = static_cast<quint8>(data[offset + 7]);
+    auto value = static_cast<bool>(configBit & 0b00000001);
     return static_cast<Flag>(value);
 }
 
@@ -340,36 +340,54 @@ void EEPROM::setChannelCpuOffset(Channel channel, Flag cpuOffset) {
 
     int offset = computeOffset(channel);
 
-    auto byte = (quint8) data[offset + 7];
+    auto byte = static_cast<quint8>(data[offset + 7]);
     byte &= 0b00000011;
     byte |= 0b00100100;
 
     switch (cpuOffset) {
 
         case Flag::ENABLED:
-            byte |= 0b00000010;
+            byte |= 0b00000001;
             break;
 
         case Flag::DISABLED:
         default:
-            byte &= 0b11111101;
+            byte &= 0b11111110;
             break;
     }
 
     assign(offset + 7, byte);
 }
 
-Channel EEPROM::getDefaultChannel() {
+Channel EEPROM::getStartupChannel() {
     auto value = static_cast<quint8>(data[OFFSET_STARTUP_CHANNEL]);
     return static_cast<Channel>(value < CHANNELS_COUNT ? value : (Channel) 0xff);
 }
 
-void EEPROM::setDefaultChannel(Channel defaultChannel) {
-    if (!isValidChannelNumber(defaultChannel))
+void EEPROM::setStartupChannel(Channel startupChannel) {
+    if (!isValidChannelNumber(startupChannel))
         return;
 
-    auto byte = static_cast<quint8>(defaultChannel < CHANNELS_COUNT ? defaultChannel : (Channel) 0xff);
+    auto byte = static_cast<quint8>(startupChannel < CHANNELS_COUNT ? startupChannel : (Channel) 0xff);
     assign(OFFSET_STARTUP_CHANNEL, byte);
+}
+
+Flag EEPROM::getKeyBeep() {
+    auto value = static_cast<quint8>(data[OFFSET_KEY_BEEP]);
+
+    if (value == 0)
+        return Flag::DISABLED;
+    else
+        return Flag::ENABLED;
+}
+
+void EEPROM::setKeyBeep(Flag keyBeep) {
+    quint8 value = 0x00;
+
+    if (keyBeep == Flag::ENABLED)
+        value = 0x01;
+
+    assign(OFFSET_KEY_BEEP, value);
 }
 
 TOT EEPROM::getTot() {
@@ -390,6 +408,10 @@ Power EEPROM::getLowPower() {
 void EEPROM::setLowPower(Power power) {
     auto value = static_cast<quint8>(power);
     assign(OFFSET_LOW_POWER, value);
+}
+
+int EEPROM::computeOffset(Channel channel) const {
+    return firstChannelOffset + (static_cast<quint8>(channel) * 8);
 }
 
 bool EEPROM::detectRadioType() {
@@ -424,10 +446,6 @@ void EEPROM::assign(int pos, quint8 value) {
     data.replace(pos, 1, (const char *) &value, 1);
 
     QMetaObject::invokeMethod(this, "byteUpdated", Qt::QueuedConnection, Q_ARG(int, pos), Q_ARG(quint8, value));
-}
-
-int EEPROM::computeOffset(Channel channel) const {
-    return firstChannelOffset + (static_cast<quint8>(channel) * 8);
 }
 
 Frequency EEPROM::wordToFrequency(quint16 word) const {
