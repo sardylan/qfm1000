@@ -25,7 +25,9 @@
 using namespace qfm1000::eeprom;
 
 EEPROM::EEPROM(QObject *parent) : QObject(parent), data(EEPROM_SIZE, '\0') {
-
+    frequencyBand = FrequencyBand::A9;
+    add300Mhz = false;
+    firstChannelOffset = OFFSET_CHANNEL_FIRST;
 }
 
 EEPROM::~EEPROM() = default;
@@ -46,47 +48,86 @@ bool EEPROM::setData(const QByteArray &newValue) {
     }
 
     EEPROM::data = newValue;
-    return true;
+
+    return detectRadioType();
 }
 
-Frequency EEPROM::getChannelRxFreq(Channel channel, FrequencyBand frequencyBand) {
+FrequencyBand EEPROM::getFrequencyBand() const {
+    return frequencyBand;
+}
+
+void EEPROM::setFrequencyBand(FrequencyBand newValue) {
+    EEPROM::frequencyBand = newValue;
+
+    switch (EEPROM::frequencyBand) {
+        case FrequencyBand::E0:
+        case FrequencyBand::B0:
+        case FrequencyBand::A9:
+        case FrequencyBand::K1:
+        case FrequencyBand::K2:
+        case FrequencyBand::K8:
+        case FrequencyBand::K9:
+            add300Mhz = false;
+            break;
+
+        case FrequencyBand::TD:
+        case FrequencyBand::TM:
+        case FrequencyBand::TZ:
+        case FrequencyBand::T4:
+        case FrequencyBand::U0:
+        case FrequencyBand::W1:
+        case FrequencyBand::W4:
+            add300Mhz = true;
+            break;
+    }
+}
+
+int EEPROM::getFirstChannelOffset() const {
+    return firstChannelOffset;
+}
+
+void EEPROM::setFirstChannelOffset(int newValue) {
+    EEPROM::firstChannelOffset = newValue;
+}
+
+Frequency EEPROM::getChannelRxFreq(Channel channel) {
     if (!isValidChannelNumber(channel))
-        return wordToFrequency(0, frequencyBand);;
+        return wordToFrequency(0);
 
     int offset = computeOffset(channel);
 
     quint16 rxFreqBits = static_cast<quint8>(data[offset]) << 8 | static_cast<quint8>(data[offset + 1]);
-    return wordToFrequency(rxFreqBits, frequencyBand);
+    return wordToFrequency(rxFreqBits);
 }
 
-void EEPROM::setChannelRxFreq(Channel channel, Frequency freq, FrequencyBand frequencyBand) {
+void EEPROM::setChannelRxFreq(Channel channel, Frequency freq) {
     if (!isValidChannelNumber(channel))
         return;
 
     int offset = computeOffset(channel);
 
-    auto rxValue = frequencyToWord(freq, frequencyBand);
+    auto rxValue = frequencyToWord(freq);
     assign(offset + 0, static_cast<quint8>(rxValue >> 8));
     assign(offset + 1, static_cast<quint8>(rxValue & 0xff));
 }
 
-Frequency EEPROM::getChannelTxFreq(Channel channel, FrequencyBand frequencyBand) {
+Frequency EEPROM::getChannelTxFreq(Channel channel) {
     if (!isValidChannelNumber(channel))
-        return wordToFrequency(0, frequencyBand);;
+        return wordToFrequency(0);;
 
     int offset = computeOffset(channel);
 
     quint16 rxFreqBits = static_cast<quint8>(data[offset + 2] << 8) | static_cast<quint8>(data[offset + 3]);
-    return wordToFrequency(rxFreqBits, frequencyBand);
+    return wordToFrequency(rxFreqBits);
 }
 
-void EEPROM::setChannelTxFreq(Channel channel, Frequency freq, FrequencyBand frequencyBand) {
+void EEPROM::setChannelTxFreq(Channel channel, Frequency freq) {
     if (!isValidChannelNumber(channel))
         return;
 
     int offset = computeOffset(channel);
 
-    auto txValue = frequencyToWord(freq, frequencyBand);
+    auto txValue = frequencyToWord(freq);
     assign(offset + 2, static_cast<quint8>(txValue >> 8));
     assign(offset + 3, static_cast<quint8>(txValue & 0xff));
 }
@@ -351,66 +392,58 @@ void EEPROM::setLowPower(Power power) {
     assign(OFFSET_LOW_POWER, value);
 }
 
+bool EEPROM::detectRadioType() {
+    firstChannelOffset = OFFSET_CHANNEL_FIRST;
+    add300Mhz = true;
+    Frequency frequency = getChannelRxFreq(0);
+    if (frequency >= 400000000 && frequency <= 480000000) {
+        frequencyBand = FrequencyBand::U0;
+        return true;
+    }
+
+    firstChannelOffset = OFFSET_CHANNEL_FIRST_ALTERNATIVE;
+    add300Mhz = false;
+    frequency = getChannelRxFreq(0);
+    if (frequency >= 120000000 && frequency <= 180000000) {
+        frequencyBand = FrequencyBand::A9;
+        return true;
+    }
+
+    firstChannelOffset = OFFSET_CHANNEL_FIRST;
+    add300Mhz = false;
+    frequency = getChannelRxFreq(0);
+    if (frequency >= 120000000 && frequency <= 180000000) {
+        frequencyBand = FrequencyBand::A9;
+        return true;
+    }
+
+    return false;
+}
+
 void EEPROM::assign(int pos, quint8 value) {
     data.replace(pos, 1, (const char *) &value, 1);
 
     QMetaObject::invokeMethod(this, "byteUpdated", Qt::QueuedConnection, Q_ARG(int, pos), Q_ARG(quint8, value));
 }
 
-int EEPROM::computeOffset(Channel channel) {
-    return OFFSET_CHANNEL_FIRST + (static_cast<quint8>(channel) * 8);
+int EEPROM::computeOffset(Channel channel) const {
+    return firstChannelOffset + (static_cast<quint8>(channel) * 8);
+}
+
+Frequency EEPROM::wordToFrequency(quint16 word) const {
+    if (add300Mhz)
+        return static_cast<Frequency>((word + 48000) * 6250);
+    else
+        return static_cast<Frequency>(word * 6250);
+}
+
+quint16 EEPROM::frequencyToWord(Frequency frequency) const {
+    if (add300Mhz)
+        return static_cast<quint16>((frequency / 6250) - 48000);
+    else
+        return static_cast<quint16>(frequency / 6250);
 }
 
 bool EEPROM::isValidChannelNumber(Channel channel) {
     return channel < CHANNELS_COUNT;
-}
-
-Frequency EEPROM::wordToFrequency(quint16 word, FrequencyBand frequencyBand) {
-    switch (frequencyBand) {
-        case FrequencyBand::E0:
-        case FrequencyBand::B0:
-        case FrequencyBand::A9:
-        case FrequencyBand::K1:
-        case FrequencyBand::K2:
-        case FrequencyBand::K8:
-        case FrequencyBand::K9:
-            return static_cast<Frequency>(word * 6250);
-
-        case FrequencyBand::TD:
-        case FrequencyBand::TM:
-        case FrequencyBand::TZ:
-        case FrequencyBand::T4:
-        case FrequencyBand::U0:
-        case FrequencyBand::W1:
-        case FrequencyBand::W4:
-            return static_cast<Frequency>((word + 48000) * 6250);
-
-        default:
-            return static_cast<Frequency>(0);
-    }
-}
-
-quint16 EEPROM::frequencyToWord(Frequency frequency, FrequencyBand frequencyBand) {
-    switch (frequencyBand) {
-        case FrequencyBand::E0:
-        case FrequencyBand::B0:
-        case FrequencyBand::A9:
-        case FrequencyBand::K1:
-        case FrequencyBand::K2:
-        case FrequencyBand::K8:
-        case FrequencyBand::K9:
-            return static_cast<quint16>(frequency / 6250);
-
-        case FrequencyBand::TD:
-        case FrequencyBand::TM:
-        case FrequencyBand::TZ:
-        case FrequencyBand::T4:
-        case FrequencyBand::U0:
-        case FrequencyBand::W1:
-        case FrequencyBand::W4:
-            return static_cast<quint16>((frequency / 6250) - 48000);
-
-        default:
-            return static_cast<quint16>(0);
-    }
 }

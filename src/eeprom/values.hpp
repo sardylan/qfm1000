@@ -25,23 +25,17 @@
 
 #include "eeprom.hpp"
 
-namespace qfm1000::eeprom {
+namespace qfm1000::eeprom::Values {
 
-    class Values {
+    QString frequencyBand(FrequencyBand frequencyBand);
 
-    public:
+    QString flag(Flag flag);
 
-        static QString frequencyBand(FrequencyBand frequencyBand);
+    QString ctcss(CTCSS ctcss);
 
-        static QString flag(Flag flag);
+    QString power(Power power);
 
-        static QString ctcss(CTCSS ctcss);
-
-        static QString power(Power power);
-
-        static QString squelch(Squelch squelch);
-
-    };
+    QString squelch(Squelch squelch);
 
 }
 

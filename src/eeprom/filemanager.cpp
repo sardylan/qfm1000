@@ -60,8 +60,10 @@ bool FileManager::saveToFile(EEPROM *eeprom, const QString &filename, const File
             break;
 
         case FileFormat::FORMAT_INTEL_HEX:
-            QByteArray hexData = byteArrayToIntelHex(data);
-            file.write(hexData);
+            file.write(byteArrayToIntelHex(data));
+            break;
+
+        default:
             break;
     }
 
@@ -73,24 +75,45 @@ bool FileManager::saveToFile(EEPROM *eeprom, const QString &filename, const File
 QByteArray FileManager::parseFile(const QByteArray &rawData) {
     QByteArray data;
 
-    if (rawData.size() == EEPROM_SIZE) {
-        data = rawData;
-    } else if (isIntelHex(rawData)) {
-        data = intelHexToByteArray(rawData);
+    FileFormat fileFormat = detectFormat(rawData);
+
+    switch (fileFormat) {
+
+        case FileFormat::FORMAT_BINARY:
+            data = rawData;
+            break;
+
+        case FileFormat::FORMAT_INTEL_HEX:
+            data = intelHexToByteArray(rawData);
+            break;
+
+        default:
+            data.clear();
+            break;
     }
 
     return data;
 }
 
-bool FileManager::isIntelHex(const QByteArray &rawFile) {
-    QStringList rows = splitInLines(rawFile);
+FileFormat FileManager::detectFormat(const QByteArray &rawData) {
+    QStringList rows = splitInLines(rawData);
+
+    bool containsIntelStartCodes = false;
+    bool containsOnlyIntelStartCodes = true;
 
     for (const QString &row : rows)
         if (!row.startsWith(":"))
-            return false;
+            containsIntelStartCodes = true;
+        else
+            containsOnlyIntelStartCodes = false;
 
-    // TODO: Check hardcoded value
-    return rows.length() > 0 && rows.last() == ":00000001FF";
+    if (!containsIntelStartCodes && rawData.size() == EEPROM_SIZE)
+        return FileFormat::FORMAT_BINARY;
+
+    if (containsOnlyIntelStartCodes && rows.last() == ":00000001FF")
+        return FileFormat::FORMAT_INTEL_HEX;
+
+    return FileFormat::FORMAT_UNKNOWN;
 }
 
 QStringList FileManager::splitInLines(const QByteArray &rawData) {

@@ -29,6 +29,7 @@
 namespace qfm1000::eeprom {
 
     enum class FileFormat {
+        FORMAT_UNKNOWN,
         FORMAT_BINARY,
         FORMAT_INTEL_HEX
     };
@@ -40,13 +41,13 @@ namespace qfm1000::eeprom {
         static bool loadFromFile(EEPROM *eeprom, const QString &filename);
 
         static bool
-        saveToFile(EEPROM *eeprom, const QString &filename, const FileFormat &fileFormat = FileFormat::FORMAT_BINARY);
+        saveToFile(EEPROM *eeprom, const QString &filename, const FileFormat &fileFormat = FileFormat::FORMAT_UNKNOWN);
 
     private:
 
         static QByteArray parseFile(const QByteArray &rawData);
 
-        static bool isIntelHex(const QByteArray &rawFile);
+        static FileFormat detectFormat(const QByteArray &rawFile);
 
         static QStringList splitInLines(const QByteArray &rawData);
 

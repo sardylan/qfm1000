@@ -50,9 +50,9 @@ Windows build are created using the official releases of Qt. Just download the M
 * 0.4.0
     * ADD: Support for read/write EEPROM with Arduino
 * 0.3.1
-    * FIX: Power values and channel numbers
+    * FIX: Power Values and channel numbers
 * 0.3.0
-    * ADD: Support for squelch values
+    * ADD: Support for squelch Values
     * TOOL: Add Coverity Scan support
 * 0.2.1
     * FIX: Bitwise error on eeprom flags

@@ -30,8 +30,10 @@
 #define CHANNELS_COUNT 100
 
 #define OFFSET_CHANNEL_FIRST 0x26
+#define OFFSET_CHANNEL_FIRST_ALTERNATIVE 0x21
 #define OFFSET_TOT 0x719
 #define OFFSET_STARTUP_CHANNEL 0x6D7
+#define OFFSET_KEY_BEEP 0x6EB
 #define OFFSET_BUTTONS 0x729
 #define OFFSET_LOW_POWER 0x71E
 
@@ -142,13 +144,21 @@ namespace qfm1000::eeprom {
 
         bool setData(const QByteArray &newValue);
 
-        Frequency getChannelRxFreq(Channel channel, FrequencyBand frequencyBand);
+        [[nodiscard]] FrequencyBand getFrequencyBand() const;
 
-        void setChannelRxFreq(Channel channel, Frequency freq, FrequencyBand frequencyBand);
+        void setFrequencyBand(FrequencyBand newValue);
 
-        Frequency getChannelTxFreq(Channel channel, FrequencyBand frequencyBand);
+        [[nodiscard]] int getFirstChannelOffset() const;
 
-        void setChannelTxFreq(Channel channel, Frequency freq, FrequencyBand frequencyBand);
+        void setFirstChannelOffset(int newValue);
+
+        Frequency getChannelRxFreq(Channel channel);
+
+        void setChannelRxFreq(Channel channel, Frequency freq);
+
+        Frequency getChannelTxFreq(Channel channel);
+
+        void setChannelTxFreq(Channel channel, Frequency freq);
 
         CTCSS getChannelRxCtcss(Channel channel);
 
@@ -190,15 +200,22 @@ namespace qfm1000::eeprom {
 
         QByteArray data;
 
+        FrequencyBand frequencyBand;
+        int firstChannelOffset;
+
+        bool add300Mhz;
+
+        bool detectRadioType();
+
         void assign(int pos, quint8 value);
 
-        static int computeOffset(Channel channel);
+        [[nodiscard]] int computeOffset(Channel channel) const;
+
+        [[nodiscard]] Frequency wordToFrequency(quint16 word) const;
+
+        [[nodiscard]] quint16 frequencyToWord(Frequency frequency) const;
 
         static bool isValidChannelNumber(Channel channel);
-
-        static Frequency wordToFrequency(quint16 word, FrequencyBand frequencyBand);
-
-        static quint16 frequencyToWord(Frequency frequency, FrequencyBand frequencyBand);
 
     signals:
 
