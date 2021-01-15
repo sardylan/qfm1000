@@ -202,6 +202,8 @@ namespace qfm1000::eeprom {
 
         [[nodiscard]] int computeOffset(Channel channel) const;
 
+        static void registerMetaType();
+
     private:
 
         QByteArray data;
@@ -228,5 +230,15 @@ namespace qfm1000::eeprom {
     };
 
 }
+
+Q_DECLARE_METATYPE(qfm1000::eeprom::FrequencyBand)
+
+Q_DECLARE_METATYPE(qfm1000::eeprom::Flag)
+
+Q_DECLARE_METATYPE(qfm1000::eeprom::CTCSS)
+
+Q_DECLARE_METATYPE(qfm1000::eeprom::Power)
+
+Q_DECLARE_METATYPE(qfm1000::eeprom::Squelch)
 
 #endif

@@ -445,7 +445,13 @@ bool EEPROM::detectRadioType() {
 void EEPROM::assign(int pos, quint8 value) {
     data.replace(pos, 1, (const char *) &value, 1);
 
-    QMetaObject::invokeMethod(this, "byteUpdated", Qt::QueuedConnection, Q_ARG(int, pos), Q_ARG(quint8, value));
+    QMetaObject::invokeMethod(
+            this,
+            "byteUpdated",
+            Qt::QueuedConnection,
+            Q_ARG(int, pos),
+            Q_ARG(quint8, value)
+    );
 }
 
 Frequency EEPROM::wordToFrequency(quint16 word) const {
@@ -464,4 +470,12 @@ quint16 EEPROM::frequencyToWord(Frequency frequency) const {
 
 bool EEPROM::isValidChannelNumber(Channel channel) {
     return channel < CHANNELS_COUNT;
+}
+
+void EEPROM::registerMetaType() {
+    qRegisterMetaType<qfm1000::eeprom::FrequencyBand>("qfm1000::eeprom::FrequencyBand");
+    qRegisterMetaType<qfm1000::eeprom::Flag>("qfm1000::eeprom::Flag");
+    qRegisterMetaType<qfm1000::eeprom::CTCSS>("qfm1000::eeprom::CTCSS");
+    qRegisterMetaType<qfm1000::eeprom::Power>("qfm1000::eeprom::Power");
+    qRegisterMetaType<qfm1000::eeprom::Squelch>("qfm1000::eeprom::Squelch");
 }

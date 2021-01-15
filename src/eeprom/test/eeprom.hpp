@@ -34,7 +34,6 @@ namespace qfm1000::eeprom {
     private:
 
         EEPROM *eeprom;
-        QSignalSpy *eepromSignalSpyByteUpdated;
 
     private slots:
 
