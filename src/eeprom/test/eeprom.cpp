@@ -39,6 +39,24 @@ int main(int argc, char *argv[]) {
 #define TEST_CTCSS CTCSS::TONE_67_0
 #define TEST_CTCSS_BYTES '\x01'
 
+#define TEST_POWER_DISABLED_BYTES '\x00'
+#define TEST_POWER_WATT_1_BYTES '\x01'
+#define TEST_POWER_WATT_6_BYTES '\x02'
+#define TEST_POWER_WATT_10_BYTES '\x03'
+#define TEST_POWER_WATT_15_BYTES '\x04'
+#define TEST_POWER_WATT_25_BYTES '\x05'
+
+#define TEST_SQUELCH_OPEN_BYTES '\x00'
+#define TEST_SQUELCH_SINAD_9DB_BYTES '\x01'
+#define TEST_SQUELCH_SINAD_12DB_BYTES '\x02'
+#define TEST_SQUELCH_SINAD_15DB_BYTES '\x03'
+#define TEST_SQUELCH_SINAD_18DB_BYTES '\x04'
+#define TEST_SQUELCH_SINAD_21DB_BYTES '\x05'
+#define TEST_SQUELCH_SINAD_24DB_BYTES '\x06'
+
+#define TEST_FLAG_DISABLED '\x00'
+#define TEST_FLAG_ENABLED '\x01'
+
 #define TEST_STARTUP_CHANNEL static_cast<Channel>(10)
 #define TEST_STARTUP_CHANNEL_BYTES '\x0a'
 
@@ -51,14 +69,15 @@ int main(int argc, char *argv[]) {
 #define TEST_LOW_POWER Power::WATT_1
 #define TEST_LOW_POWER_BYTES '\x01'
 
-#define checkSignalCount(signalSpy, count) QVERIFY(signalSpy.wait()); QCOMPARE(signalSpy.size(), count); signalSpy.clear()
-
-
 [[maybe_unused]] void EEPROMTest::initTestCase() {
     eeprom = new EEPROM();
+
+    signalSpy = new QSignalSpy(eeprom, &EEPROM::byteUpdated);
+    QVERIFY(signalSpy->isValid());
 }
 
 [[maybe_unused]] void EEPROMTest::cleanupTestCase() {
+    delete signalSpy;
     delete eeprom;
 }
 
@@ -68,6 +87,7 @@ int main(int argc, char *argv[]) {
 
 [[maybe_unused]] void EEPROMTest::cleanup() {
     eeprom->clear();
+    signalSpy->clear();
 }
 
 [[maybe_unused]] void EEPROMTest::clear() {
@@ -82,23 +102,20 @@ int main(int argc, char *argv[]) {
 }
 
 [[maybe_unused]] void EEPROMTest::channelRxFreq() {
-    QSignalSpy signalSpy(eeprom, &EEPROM::byteUpdated);
-    QVERIFY(signalSpy.isValid());
-
     for (Channel i = 0; i < CHANNELS_COUNT; i++) {
         QCOMPARE(eeprom->getChannelRxFreq(i), static_cast<Frequency>(0));
 
         eeprom->setChannelRxFreq(i, TEST_FREQ);
-        checkSignalCount(signalSpy, 2);
+
+        QVERIFY(signalSpy->wait());
+        QCOMPARE(signalSpy->size(), 2);
+        signalSpy->clear();
 
         QCOMPARE(eeprom->getChannelRxFreq(i), TEST_FREQ);
     }
 }
 
 [[maybe_unused]] void EEPROMTest::channelRxFreqBytes() {
-    QSignalSpy signalSpy(eeprom, &EEPROM::byteUpdated);
-    QVERIFY(signalSpy.isValid());
-
     for (Channel i = 0; i < CHANNELS_COUNT; i++) {
         int offset = eeprom->computeOffset(i);
 
@@ -106,42 +123,39 @@ int main(int argc, char *argv[]) {
         QCOMPARE(eeprom->getData()[offset + 1], '\x00');
 
         eeprom->setChannelRxFreq(i, TEST_FREQ);
-        QVERIFY(signalSpy.wait());
-        QCOMPARE(signalSpy.size(), 2);
+        QVERIFY(signalSpy->wait());
+        QCOMPARE(signalSpy->size(), 2);
 
         QCOMPARE(eeprom->getData()[offset + 0], TEST_FREQ_BYTES_MSB);
         QCOMPARE(eeprom->getData()[offset + 1], TEST_FREQ_BYTES_LSB);
 
-        QList<QVariant> signalArguments = signalSpy.takeFirst();
+        QList<QVariant> signalArguments = signalSpy->takeFirst();
         QCOMPARE(signalArguments[0].toInt(), offset + 0);
         QCOMPARE(signalArguments[1].toChar().toLatin1(), TEST_FREQ_BYTES_MSB);
 
-        signalArguments = signalSpy.takeFirst();
+        signalArguments = signalSpy->takeFirst();
         QCOMPARE(signalArguments[0].toInt(), offset + 1);
         QCOMPARE(signalArguments[1].toChar().toLatin1(), TEST_FREQ_BYTES_LSB);
 
-        signalSpy.clear();
+        signalSpy->clear();
     }
 }
 
 [[maybe_unused]] void EEPROMTest::channelTxFreq() {
-    QSignalSpy signalSpy(eeprom, &EEPROM::byteUpdated);
-    QVERIFY(signalSpy.isValid());
-
     for (Channel i = 0; i < CHANNELS_COUNT; i++) {
         QCOMPARE(eeprom->getChannelTxFreq(i), static_cast<Frequency>(0));
 
         eeprom->setChannelTxFreq(i, TEST_FREQ);
-        checkSignalCount(signalSpy, 2);
+
+        QVERIFY(signalSpy->wait());
+        QCOMPARE(signalSpy->size(), 2);
+        signalSpy->clear();
 
         QCOMPARE(eeprom->getChannelTxFreq(i), TEST_FREQ);
     }
 }
 
 [[maybe_unused]] void EEPROMTest::channelTxFreqBytes() {
-    QSignalSpy signalSpy(eeprom, &EEPROM::byteUpdated);
-    QVERIFY(signalSpy.isValid());
-
     for (Channel i = 0; i < CHANNELS_COUNT; i++) {
         int offset = eeprom->computeOffset(i);
 
@@ -149,100 +163,142 @@ int main(int argc, char *argv[]) {
         QCOMPARE(eeprom->getData()[offset + 3], '\x00');
 
         eeprom->setChannelTxFreq(i, TEST_FREQ);
+
+        QVERIFY(signalSpy->wait());
+        QCOMPARE(signalSpy->size(), 2);
+
         QCOMPARE(eeprom->getData()[offset + 2], TEST_FREQ_BYTES_MSB);
         QCOMPARE(eeprom->getData()[offset + 3], TEST_FREQ_BYTES_LSB);
+
+        QList<QVariant> signalArguments = signalSpy->takeFirst();
+        QCOMPARE(signalArguments[0].toInt(), offset + 2);
+        QCOMPARE(signalArguments[1].toChar().toLatin1(), TEST_FREQ_BYTES_MSB);
+
+        signalArguments = signalSpy->takeFirst();
+        QCOMPARE(signalArguments[0].toInt(), offset + 3);
+        QCOMPARE(signalArguments[1].toChar().toLatin1(), TEST_FREQ_BYTES_LSB);
+
+        signalSpy->clear();
     }
 }
 
 [[maybe_unused]] void EEPROMTest::channelRxCtcss() {
-    QSignalSpy signalSpy(eeprom, &EEPROM::byteUpdated);
-    QVERIFY(signalSpy.isValid());
-
     for (Channel i = 0; i < CHANNELS_COUNT; i++) {
         QCOMPARE(eeprom->getChannelRxCtcss(i), CTCSS::TONE_OFF);
 
         eeprom->setChannelRxCtcss(i, TEST_CTCSS);
-        checkSignalCount(signalSpy, 1);
+
+        QVERIFY(signalSpy->wait());
+        QCOMPARE(signalSpy->size(), 1);
+        signalSpy->clear();
 
         QCOMPARE(eeprom->getChannelRxCtcss(i), TEST_CTCSS);
     }
 }
 
 [[maybe_unused]] void EEPROMTest::channelRxCtcssBytes() {
-    QSignalSpy signalSpy(eeprom, &EEPROM::byteUpdated);
-    QVERIFY(signalSpy.isValid());
-
     for (Channel i = 0; i < CHANNELS_COUNT; i++) {
         int offset = eeprom->computeOffset(i);
 
         QCOMPARE(eeprom->getData()[offset + 4], '\x00');
 
         eeprom->setChannelRxCtcss(i, TEST_CTCSS);
+
+        QVERIFY(signalSpy->wait());
+        QCOMPARE(signalSpy->size(), 1);
+
         QCOMPARE(eeprom->getData()[offset + 4], TEST_CTCSS_BYTES);
+
+        QList<QVariant> signalArguments = signalSpy->takeFirst();
+        QCOMPARE(signalArguments[0].toInt(), offset + 4);
+        QCOMPARE(signalArguments[1].toChar().toLatin1(), TEST_CTCSS_BYTES);
+
+        signalSpy->clear();
     }
 }
 
 [[maybe_unused]] void EEPROMTest::channelTxCtcss() {
-    QSignalSpy signalSpy(eeprom, &EEPROM::byteUpdated);
-    QVERIFY(signalSpy.isValid());
-
     for (Channel i = 0; i < CHANNELS_COUNT; i++) {
         QCOMPARE(eeprom->getChannelTxCtcss(i), CTCSS::TONE_OFF);
 
         eeprom->setChannelTxCtcss(i, TEST_CTCSS);
-        checkSignalCount(signalSpy, 1);
+
+        QVERIFY(signalSpy->wait());
+        QCOMPARE(signalSpy->size(), 1);
+        signalSpy->clear();
 
         QCOMPARE(eeprom->getChannelTxCtcss(i), TEST_CTCSS);
     }
 }
 
 [[maybe_unused]] void EEPROMTest::channelTxCtcssBytes() {
-    QSignalSpy signalSpy(eeprom, &EEPROM::byteUpdated);
-    QVERIFY(signalSpy.isValid());
-
     for (Channel i = 0; i < CHANNELS_COUNT; i++) {
         int offset = eeprom->computeOffset(i);
 
         QCOMPARE(eeprom->getData()[offset + 5], '\x00');
 
         eeprom->setChannelTxCtcss(i, TEST_CTCSS);
+
+        QVERIFY(signalSpy->wait());
+        QCOMPARE(signalSpy->size(), 1);
+
         QCOMPARE(eeprom->getData()[offset + 5], TEST_CTCSS_BYTES);
+
+        QList<QVariant> signalArguments = signalSpy->takeFirst();
+        QCOMPARE(signalArguments[0].toInt(), offset + 5);
+        QCOMPARE(signalArguments[1].toChar().toLatin1(), TEST_CTCSS_BYTES);
+
+        signalSpy->clear();
     }
 }
 
 [[maybe_unused]] void EEPROMTest::channelPower() {
-    QSignalSpy signalSpy(eeprom, &EEPROM::byteUpdated);
-    QVERIFY(signalSpy.isValid());
-
     for (Channel i = 0; i < CHANNELS_COUNT; i++) {
         QCOMPARE(eeprom->getChannelPower(i), Power::DISABLED);
 
         eeprom->setChannelPower(i, Power::WATT_1);
-        checkSignalCount(signalSpy, 1);
+
+        QVERIFY(signalSpy->wait());
+        QCOMPARE(signalSpy->size(), 1);
+        signalSpy->clear();
+
         QCOMPARE(eeprom->getChannelPower(i), Power::WATT_1);
 
         eeprom->setChannelPower(i, Power::WATT_6);
-        checkSignalCount(signalSpy, 1);
+
+        QVERIFY(signalSpy->wait());
+        QCOMPARE(signalSpy->size(), 1);
+        signalSpy->clear();
+
         QCOMPARE(eeprom->getChannelPower(i), Power::WATT_6);
 
         eeprom->setChannelPower(i, Power::WATT_10);
-        checkSignalCount(signalSpy, 1);
+
+        QVERIFY(signalSpy->wait());
+        QCOMPARE(signalSpy->size(), 1);
+        signalSpy->clear();
+
         QCOMPARE(eeprom->getChannelPower(i), Power::WATT_10);
 
         eeprom->setChannelPower(i, Power::WATT_15);
-        checkSignalCount(signalSpy, 1);
+
+        QVERIFY(signalSpy->wait());
+        QCOMPARE(signalSpy->size(), 1);
+        signalSpy->clear();
+
         QCOMPARE(eeprom->getChannelPower(i), Power::WATT_15);
 
         eeprom->setChannelPower(i, Power::WATT_25);
-        checkSignalCount(signalSpy, 1);
+
+        QVERIFY(signalSpy->wait());
+        QCOMPARE(signalSpy->size(), 1);
+        signalSpy->clear();
+
         QCOMPARE(eeprom->getChannelPower(i), Power::WATT_25);
     }
 }
 
 [[maybe_unused]] void EEPROMTest::channelPowerBytes() {
-    QSignalSpy signalSpy(eeprom, &EEPROM::byteUpdated);
-    QVERIFY(signalSpy.isValid());
-
     for (Channel i = 0; i < CHANNELS_COUNT; i++) {
         int offset = eeprom->computeOffset(i);
 
@@ -250,64 +306,132 @@ int main(int argc, char *argv[]) {
                  static_cast<quint8>(Power::DISABLED));
 
         eeprom->setChannelPower(i, Power::WATT_1);
+
+        QVERIFY(signalSpy->wait());
+        QCOMPARE(signalSpy->size(), 1);
+
         QCOMPARE(static_cast<quint8>((eeprom->getData()[offset + 6] & 0b00111000) >> 3),
                  static_cast<quint8>(Power::WATT_1));
 
+        QList<QVariant> signalArguments = signalSpy->takeFirst();
+        QCOMPARE(signalArguments[0].toInt(), offset + 6);
+        QCOMPARE((signalArguments[1].toChar().toLatin1() & 0b00111000) >> 3, TEST_POWER_WATT_1_BYTES);
+
+        signalSpy->clear();
+
         eeprom->setChannelPower(i, Power::WATT_6);
+
+        QVERIFY(signalSpy->wait());
+        QCOMPARE(signalSpy->size(), 1);
+
         QCOMPARE(static_cast<quint8>((eeprom->getData()[offset + 6] & 0b00111000) >> 3),
                  static_cast<quint8>(Power::WATT_6));
 
+        signalArguments = signalSpy->takeFirst();
+        QCOMPARE(signalArguments[0].toInt(), offset + 6);
+        QCOMPARE((signalArguments[1].toChar().toLatin1() & 0b00111000) >> 3, TEST_POWER_WATT_6_BYTES);
+
+        signalSpy->clear();
+
         eeprom->setChannelPower(i, Power::WATT_10);
+
+        QVERIFY(signalSpy->wait());
+        QCOMPARE(signalSpy->size(), 1);
+
         QCOMPARE(static_cast<quint8>((eeprom->getData()[offset + 6] & 0b00111000) >> 3),
                  static_cast<quint8>(Power::WATT_10));
 
+        signalArguments = signalSpy->takeFirst();
+        QCOMPARE(signalArguments[0].toInt(), offset + 6);
+        QCOMPARE((signalArguments[1].toChar().toLatin1() & 0b00111000) >> 3, TEST_POWER_WATT_10_BYTES);
+
+        signalSpy->clear();
+
         eeprom->setChannelPower(i, Power::WATT_15);
+
+        QVERIFY(signalSpy->wait());
+        QCOMPARE(signalSpy->size(), 1);
+
         QCOMPARE(static_cast<quint8>((eeprom->getData()[offset + 6] & 0b00111000) >> 3),
                  static_cast<quint8>(Power::WATT_15));
 
+        signalArguments = signalSpy->takeFirst();
+        QCOMPARE(signalArguments[0].toInt(), offset + 6);
+        QCOMPARE((signalArguments[1].toChar().toLatin1() & 0b00111000) >> 3, TEST_POWER_WATT_15_BYTES);
+
+        signalSpy->clear();
+
         eeprom->setChannelPower(i, Power::WATT_25);
+
+        QVERIFY(signalSpy->wait());
+        QCOMPARE(signalSpy->size(), 1);
+
         QCOMPARE(static_cast<quint8>((eeprom->getData()[offset + 6] & 0b00111000) >> 3),
                  static_cast<quint8>(Power::WATT_25));
+
+        signalArguments = signalSpy->takeFirst();
+        QCOMPARE(signalArguments[0].toInt(), offset + 6);
+        QCOMPARE((signalArguments[1].toChar().toLatin1() & 0b00111000) >> 3, TEST_POWER_WATT_25_BYTES);
+
+        signalSpy->clear();
     }
 }
 
 [[maybe_unused]] void EEPROMTest::channelSquelch() {
-    QSignalSpy signalSpy(eeprom, &EEPROM::byteUpdated);
-    QVERIFY(signalSpy.isValid());
-
     for (Channel i = 0; i < CHANNELS_COUNT; i++) {
         QCOMPARE(eeprom->getChannelSquelch(i), Squelch::OPEN);
 
         eeprom->setChannelSquelch(i, Squelch::SINAD_9DB);
-        checkSignalCount(signalSpy, 1);
+
+        QVERIFY(signalSpy->wait());
+        QCOMPARE(signalSpy->size(), 1);
+        signalSpy->clear();
+
         QCOMPARE(eeprom->getChannelSquelch(i), Squelch::SINAD_9DB);
 
         eeprom->setChannelSquelch(i, Squelch::SINAD_12DB);
-        checkSignalCount(signalSpy, 1);
+
+        QVERIFY(signalSpy->wait());
+        QCOMPARE(signalSpy->size(), 1);
+        signalSpy->clear();
+
         QCOMPARE(eeprom->getChannelSquelch(i), Squelch::SINAD_12DB);
 
         eeprom->setChannelSquelch(i, Squelch::SINAD_15DB);
-        checkSignalCount(signalSpy, 1);
+
+        QVERIFY(signalSpy->wait());
+        QCOMPARE(signalSpy->size(), 1);
+        signalSpy->clear();
+
         QCOMPARE(eeprom->getChannelSquelch(i), Squelch::SINAD_15DB);
 
         eeprom->setChannelSquelch(i, Squelch::SINAD_18DB);
-        checkSignalCount(signalSpy, 1);
+
+        QVERIFY(signalSpy->wait());
+        QCOMPARE(signalSpy->size(), 1);
+        signalSpy->clear();
+
         QCOMPARE(eeprom->getChannelSquelch(i), Squelch::SINAD_18DB);
 
         eeprom->setChannelSquelch(i, Squelch::SINAD_21DB);
-        checkSignalCount(signalSpy, 1);
+
+        QVERIFY(signalSpy->wait());
+        QCOMPARE(signalSpy->size(), 1);
+        signalSpy->clear();
+
         QCOMPARE(eeprom->getChannelSquelch(i), Squelch::SINAD_21DB);
 
         eeprom->setChannelSquelch(i, Squelch::SINAD_24DB);
-        checkSignalCount(signalSpy, 1);
+
+        QVERIFY(signalSpy->wait());
+        QCOMPARE(signalSpy->size(), 1);
+        signalSpy->clear();
+
         QCOMPARE(eeprom->getChannelSquelch(i), Squelch::SINAD_24DB);
     }
 }
 
 [[maybe_unused]] void EEPROMTest::channelSquelchBytes() {
-    QSignalSpy signalSpy(eeprom, &EEPROM::byteUpdated);
-    QVERIFY(signalSpy.isValid());
-
     for (Channel i = 0; i < CHANNELS_COUNT; i++) {
         int offset = eeprom->computeOffset(i);
 
@@ -315,52 +439,114 @@ int main(int argc, char *argv[]) {
                  static_cast<quint8>(Squelch::OPEN));
 
         eeprom->setChannelSquelch(i, Squelch::SINAD_9DB);
+
+        QVERIFY(signalSpy->wait());
+        QCOMPARE(signalSpy->size(), 1);
+
         QCOMPARE(static_cast<quint8>((eeprom->getData()[offset + 7] & 0b00011100) >> 2),
                  static_cast<quint8>(Squelch::SINAD_9DB));
 
+        QList<QVariant> signalArguments = signalSpy->takeFirst();
+        QCOMPARE(signalArguments[0].toInt(), offset + 7);
+        QCOMPARE((signalArguments[1].toChar().toLatin1() & 0b00011100) >> 2, TEST_SQUELCH_SINAD_9DB_BYTES);
+
+        signalSpy->clear();
+
         eeprom->setChannelSquelch(i, Squelch::SINAD_12DB);
+
+        QVERIFY(signalSpy->wait());
+        QCOMPARE(signalSpy->size(), 1);
+
         QCOMPARE(static_cast<quint8>((eeprom->getData()[offset + 7] & 0b00011100) >> 2),
                  static_cast<quint8>(Squelch::SINAD_12DB));
 
+        signalArguments = signalSpy->takeFirst();
+        QCOMPARE(signalArguments[0].toInt(), offset + 7);
+        QCOMPARE((signalArguments[1].toChar().toLatin1() & 0b00011100) >> 2, TEST_SQUELCH_SINAD_12DB_BYTES);
+
+        signalSpy->clear();
+
         eeprom->setChannelSquelch(i, Squelch::SINAD_15DB);
+
+        QVERIFY(signalSpy->wait());
+        QCOMPARE(signalSpy->size(), 1);
+
         QCOMPARE(static_cast<quint8>((eeprom->getData()[offset + 7] & 0b00011100) >> 2),
                  static_cast<quint8>(Squelch::SINAD_15DB));
 
+        signalArguments = signalSpy->takeFirst();
+        QCOMPARE(signalArguments[0].toInt(), offset + 7);
+        QCOMPARE((signalArguments[1].toChar().toLatin1() & 0b00011100) >> 2, TEST_SQUELCH_SINAD_15DB_BYTES);
+
+        signalSpy->clear();
+
         eeprom->setChannelSquelch(i, Squelch::SINAD_18DB);
+
+        QVERIFY(signalSpy->wait());
+        QCOMPARE(signalSpy->size(), 1);
+
         QCOMPARE(static_cast<quint8>((eeprom->getData()[offset + 7] & 0b00011100) >> 2),
                  static_cast<quint8>(Squelch::SINAD_18DB));
 
+        signalArguments = signalSpy->takeFirst();
+        QCOMPARE(signalArguments[0].toInt(), offset + 7);
+        QCOMPARE((signalArguments[1].toChar().toLatin1() & 0b00011100) >> 2, TEST_SQUELCH_SINAD_18DB_BYTES);
+
+        signalSpy->clear();
+
         eeprom->setChannelSquelch(i, Squelch::SINAD_21DB);
+
+        QVERIFY(signalSpy->wait());
+        QCOMPARE(signalSpy->size(), 1);
+
         QCOMPARE(static_cast<quint8>((eeprom->getData()[offset + 7] & 0b00011100) >> 2),
                  static_cast<quint8>(Squelch::SINAD_21DB));
 
+        signalArguments = signalSpy->takeFirst();
+        QCOMPARE(signalArguments[0].toInt(), offset + 7);
+        QCOMPARE((signalArguments[1].toChar().toLatin1() & 0b00011100) >> 2, TEST_SQUELCH_SINAD_21DB_BYTES);
+
+        signalSpy->clear();
+
         eeprom->setChannelSquelch(i, Squelch::SINAD_24DB);
+
+        QVERIFY(signalSpy->wait());
+        QCOMPARE(signalSpy->size(), 1);
+
         QCOMPARE(static_cast<quint8>((eeprom->getData()[offset + 7] & 0b00011100) >> 2),
                  static_cast<quint8>(Squelch::SINAD_24DB));
+
+        signalArguments = signalSpy->takeFirst();
+        QCOMPARE(signalArguments[0].toInt(), offset + 7);
+        QCOMPARE((signalArguments[1].toChar().toLatin1() & 0b00011100) >> 2, TEST_SQUELCH_SINAD_24DB_BYTES);
+
+        signalSpy->clear();
     }
 }
 
 [[maybe_unused]] void EEPROMTest::channelSelectiveCalling() {
-    QSignalSpy signalSpy(eeprom, &EEPROM::byteUpdated);
-    QVERIFY(signalSpy.isValid());
-
     for (Channel i = 0; i < CHANNELS_COUNT; i++) {
         QCOMPARE(eeprom->getChannelSelectiveCalling(i), Flag::DISABLED);
 
         eeprom->setChannelSelectiveCalling(i, Flag::ENABLED);
-        checkSignalCount(signalSpy, 1);
+
+        QVERIFY(signalSpy->wait());
+        QCOMPARE(signalSpy->size(), 1);
+        signalSpy->clear();
+
         QCOMPARE(eeprom->getChannelSelectiveCalling(i), Flag::ENABLED);
 
         eeprom->setChannelSelectiveCalling(i, Flag::DISABLED);
-        checkSignalCount(signalSpy, 1);
+
+        QVERIFY(signalSpy->wait());
+        QCOMPARE(signalSpy->size(), 1);
+        signalSpy->clear();
+
         QCOMPARE(eeprom->getChannelSelectiveCalling(i), Flag::DISABLED);
     }
 }
 
 [[maybe_unused]] void EEPROMTest::channelSelectiveCallingBytes() {
-    QSignalSpy signalSpy(eeprom, &EEPROM::byteUpdated);
-    QVERIFY(signalSpy.isValid());
-
     for (Channel i = 0; i < CHANNELS_COUNT; i++) {
         int offset = eeprom->computeOffset(i);
 
@@ -368,36 +554,58 @@ int main(int argc, char *argv[]) {
                  static_cast<bool>(Flag::DISABLED));
 
         eeprom->setChannelSelectiveCalling(i, Flag::ENABLED);
+
+        QVERIFY(signalSpy->wait());
+        QCOMPARE(signalSpy->size(), 1);
+
         QCOMPARE(static_cast<bool>((eeprom->getData()[offset + 7] & 0b00000010) >> 1),
                  static_cast<bool>(Flag::ENABLED));
 
+        QList<QVariant> signalArguments = signalSpy->takeFirst();
+        QCOMPARE(signalArguments[0].toInt(), offset + 7);
+        QCOMPARE((signalArguments[1].toChar().toLatin1() & 0b00000010) >> 1, TEST_FLAG_ENABLED);
+
+        signalSpy->clear();
+
         eeprom->setChannelSelectiveCalling(i, Flag::DISABLED);
+
+        QVERIFY(signalSpy->wait());
+        QCOMPARE(signalSpy->size(), 1);
+
         QCOMPARE(static_cast<bool>((eeprom->getData()[offset + 7] & 0b00000010) >> 1),
                  static_cast<bool>(Flag::DISABLED));
+
+        signalArguments = signalSpy->takeFirst();
+        QCOMPARE(signalArguments[0].toInt(), offset + 7);
+        QCOMPARE((signalArguments[1].toChar().toLatin1() & 0b00000010) >> 1, TEST_FLAG_DISABLED);
+
+        signalSpy->clear();
     }
 }
 
 [[maybe_unused]] void EEPROMTest::channelCpuOffset() {
-    QSignalSpy signalSpy(eeprom, &EEPROM::byteUpdated);
-    QVERIFY(signalSpy.isValid());
-
     for (Channel i = 0; i < CHANNELS_COUNT; i++) {
         QCOMPARE(eeprom->getChannelCpuOffset(i), Flag::DISABLED);
 
         eeprom->setChannelCpuOffset(i, Flag::ENABLED);
-        checkSignalCount(signalSpy, 1);
+
+        QVERIFY(signalSpy->wait());
+        QCOMPARE(signalSpy->size(), 1);
+        signalSpy->clear();
+
         QCOMPARE(eeprom->getChannelCpuOffset(i), Flag::ENABLED);
 
         eeprom->setChannelCpuOffset(i, Flag::DISABLED);
-        checkSignalCount(signalSpy, 1);
+
+        QVERIFY(signalSpy->wait());
+        QCOMPARE(signalSpy->size(), 1);
+        signalSpy->clear();
+
         QCOMPARE(eeprom->getChannelCpuOffset(i), Flag::DISABLED);
     }
 }
 
 [[maybe_unused]] void EEPROMTest::channelCpuOffsetBytes() {
-    QSignalSpy signalSpy(eeprom, &EEPROM::byteUpdated);
-    QVERIFY(signalSpy.isValid());
-
     for (Channel i = 0; i < CHANNELS_COUNT; i++) {
         int offset = eeprom->computeOffset(i);
 
@@ -405,96 +613,147 @@ int main(int argc, char *argv[]) {
                  static_cast<bool>(Flag::DISABLED));
 
         eeprom->setChannelCpuOffset(i, Flag::ENABLED);
+
+        QVERIFY(signalSpy->wait());
+        QCOMPARE(signalSpy->size(), 1);
+
         QCOMPARE(static_cast<bool>(eeprom->getData()[offset + 7] & 0b00000001),
                  static_cast<bool>(Flag::ENABLED));
 
+        QList<QVariant> signalArguments = signalSpy->takeFirst();
+        QCOMPARE(signalArguments[0].toInt(), offset + 7);
+        QCOMPARE(signalArguments[1].toChar().toLatin1() & 0b00000001, TEST_FLAG_ENABLED);
+
+        signalSpy->clear();
+
         eeprom->setChannelCpuOffset(i, Flag::DISABLED);
+
+        QVERIFY(signalSpy->wait());
+        QCOMPARE(signalSpy->size(), 1);
+
         QCOMPARE(static_cast<bool>(eeprom->getData()[offset + 7] & 0b00000001),
                  static_cast<bool>(Flag::DISABLED));
+
+        signalArguments = signalSpy->takeFirst();
+        QCOMPARE(signalArguments[0].toInt(), offset + 7);
+        QCOMPARE(signalArguments[1].toChar().toLatin1() & 0b00000001, TEST_FLAG_DISABLED);
+
+        signalSpy->clear();
     }
 }
 
 [[maybe_unused]] void EEPROMTest::startupChannel() {
-    QSignalSpy signalSpy(eeprom, &EEPROM::byteUpdated);
-    QVERIFY(signalSpy.isValid());
-
     QCOMPARE(eeprom->getStartupChannel(), static_cast<Channel>(0));
 
     eeprom->setStartupChannel(TEST_STARTUP_CHANNEL);
-    checkSignalCount(signalSpy, 1);
+
+    QVERIFY(signalSpy->wait());
+    QCOMPARE(signalSpy->size(), 1);
+    signalSpy->clear();
+
     QCOMPARE(eeprom->getStartupChannel(), TEST_STARTUP_CHANNEL);
 }
 
 [[maybe_unused]] void EEPROMTest::startupChannelBytes() {
-    QSignalSpy signalSpy(eeprom, &EEPROM::byteUpdated);
-    QVERIFY(signalSpy.isValid());
-
     QCOMPARE(eeprom->getData()[OFFSET_STARTUP_CHANNEL], '\x00');
 
     eeprom->setStartupChannel(TEST_STARTUP_CHANNEL);
+
+    QVERIFY(signalSpy->wait());
+    QCOMPARE(signalSpy->size(), 1);
+
     QCOMPARE(eeprom->getData()[OFFSET_STARTUP_CHANNEL], TEST_STARTUP_CHANNEL_BYTES);
+
+    QList<QVariant> signalArguments = signalSpy->takeFirst();
+    QCOMPARE(signalArguments[0].toInt(), OFFSET_STARTUP_CHANNEL);
+    QCOMPARE(signalArguments[1].toChar().toLatin1() & 0b00000001, TEST_FLAG_DISABLED);
+
+    signalSpy->clear();
 }
 
 [[maybe_unused]] void EEPROMTest::keyBeep() {
-    QSignalSpy signalSpy(eeprom, &EEPROM::byteUpdated);
-    QVERIFY(signalSpy.isValid());
-
     QCOMPARE(eeprom->getKeyBeep(), Flag::DISABLED);
 
     eeprom->setKeyBeep(TEST_KEY_BEEP);
-    checkSignalCount(signalSpy, 1);
+
+    QVERIFY(signalSpy->wait());
+    QCOMPARE(signalSpy->size(), 1);
+    signalSpy->clear();
+
     QCOMPARE(eeprom->getKeyBeep(), TEST_KEY_BEEP);
 }
 
 [[maybe_unused]] void EEPROMTest::keyBeepBytes() {
-    QSignalSpy signalSpy(eeprom, &EEPROM::byteUpdated);
-    QVERIFY(signalSpy.isValid());
-
     QCOMPARE(eeprom->getData()[OFFSET_KEY_BEEP], '\x00');
 
     eeprom->setKeyBeep(TEST_KEY_BEEP);
+
+    QVERIFY(signalSpy->wait());
+    QCOMPARE(signalSpy->size(), 1);
+
     QCOMPARE(eeprom->getData()[OFFSET_KEY_BEEP], TEST_KEY_BEEP_BYTES);
+
+    QList<QVariant> signalArguments = signalSpy->takeFirst();
+    QCOMPARE(signalArguments[0].toInt(), OFFSET_KEY_BEEP);
+    QCOMPARE(signalArguments[1].toChar().toLatin1() & 0b00000001, TEST_FLAG_ENABLED);
+
+    signalSpy->clear();
 }
 
 [[maybe_unused]] void EEPROMTest::tot() {
-    QSignalSpy signalSpy(eeprom, &EEPROM::byteUpdated);
-    QVERIFY(signalSpy.isValid());
-
     QCOMPARE(eeprom->getTot(), static_cast<TOT>(0));
 
     eeprom->setTot(TEST_TOT);
-    QVERIFY(signalSpy.wait());
-    checkSignalCount(signalSpy, 1);
+
+    QVERIFY(signalSpy->wait());
+    QCOMPARE(signalSpy->size(), 1);
+    signalSpy->clear();
+
     QCOMPARE(eeprom->getTot(), TEST_TOT);
 }
 
 [[maybe_unused]] void EEPROMTest::totBytes() {
-    QSignalSpy signalSpy(eeprom, &EEPROM::byteUpdated);
-    QVERIFY(signalSpy.isValid());
-
     QCOMPARE(eeprom->getData()[OFFSET_TOT], '\x00');
 
     eeprom->setTot(TEST_TOT);
+
+    QVERIFY(signalSpy->wait());
+    QCOMPARE(signalSpy->size(), 1);
+
     QCOMPARE(eeprom->getData()[OFFSET_TOT], TEST_TOT_BYTES);
+
+    QList<QVariant> signalArguments = signalSpy->takeFirst();
+    QCOMPARE(signalArguments[0].toInt(), OFFSET_TOT);
+    QCOMPARE(signalArguments[1].toChar().toLatin1() & 0b00000001, TEST_FLAG_DISABLED);
+
+    signalSpy->clear();
 }
 
 [[maybe_unused]] void EEPROMTest::lowPower() {
-    QSignalSpy signalSpy(eeprom, &EEPROM::byteUpdated);
-    QVERIFY(signalSpy.isValid());
-
     QCOMPARE(eeprom->getLowPower(), Power::DISABLED);
 
     eeprom->setLowPower(TEST_LOW_POWER);
-    checkSignalCount(signalSpy, 1);
+
+    QVERIFY(signalSpy->wait());
+    QCOMPARE(signalSpy->size(), 1);
+    signalSpy->clear();
+
     QCOMPARE(eeprom->getLowPower(), TEST_LOW_POWER);
 }
 
 [[maybe_unused]] void EEPROMTest::lowPowerBytes() {
-    QSignalSpy signalSpy(eeprom, &EEPROM::byteUpdated);
-    QVERIFY(signalSpy.isValid());
-
     QCOMPARE(eeprom->getData()[OFFSET_LOW_POWER], '\x00');
 
     eeprom->setLowPower(TEST_LOW_POWER);
+
+    QVERIFY(signalSpy->wait());
+    QCOMPARE(signalSpy->size(), 1);
+
     QCOMPARE(eeprom->getData()[OFFSET_LOW_POWER], TEST_LOW_POWER_BYTES);
+
+    QList<QVariant> signalArguments = signalSpy->takeFirst();
+    QCOMPARE(signalArguments[0].toInt(), OFFSET_LOW_POWER);
+    QCOMPARE(signalArguments[1].toChar().toLatin1() & 0b00000001, TEST_FLAG_ENABLED);
+
+    signalSpy->clear();
 }
