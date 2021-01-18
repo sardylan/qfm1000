@@ -26,8 +26,10 @@
 #include <QtWidgets/QApplication>
 #include <QtWidgets/QMessageBox>
 
-#include "main.hpp"
+#include "app.hpp"
 #include "version.hpp"
+
+#include "windows/about.hpp"
 
 #include "../eeprom/filemanager.hpp"
 
@@ -112,10 +114,12 @@ int main(int argc, char *argv[]) {
 }
 
 QFM1000::QFM1000(QObject *parent) : QObject(parent) {
-
+    mainWindow = new windows::Main();
 }
 
-QFM1000::~QFM1000() = default;
+QFM1000::~QFM1000() {
+    delete mainWindow;
+}
 
 void QFM1000::entryPoint() {
     qInfo() << "Entrypoint";
@@ -126,9 +130,27 @@ void QFM1000::entryPoint() {
 void QFM1000::start() {
     qInfo() << "Start";
 
+    connectSignals();
+
+    mainWindow->show();
+}
+
+void QFM1000::connectSignals() const {
+    qInfo() << "Connecting signals";
+
+    connect(mainWindow, &windows::Main::displayAbout, this, &QFM1000::displayAbout);
 }
 
 void QFM1000::stop() {
     qInfo() << "Stop";
 
+    mainWindow->close();
+}
+
+void QFM1000::displayAbout() {
+    qInfo() << "Displaying about";
+
+    windows::About aboutWindow;
+    aboutWindow.setWindowModality(Qt::ApplicationModal);
+    aboutWindow.exec();
 }

@@ -18,56 +18,35 @@
  */
 
 
-#ifndef __QFM1000__QFM1000__MAIN__H
-#define __QFM1000__QFM1000__MAIN__H
+#ifndef __QFM1000__QFM1000__WINDOWS__ABOUT__H
+#define __QFM1000__QFM1000__WINDOWS__ABOUT__H
 
-#ifdef Q_OS_LINUX
+#include <QtWidgets/QDialog>
 
-#include <csignal>
+namespace Ui {
+    class About;
+}
 
-void signalHandler(int signal);
+namespace qfm1000::app::windows {
 
-#endif
-
-#ifdef Q_OS_WINDOWS
-
-#include <windows.h>
-
-BOOL WINAPI ctrlHandler(DWORD ctrlHandler);
-
-#endif
-
-#include <QtCore/QObject>
-
-#include "../eeprom/eeprom.hpp"
-#include "../inoprog/inoprog.hpp"
-
-using namespace qfm1000;
-
-namespace qfm1000::app {
-
-    class QFM1000 : public QObject {
+    class About : public QDialog {
     Q_OBJECT
 
     public:
 
-        explicit QFM1000(QObject *parent = nullptr);
+        explicit About(QWidget *parent = nullptr);
 
-        ~QFM1000() override;
+        ~About() override;
 
-        void entryPoint();
+    private:
 
-        void start();
+        Ui::About *ui;
 
-        void stop();
+        void connectSignals();
 
-//    private:
-//
-//        eeprom::EEPROM *eeprom;
+        void initUi();
 
-    signals:
-
-        void finished();
+        static QByteArray readFile(const QString &path);
 
     };
 

@@ -13,7 +13,9 @@ set(MACOSX_BUNDLE_ICON_FILE icon.icns)
 
 add_executable(qfm1000
         WIN32 MACOSX_BUNDLE
-        main.cpp main.hpp
+        windows/main.cpp windows/main.hpp windows/main.ui
+        windows/about.cpp windows/about.hpp windows/about.ui
+        app.cpp app.hpp
         version.hpp
         qfm1000.rc
         qfm1000.qrc

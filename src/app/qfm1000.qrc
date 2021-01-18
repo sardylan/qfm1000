@@ -1,7 +1,15 @@
 <RCC>
 
     <qresource prefix="/files/eeprom">
-        <file alias="new">../../resources/eeprom_new.bin</file>
+        <file alias="new">../../resources/eeprom/new.bin</file>
+    </qresource>
+
+    <qresource prefix="/files/text">
+        <file alias="about">../../resources/text/about.html</file>
+    </qresource>
+
+    <qresource prefix="/icons">
+        <file alias="application">../../icons/application.svg</file>
     </qresource>
 
     <qresource prefix="/action/application">
