@@ -67,7 +67,7 @@ namespace qfm1000::inoprog {
 
         QByteArray readEeprom();
 
-        void writeEeprom(const QByteArray& data);
+        void writeEeprom(const QByteArray &data);
 
     private:
 
@@ -81,13 +81,19 @@ namespace qfm1000::inoprog {
 
         bool isReady();
 
+        void programmerStart();
+
+        void programmerStop(bool sendSignal = true);
+
+        void emitProgress(int value);
+
     private slots:
 
         void errorOccurred(QSerialPort::SerialPortError serialPortError);
 
         QByteArray readPage(PageNum num);
 
-        void writePage(PageNum num, const QByteArray& pageData);
+        bool writePage(PageNum num, const QByteArray &pageData);
 
     signals:
 
@@ -100,6 +106,8 @@ namespace qfm1000::inoprog {
         void pageRead(PageNum num);
 
         void pageWritten(PageNum num);
+
+        void progress(int max, int value);
 
         void readCompleted();
 

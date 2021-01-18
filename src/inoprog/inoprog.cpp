@@ -30,13 +30,15 @@
 using namespace qfm1000;
 using namespace qfm1000::inoprog;
 
-#define INOPROG_SERIAL_WAIT 30000
+#define INOPROG_SERIAL_WAIT 5000
 #define INOPROG_SERIAL_SLEEP 25
 
 InoProg::InoProg(QObject *parent) : Service(parent) {
 #if QT_VERSION >= QT_VERSION_CHECK(5, 8, 0)
     connect(&serialPort, &QSerialPort::errorOccurred, this, &InoProg::errorOccurred);
 #endif
+
+    portSpeed = QSerialPort::Baud115200;
 
     ready = false;
 }
@@ -66,32 +68,8 @@ bool InoProg::isReady() {
 void InoProg::start() {
     mutex.lock();
 
-    if (!serialPort.isOpen()) {
-        serialPort.setPortName(portName);
-        serialPort.setBaudRate(portSpeed);
-
-        serialPort.setDataBits(QSerialPort::Data8);
-        serialPort.setParity(QSerialPort::NoParity);
-        serialPort.setStopBits(QSerialPort::OneStop);
-
-        serialPort.setFlowControl(QSerialPort::NoFlowControl);
-
-        if (serialPort.open(QIODevice::ReadWrite)) {
-            serialPort.clear();
-
-            while (serialPort.bytesAvailable() < 1)
-                serialPort.waitForReadyRead(INOPROG_SERIAL_WAIT);
-
-            QByteArray data = serialPort.read(1);
-            if (data.at(0) == INOPROG_PROTOCOL_READY) {
-                ready = true;
-                serialPort.clear();
-                QMetaObject::invokeMethod(this, &InoProg::connected, Qt::QueuedConnection);
-            }
-        } else {
-            qCritical() << "Unable to open serial port";
-        }
-    }
+    if (!serialPort.isOpen())
+        programmerStart();
 
     mutex.unlock();
 }
@@ -99,15 +77,50 @@ void InoProg::start() {
 void InoProg::stop() {
     mutex.lock();
 
-    if (serialPort.isOpen()) {
+    if (serialPort.isOpen())
+        programmerStop();
+
+    mutex.unlock();
+}
+
+void InoProg::programmerStart() {
+    serialPort.setPortName(portName);
+    serialPort.setBaudRate(portSpeed);
+
+    serialPort.setDataBits(QSerialPort::Data8);
+    serialPort.setParity(QSerialPort::NoParity);
+    serialPort.setStopBits(QSerialPort::OneStop);
+
+    serialPort.setFlowControl(QSerialPort::NoFlowControl);
+
+    if (serialPort.open(QIODevice::ReadWrite)) {
         serialPort.clear();
-        serialPort.close();
-        QMetaObject::invokeMethod(this, &InoProg::disconnected, Qt::QueuedConnection);
+
+        while (serialPort.bytesAvailable() < 1)
+            serialPort.waitForReadyRead(INOPROG_SERIAL_WAIT);
+
+        QByteArray data = serialPort.read(1);
+        if (data.at(0) != INOPROG_PROTOCOL_READY) {
+            programmerStop(false);
+            return;
+        }
+
+        ready = true;
+        serialPort.clear();
+        QMetaObject::invokeMethod(this, &InoProg::connected, Qt::QueuedConnection);
+    } else {
+        qCritical() << "Unable to open serial port";
     }
+}
+
+void InoProg::programmerStop(bool sendSignal) {
+    serialPort.clear();
+    serialPort.close();
 
     ready = false;
 
-    mutex.unlock();
+    if (sendSignal)
+        QMetaObject::invokeMethod(this, &InoProg::disconnected, Qt::QueuedConnection);
 }
 
 void InoProg::errorOccurred(QSerialPort::SerialPortError serialPortError) {
@@ -126,25 +139,32 @@ QByteArray InoProg::readEeprom() {
 
     mutex.lock();
 
+    emitProgress(-1);
+
     if (isReady()) {
         eepromData.clear();
 
         for (int p = 0; p < INOPROG_EEPROM_PAGE_COUNT; p++) {
             auto pageNum = (PageNum) p;
 
-            QFuture<QByteArray> pageDataFuture = QtConcurrent::run(this, &InoProg::readPage, pageNum);
-            QByteArray pageData = pageDataFuture.result();
+            QFuture<QByteArray> readPageFuture = QtConcurrent::run(this, &InoProg::readPage, pageNum);
+            QByteArray pageData = readPageFuture.result();
 
             if (pageData.size() != INOPROG_EEPROM_PAGE_SIZE) {
                 qCritical() << "Error reading page" << pageNum;
+                QMetaObject::invokeMethod(this, &InoProg::error, Qt::QueuedConnection);
                 eepromData.clear();
                 break;
             }
 
             eepromData.append(pageData);
 
+            emitProgress(p);
+
             QThread::msleep(INOPROG_SERIAL_SLEEP);
         }
+
+        emitProgress(INOPROG_EEPROM_PAGE_COUNT);
 
         QMetaObject::invokeMethod(this, &InoProg::readCompleted, Qt::QueuedConnection);
     } else {
@@ -160,16 +180,28 @@ QByteArray InoProg::readEeprom() {
 void InoProg::writeEeprom(const QByteArray &data) {
     mutex.lock();
 
+    emitProgress(-1);
+
     if (isReady()) {
         for (int p = 0; p < INOPROG_EEPROM_PAGE_COUNT; p++) {
             auto pageNum = (PageNum) p;
 
             QByteArray pageData = data.mid(INOPROG_EEPROM_PAGE_SIZE * pageNum, INOPROG_EEPROM_PAGE_SIZE);
-            QFuture<void> pageDataFuture = QtConcurrent::run(this, &InoProg::writePage, pageNum, pageData);
-            pageDataFuture.waitForFinished();
+            QFuture<bool> writePageFuture = QtConcurrent::run(this, &InoProg::writePage, pageNum, pageData);
+            bool result = writePageFuture.result();
+
+            if (!result) {
+                qCritical() << "Error writing page" << pageNum;
+                QMetaObject::invokeMethod(this, &InoProg::error, Qt::QueuedConnection);
+                break;
+            }
+
+            emitProgress(p);
 
             QThread::msleep(INOPROG_SERIAL_SLEEP);
         }
+
+        emitProgress(INOPROG_EEPROM_PAGE_COUNT);
 
         QMetaObject::invokeMethod(this, &InoProg::writeCompleted, Qt::QueuedConnection);
     } else {
@@ -187,8 +219,11 @@ QByteArray InoProg::readPage(PageNum num) {
     serialPort.write(cmd);
     serialPort.waitForBytesWritten(INOPROG_SERIAL_WAIT);
 
-    while (serialPort.bytesAvailable() < INOPROG_EEPROM_PAGE_SIZE)
+    if (serialPort.bytesAvailable() < INOPROG_EEPROM_PAGE_SIZE)
         serialPort.waitForReadyRead(INOPROG_SERIAL_WAIT);
+
+    if (serialPort.bytesAvailable() < INOPROG_EEPROM_PAGE_SIZE)
+        return QByteArray();
 
     QByteArray pageData = serialPort.read(INOPROG_EEPROM_PAGE_SIZE);
 
@@ -200,7 +235,7 @@ QByteArray InoProg::readPage(PageNum num) {
     return pageData;
 }
 
-void InoProg::writePage(PageNum num, const QByteArray &pageData) {
+bool InoProg::writePage(PageNum num, const QByteArray &pageData) {
     QByteArray cmd;
 
     cmd.append(INOPROG_PROTOCOL_WRITE);
@@ -210,8 +245,11 @@ void InoProg::writePage(PageNum num, const QByteArray &pageData) {
     serialPort.write(cmd);
     serialPort.waitForBytesWritten(INOPROG_SERIAL_WAIT);
 
-    while (serialPort.bytesAvailable() == 0)
+    if (serialPort.bytesAvailable() < 1)
         serialPort.waitForReadyRead(INOPROG_SERIAL_WAIT);
+
+    if (serialPort.bytesAvailable() < 1)
+        return false;
 
     QByteArray response = serialPort.read(1);
 
@@ -223,4 +261,16 @@ void InoProg::writePage(PageNum num, const QByteArray &pageData) {
              << pageData.toHex()
              << " - "
              << "Response" << response;
+
+    return true;
+}
+
+void InoProg::emitProgress(int value) {
+    QMetaObject::invokeMethod(
+            this,
+            "progress",
+            Qt::QueuedConnection,
+            Q_ARG(int, INOPROG_EEPROM_PAGE_COUNT),
+            Q_ARG(int, value)
+    );
 }
