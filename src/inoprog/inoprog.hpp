@@ -42,6 +42,14 @@ namespace qfm1000::inoprog {
 
     typedef quint8 PageNum;
 
+    enum class InoProgError {
+        ERROR_NO_ANSWER,
+        ERROR_NOT_READY,
+        ERROR_UNABLE_OPEN_SERIAL,
+        ERROR_SERIAL_PORT,
+        ERROR_PAGE
+    };
+
     class InoProg : public utilities::Service {
     Q_OBJECT
 
@@ -58,6 +66,8 @@ namespace qfm1000::inoprog {
         [[nodiscard]] QSerialPort::BaudRate getPortSpeed() const;
 
         void setPortSpeed(QSerialPort::BaudRate newValue);
+
+        static void registerMetaTypes();
 
     public slots:
 
@@ -87,6 +97,8 @@ namespace qfm1000::inoprog {
 
         void emitProgress(int value);
 
+        void emitError(InoProgError inoProgError);
+
     private slots:
 
         void errorOccurred(QSerialPort::SerialPortError serialPortError);
@@ -101,7 +113,7 @@ namespace qfm1000::inoprog {
 
         void disconnected();
 
-        void error();
+        void error(InoProgError inoProgError);
 
         void pageRead(PageNum num);
 
@@ -116,5 +128,7 @@ namespace qfm1000::inoprog {
     };
 
 }
+
+Q_DECLARE_METATYPE(qfm1000::inoprog::InoProgError)
 
 #endif

@@ -96,11 +96,20 @@ void InoProg::programmerStart() {
     if (serialPort.open(QIODevice::ReadWrite)) {
         serialPort.clear();
 
-        while (serialPort.bytesAvailable() < 1)
+        if (serialPort.bytesAvailable() < 1)
             serialPort.waitForReadyRead(INOPROG_SERIAL_WAIT);
+
+        if (serialPort.bytesAvailable() < 1) {
+            qCritical() << "Arduino not answering";
+            emitError(InoProgError::ERROR_NO_ANSWER);
+            programmerStop(false);
+            return;
+        }
 
         QByteArray data = serialPort.read(1);
         if (data.at(0) != INOPROG_PROTOCOL_READY) {
+            qCritical() << "Arduino not ready";
+            emitError(InoProgError::ERROR_NOT_READY);
             programmerStop(false);
             return;
         }
@@ -110,6 +119,8 @@ void InoProg::programmerStart() {
         QMetaObject::invokeMethod(this, &InoProg::connected, Qt::QueuedConnection);
     } else {
         qCritical() << "Unable to open serial port";
+        emitError(InoProgError::ERROR_UNABLE_OPEN_SERIAL);
+        programmerStop(false);
     }
 }
 
@@ -127,9 +138,8 @@ void InoProg::errorOccurred(QSerialPort::SerialPortError serialPortError) {
     if (serialPortError == QSerialPort::NoError)
         return;
 
-    qDebug() << "ERROR:" << serialPortError;
-
-    QMetaObject::invokeMethod(this, &InoProg::error, Qt::QueuedConnection);
+    qCritical() << "ERROR:" << serialPortError;
+    emitError(InoProgError::ERROR_SERIAL_PORT);
 
     stop();
 }
@@ -152,7 +162,7 @@ QByteArray InoProg::readEeprom() {
 
             if (pageData.size() != INOPROG_EEPROM_PAGE_SIZE) {
                 qCritical() << "Error reading page" << pageNum;
-                QMetaObject::invokeMethod(this, &InoProg::error, Qt::QueuedConnection);
+                emitError(InoProgError::ERROR_PAGE);
                 eepromData.clear();
                 break;
             }
@@ -164,11 +174,13 @@ QByteArray InoProg::readEeprom() {
             QThread::msleep(INOPROG_SERIAL_SLEEP);
         }
 
-        emitProgress(INOPROG_EEPROM_PAGE_COUNT);
-
-        QMetaObject::invokeMethod(this, &InoProg::readCompleted, Qt::QueuedConnection);
+        if (eepromData.size() == INOPROG_EEPROM_PAGE_COUNT * INOPROG_EEPROM_PAGE_SIZE) {
+            emitProgress(INOPROG_EEPROM_PAGE_COUNT);
+            QMetaObject::invokeMethod(this, &InoProg::readCompleted, Qt::QueuedConnection);
+        }
     } else {
-        qWarning() << "Serial port is not ready";
+        qCritical() << "Serial port is not ready";
+        emitError(InoProgError::ERROR_SERIAL_PORT);
         eepromData.clear();
     }
 
@@ -183,6 +195,8 @@ void InoProg::writeEeprom(const QByteArray &data) {
     emitProgress(-1);
 
     if (isReady()) {
+        bool errors = false;
+
         for (int p = 0; p < INOPROG_EEPROM_PAGE_COUNT; p++) {
             auto pageNum = (PageNum) p;
 
@@ -192,7 +206,8 @@ void InoProg::writeEeprom(const QByteArray &data) {
 
             if (!result) {
                 qCritical() << "Error writing page" << pageNum;
-                QMetaObject::invokeMethod(this, &InoProg::error, Qt::QueuedConnection);
+                emitError(InoProgError::ERROR_PAGE);
+                errors = true;
                 break;
             }
 
@@ -201,11 +216,13 @@ void InoProg::writeEeprom(const QByteArray &data) {
             QThread::msleep(INOPROG_SERIAL_SLEEP);
         }
 
-        emitProgress(INOPROG_EEPROM_PAGE_COUNT);
-
-        QMetaObject::invokeMethod(this, &InoProg::writeCompleted, Qt::QueuedConnection);
+        if (!errors) {
+            emitProgress(INOPROG_EEPROM_PAGE_COUNT);
+            QMetaObject::invokeMethod(this, &InoProg::writeCompleted, Qt::QueuedConnection);
+        }
     } else {
-        qWarning() << "Serial port is not ready";
+        qCritical() << "Serial port is not ready";
+        emitError(InoProgError::ERROR_SERIAL_PORT);
     }
 
     mutex.unlock();
@@ -273,4 +290,17 @@ void InoProg::emitProgress(int value) {
             Q_ARG(int, INOPROG_EEPROM_PAGE_COUNT),
             Q_ARG(int, value)
     );
+}
+
+void InoProg::emitError(InoProgError inoProgError) {
+    QMetaObject::invokeMethod(
+            this,
+            "error",
+            Qt::QueuedConnection,
+            Q_ARG(InoProgError, inoProgError)
+    );
+}
+
+void InoProg::registerMetaTypes() {
+    qRegisterMetaType<qfm1000::inoprog::InoProgError>("qfm1000::inoprog::InoProgError");
 }
