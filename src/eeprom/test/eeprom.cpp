@@ -23,7 +23,7 @@
 using namespace qfm1000::eeprom;
 
 int main(int argc, char *argv[]) {
-    EEPROM::registerMetaType();
+    EEPROM::registerMetaTypes();
 
     QTEST_MAIN_IMPL(EEPROMTest)
 }

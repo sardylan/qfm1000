@@ -31,7 +31,7 @@ namespace qfm1000::utilities {
 
     public:
 
-        explicit Service(QObject *parent);
+        explicit Service(QObject *parent = nullptr);
 
         ~Service() override;
 

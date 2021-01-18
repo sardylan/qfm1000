@@ -472,7 +472,7 @@ bool EEPROM::isValidChannelNumber(Channel channel) {
     return channel < CHANNELS_COUNT;
 }
 
-void EEPROM::registerMetaType() {
+void EEPROM::registerMetaTypes() {
     qRegisterMetaType<qfm1000::eeprom::FrequencyBand>("qfm1000::eeprom::FrequencyBand");
     qRegisterMetaType<qfm1000::eeprom::Flag>("qfm1000::eeprom::Flag");
     qRegisterMetaType<qfm1000::eeprom::CTCSS>("qfm1000::eeprom::CTCSS");

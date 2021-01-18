@@ -39,9 +39,8 @@ BOOL WINAPI ctrlHandler(DWORD ctrlHandler);
 
 #include <QtCore/QObject>
 
-#include <QtWidgets/QApplication>
-
 #include "../eeprom/eeprom.hpp"
+#include "../inoprog/inoprog.hpp"
 
 using namespace qfm1000;
 
@@ -62,21 +61,9 @@ namespace qfm1000::app {
 
         void stop();
 
-    private:
-
-        eeprom::EEPROM *eeprom;
-
-    private slots:
-
-        void fileNew();
-
-        void fileLoad();
-
-        void fileSave();
-
-        void programmerRead();
-
-        void programmerWrite();
+//    private:
+//
+//        eeprom::EEPROM *eeprom;
 
     signals:
 

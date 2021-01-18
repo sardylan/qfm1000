@@ -22,7 +22,7 @@
 
 using namespace qfm1000::utilities;
 
-Service::Service(QObject *parent) : QObject() {
+Service::Service(QObject *parent) : QObject(parent) {
     thread = new QThread(this);
 
     moveToThread(thread);

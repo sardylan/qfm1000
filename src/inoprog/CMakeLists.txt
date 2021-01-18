@@ -5,6 +5,7 @@ add_library(inoprog
         inoprog.cpp inoprog.hpp)
 
 target_link_libraries(inoprog
+        utilities
         Qt5::Core
         Qt5::SerialPort
         Qt5::Concurrent)

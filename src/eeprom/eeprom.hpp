@@ -202,7 +202,7 @@ namespace qfm1000::eeprom {
 
         [[nodiscard]] int computeOffset(Channel channel) const;
 
-        static void registerMetaType();
+        static void registerMetaTypes();
 
     private:
 
