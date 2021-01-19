@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+    <class>EEPROM</class>
+    <widget class="QWidget" name="eepromWidget">
+        <property name="geometry">
+            <rect>
+                <x>0</x>
+                <y>0</y>
+                <width>640</width>
+                <height>480</height>
+            </rect>
+        </property>
+        <property name="windowTitle">
+            <string>Form</string>
+        </property>
+        <property name="windowIcon">
+            <iconset resource="../qfm1000.qrc">
+                <normaloff>:/icons/application</normaloff>:/icons/application
+            </iconset>
+        </property>
+        <layout class="QGridLayout" name="gridLayout_2" rowstretch="0,1">
+            <item row="0" column="0">
+                <widget class="QGroupBox" name="eepromGroupBox">
+                    <property name="title">
+                        <string>EEPROM Configurations</string>
+                    </property>
+                    <layout class="QGridLayout" name="gridLayout" columnstretch="0,1,0,1">
+                        <item row="0" column="0">
+                            <widget class="QLabel" name="frequencyBandLabel">
+                                <property name="text">
+                                    <string>Frequency Band</string>
+                                </property>
+                            </widget>
+                        </item>
+                        <item row="0" column="1">
+                            <widget class="QComboBox" name="frequencyBandComboBox"/>
+                        </item>
+                        <item row="0" column="2" colspan="2">
+                            <widget class="QCheckBox" name="beepCheckBox">
+                                <property name="text">
+                                    <string>Buttons beep</string>
+                                </property>
+                            </widget>
+                        </item>
+                        <item row="1" column="0">
+                            <widget class="QLabel" name="defaultChannelLabel">
+                                <property name="text">
+                                    <string>Default channel</string>
+                                </property>
+                            </widget>
+                        </item>
+                        <item row="1" column="1">
+                            <widget class="QComboBox" name="defaultChannelComboBox"/>
+                        </item>
+                        <item row="1" column="2">
+                            <widget class="QLabel" name="lowPowerLabel">
+                                <property name="text">
+                                    <string>Low Power</string>
+                                </property>
+                            </widget>
+                        </item>
+                        <item row="1" column="3">
+                            <widget class="QComboBox" name="lowPowerComboBox"/>
+                        </item>
+                        <item row="2" column="0">
+                            <widget class="QLabel" name="totLabel">
+                                <property name="text">
+                                    <string>TOT</string>
+                                </property>
+                            </widget>
+                        </item>
+                        <item row="2" column="3">
+                            <widget class="QSpinBox" name="totSpinBox">
+                                <property name="wrapping">
+                                    <bool>false</bool>
+                                </property>
+                                <property name="frame">
+                                    <bool>true</bool>
+                                </property>
+                                <property name="suffix">
+                                    <string>seconds</string>
+                                </property>
+                                <property name="maximum">
+                                    <number>255</number>
+                                </property>
+                            </widget>
+                        </item>
+                        <item row="2" column="1" colspan="2">
+                            <widget class="QSlider" name="totSlider">
+                                <property name="maximum">
+                                    <number>255</number>
+                                </property>
+                                <property name="orientation">
+                                    <enum>Qt::Horizontal</enum>
+                                </property>
+                                <property name="invertedAppearance">
+                                    <bool>false</bool>
+                                </property>
+                                <property name="invertedControls">
+                                    <bool>false</bool>
+                                </property>
+                                <property name="tickPosition">
+                                    <enum>QSlider::TicksBelow</enum>
+                                </property>
+                                <property name="tickInterval">
+                                    <number>30</number>
+                                </property>
+                            </widget>
+                        </item>
+                    </layout>
+                </widget>
+            </item>
+            <item row="1" column="0">
+                <widget class="QTableView" name="channelsTableView"/>
+            </item>
+        </layout>
+    </widget>
+    <resources>
+        <include location="../qfm1000.qrc"/>
+    </resources>
+    <connections/>
+</ui>

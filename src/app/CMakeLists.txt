@@ -15,6 +15,7 @@ add_executable(qfm1000
         WIN32 MACOSX_BUNDLE
         windows/main.cpp windows/main.hpp windows/main.ui
         windows/about.cpp windows/about.hpp windows/about.ui
+        windows/eeprom.cpp windows/eeprom.hpp windows/eeprom.ui
         app.cpp app.hpp
         version.hpp
         qfm1000.rc

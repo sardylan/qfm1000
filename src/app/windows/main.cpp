@@ -34,6 +34,9 @@ Main::Main(QWidget *parent) : QMainWindow(parent), ui(new Ui::Main) {
 }
 
 Main::~Main() {
+    for (windows::EEPROM *eepromWidget: eepromWidgets)
+        delete eepromWidget;
+
     delete ui;
 }
 
@@ -47,6 +50,14 @@ void Main::initUi() {
     qInfo() << "Initalizing UI";
 
     updateWindowTitle();
+
+    auto *eepromWidget = new windows::EEPROM();
+    eepromWidgets.append(eepromWidget);
+    ui->mdiArea->addSubWindow(eepromWidget);
+
+    eepromWidget = new windows::EEPROM();
+    eepromWidgets.append(eepromWidget);
+    ui->mdiArea->addSubWindow(eepromWidget);
 }
 
 void Main::updateWindowTitle() {

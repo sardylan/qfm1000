@@ -18,44 +18,33 @@
  */
 
 
-#ifndef __QFM1000__QFM1000__WINDOWS__MAIN__H
-#define __QFM1000__QFM1000__WINDOWS__MAIN__H
+#ifndef __QFM1000__QFM1000__WINDOWS__EEPROM__H
+#define __QFM1000__QFM1000__WINDOWS__EEPROM__H
 
-#include <QtCore/QList>
-
-#include <QtWidgets/QMainWindow>
-
-#include "eeprom.hpp"
+#include <QtWidgets/QWidget>
 
 namespace Ui {
-    class Main;
+    class EEPROM;
 }
 
 namespace qfm1000::app::windows {
 
-    class Main : public QMainWindow {
+    class EEPROM : public QWidget {
     Q_OBJECT
 
     public:
 
-        explicit Main(QWidget *parent = nullptr);
+        explicit EEPROM(QWidget *parent = nullptr);
 
-        ~Main() override;
+        ~EEPROM() override;
 
     private:
 
-        Ui::Main *ui;
-        QList<windows::EEPROM*> eepromWidgets;
+        Ui::EEPROM *ui;
 
         void connectSignals();
 
         void initUi();
-
-        void updateWindowTitle();
-
-    signals:
-
-        void displayAbout();
 
     };
 
