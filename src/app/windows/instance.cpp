@@ -20,6 +20,9 @@
 
 #include <QtCore/QDebug>
 
+#include <QtGui/QFont>
+#include <QtGui/QFontDatabase>
+
 #include "instance.hpp"
 #include "ui_instance.h"
 
@@ -38,8 +41,18 @@ Instance::~Instance() {
 
 void Instance::connectSignals() {
     qInfo() << "Connecting signals";
+
 }
 
 void Instance::initUi() {
     qInfo() << "Initalizing UI";
+}
+
+void Instance::updateFileName(const QString &filename) {
+    if (filename.size() == 0) {
+        setWindowTitle("<not saved>");
+        return;
+    }
+
+    setWindowTitle(filename);
 }

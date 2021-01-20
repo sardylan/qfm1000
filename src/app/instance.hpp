@@ -23,6 +23,8 @@
 
 #include <QtCore/QtGlobal>
 #include <QtCore/QObject>
+#include <QtCore/QByteArray>
+#include <QtCore/QString>
 
 #include <eeprom/eeprom.hpp>
 
@@ -49,16 +51,25 @@ namespace qfm1000::app {
 
         [[nodiscard]] windows::Instance *getWindow() const;
 
+        [[nodiscard]] const QString &getFileName() const;
+
+        void setFileName(const QString &newValue);
+
+    public slots:
+
+        void resetStatus();
+
     private:
 
         const quint64 id;
+        QString fileName;
 
         eeprom::EEPROM *eeprom;
         eeprom::EEPROM *oldEeprom;
 
         windows::Instance *window;
 
-        void initWindow();
+
     };
 
 }

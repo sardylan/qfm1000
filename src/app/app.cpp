@@ -23,6 +23,8 @@
 #include <QtCore/QFile>
 #include <QtCore/QCoreApplication>
 
+#include <QtGui/QFontDatabase>
+
 #include <QtWidgets/QApplication>
 #include <QtWidgets/QMessageBox>
 #include <QtWidgets/QFileDialog>
@@ -135,6 +137,9 @@ void QFM1000::entryPoint() {
 void QFM1000::start() {
     qInfo() << "Start";
 
+    QFontDatabase::addApplicationFont(":/fonts/RobotoMono-VariableFont_wght.ttf");
+    QFontDatabase::addApplicationFont(":/fonts/RobotoMono-Italic-VariableFont_wght.ttf");
+
     connectSignals();
 
     mainWindow->show();
@@ -181,6 +186,9 @@ void QFM1000::actionFileOpen() {
             delete instance;
             continue;
         }
+
+        instance->setFileName(selectedFile);
+        instance->resetStatus();
 
         instances->insert(instance->getId(), instance);
 

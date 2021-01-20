@@ -43,4 +43,9 @@
         <file alias="write">../../icons/action/eeprom-write.svg</file>
     </qresource>
 
+    <qresource prefix="/fonts">
+        <file alias="RobotoMono-Italic-VariableFont_wght.ttf">../../resources/fonts/RobotoMono-Italic-VariableFont_wght.ttf</file>
+        <file alias="RobotoMono-VariableFont_wght.ttf">../../resources/fonts/RobotoMono-VariableFont_wght.ttf</file>
+    </qresource>
+
 </RCC>

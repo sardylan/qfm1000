@@ -18,6 +18,8 @@
  */
 
 
+#include <QtCore/QDebug>
+
 #include "instance.hpp"
 
 using namespace qfm1000;
@@ -28,8 +30,6 @@ Instance::Instance(quint64 id, QObject *parent) : QObject(parent), id(id) {
     Instance::eeprom = new eeprom::EEPROM();
 
     Instance::window = new windows::Instance();
-
-    initWindow();
 }
 
 Instance::~Instance() {
@@ -55,6 +55,16 @@ windows::Instance *Instance::getWindow() const {
     return window;
 }
 
-void Instance::initWindow() {
+const QString &Instance::getFileName() const {
+    return fileName;
+}
 
+void Instance::setFileName(const QString &newValue) {
+    Instance::fileName = newValue;
+    Instance::window->updateFileName(Instance::fileName);
+}
+
+void Instance::resetStatus() {
+    qInfo() << "Resetting status";
+    Instance::oldEeprom->setData(eeprom->getData());
 }

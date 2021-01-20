@@ -21,6 +21,8 @@
 #ifndef __QFM1000__QFM1000__WINDOWS__EEPROM__H
 #define __QFM1000__QFM1000__WINDOWS__EEPROM__H
 
+#include <QtCore/QString>
+
 #include <QtWidgets/QWidget>
 
 namespace Ui {
@@ -37,6 +39,10 @@ namespace qfm1000::app::windows {
         explicit Instance(QWidget *parent = nullptr);
 
         ~Instance() override;
+
+    public slots:
+
+        void updateFileName(const QString &filename);
 
     private:
 
