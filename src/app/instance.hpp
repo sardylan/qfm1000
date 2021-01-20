@@ -18,34 +18,47 @@
  */
 
 
-#ifndef __QFM1000__QFM1000__WINDOWS__EEPROM__H
-#define __QFM1000__QFM1000__WINDOWS__EEPROM__H
+#ifndef __QFM1000__QFM1000__INSTANCE__H
+#define __QFM1000__QFM1000__INSTANCE__H
 
-#include <QtWidgets/QWidget>
+#include <QtCore/QtGlobal>
+#include <QtCore/QObject>
 
-namespace Ui {
-    class EEPROM;
-}
+#include <eeprom/eeprom.hpp>
 
-namespace qfm1000::app::windows {
+#include "windows/instance.hpp"
 
-    class EEPROM : public QWidget {
+using namespace qfm1000;
+
+namespace qfm1000::app {
+
+    class Instance : public QObject {
     Q_OBJECT
 
     public:
 
-        explicit EEPROM(QWidget *parent = nullptr);
+        explicit Instance(quint64 id, QObject *parent = nullptr);
 
-        ~EEPROM() override;
+        ~Instance() override;
+
+        [[nodiscard]] quint64 getId() const;
+
+        [[nodiscard]] eeprom::EEPROM *getEeprom() const;
+
+        [[nodiscard]] eeprom::EEPROM *getOldEeprom() const;
+
+        [[nodiscard]] windows::Instance *getWindow() const;
 
     private:
 
-        Ui::EEPROM *ui;
+        const quint64 id;
 
-        void connectSignals();
+        eeprom::EEPROM *eeprom;
+        eeprom::EEPROM *oldEeprom;
 
-        void initUi();
+        windows::Instance *window;
 
+        void initWindow();
     };
 
 }

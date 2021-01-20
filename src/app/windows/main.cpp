@@ -19,7 +19,7 @@
 
 
 #include <QtCore/QDebug>
-#include <QtCore/QCoreApplication>
+#include <QtCore/QMap>
 
 #include "main.hpp"
 #include "ui_main.h"
@@ -29,13 +29,14 @@ using namespace qfm1000::app::windows;
 Main::Main(QWidget *parent) : QMainWindow(parent), ui(new Ui::Main) {
     ui->setupUi(this);
 
+    instanceWindows = new QMap<quint64, Instance *>();
+
     connectSignals();
     initUi();
 }
 
 Main::~Main() {
-    for (windows::EEPROM *eepromWidget: eepromWidgets)
-        delete eepromWidget;
+    delete instanceWindows;
 
     delete ui;
 }
@@ -44,20 +45,14 @@ void Main::connectSignals() {
     qInfo() << "Connecting signals";
 
     connect(ui->actionAbout, &QAction::triggered, this, &Main::displayAbout);
+
+    connect(ui->actionFileOpen, &QAction::triggered, this, &Main::actionFileOpen);
 }
 
 void Main::initUi() {
     qInfo() << "Initalizing UI";
 
     updateWindowTitle();
-
-    auto *eepromWidget = new windows::EEPROM();
-    eepromWidgets.append(eepromWidget);
-    ui->mdiArea->addSubWindow(eepromWidget);
-
-    eepromWidget = new windows::EEPROM();
-    eepromWidgets.append(eepromWidget);
-    ui->mdiArea->addSubWindow(eepromWidget);
 }
 
 void Main::updateWindowTitle() {
@@ -66,4 +61,20 @@ void Main::updateWindowTitle() {
     setWindowTitle(QString("%1 %2")
                            .arg(QCoreApplication::applicationName())
                            .arg(QCoreApplication::applicationVersion()));
+}
+
+void Main::addInstance(quint64 id, Instance *window) {
+    qInfo() << "Adding instance window with id" << id;
+
+    instanceWindows->insert(id, window);
+    ui->mdiArea->addSubWindow(window);
+    window->showMaximized();
+}
+
+void Main::removeInstance(quint64 id) {
+    qInfo() << "Remove instance window with id" << id;
+
+    Instance *instance = instanceWindows->value(id);
+    ui->mdiArea->removeSubWindow(instance);
+    instanceWindows->remove(id);
 }

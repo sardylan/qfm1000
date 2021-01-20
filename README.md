@@ -7,7 +7,7 @@
 [![Build status AppVeyor (Windows)](https://ci.appveyor.com/api/projects/status/hysni857ux6k3wyg?svg=true)](https://ci.appveyor.com/project/sardylan/qfm1000)
 [![Coverity Scan Build Status](https://scan.coverity.com/projects/13866/badge.svg)](https://scan.coverity.com/projects/sardylan-qfm1000)
 
-qFm1000 is a simple tool for editing channels and configuration parameters saved into the 24C16 EEPROM mounted inside any Philips FM1000 radio.
+qFm1000 is a simple tool for editing channels and configuration parameters saved into the 24C16 Instance mounted inside any Philips FM1000 radio.
 
 It's based on the Qt/C++ cross-platform framework and can be built using cmake in Linux, Mac and Windows with gcc, clang or Visual Studio.
 
@@ -48,7 +48,7 @@ Windows build are created using the official releases of Qt. Just download the M
     * FIX: Fix build for old Qt version
     * FIX: Arduino serial port in Windows
 * 0.4.0
-    * ADD: Support for read/write EEPROM with Arduino
+    * ADD: Support for read/write Instance with Arduino
 * 0.3.1
     * FIX: Power Values and channel numbers
 * 0.3.0
@@ -58,10 +58,10 @@ Windows build are created using the official releases of Qt. Just download the M
     * FIX: Bitwise error on eeprom flags
 * 0.2.0
     * ADD: Simple error messages for invalid files
-    * ADD: Tests for EEPROM methods
+    * ADD: Tests for Instance methods
     * ADD: Travis builds
     * ADD: AppVeyor builds
-    * FIX: EEPROM flags bitwise
+    * FIX: Instance flags bitwise
 * 0.1.3
     * ADD: "Save as" feature
 * 0.1.0

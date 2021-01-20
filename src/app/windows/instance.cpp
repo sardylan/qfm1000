@@ -20,28 +20,26 @@
 
 #include <QtCore/QDebug>
 
-#include "eeprom.hpp"
-#include "ui_eeprom.h"
+#include "instance.hpp"
+#include "ui_instance.h"
 
 using namespace qfm1000::app::windows;
 
-EEPROM::EEPROM(QWidget *parent) : QWidget(parent), ui(new Ui::EEPROM) {
+Instance::Instance(QWidget *parent) : QWidget(parent), ui(new Ui::Instance) {
     ui->setupUi(this);
 
     connectSignals();
     initUi();
 }
 
-EEPROM::~EEPROM() {
+Instance::~Instance() {
     delete ui;
 }
 
-void EEPROM::connectSignals() {
+void Instance::connectSignals() {
     qInfo() << "Connecting signals";
-
 }
 
-void EEPROM::initUi() {
+void Instance::initUi() {
     qInfo() << "Initalizing UI";
-
 }

@@ -26,6 +26,12 @@
 
 #include "eeprom.hpp"
 
+#define EEPROM_FILES_NAME_FILTERS QStringList() \
+<< "All EEPROM formats [*.bin, *.hex] (*.bin *.hex)" \
+<< "Only Binary EEPROM [*.bin] (*.bin)" \
+<< "Only Intel HEX EEPROM [*.hex] (*.hex)" \
+<< "All files [*] (*)"
+
 namespace qfm1000::eeprom {
 
     enum class FileFormat {

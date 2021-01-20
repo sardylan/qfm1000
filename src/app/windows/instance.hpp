@@ -18,55 +18,33 @@
  */
 
 
-#ifndef __QFM1000__QFM1000__WINDOWS__MAIN__H
-#define __QFM1000__QFM1000__WINDOWS__MAIN__H
+#ifndef __QFM1000__QFM1000__WINDOWS__EEPROM__H
+#define __QFM1000__QFM1000__WINDOWS__EEPROM__H
 
-#include <QtCore/QtGlobal>
-#include <QtCore/QList>
-#include <QtCore/QMap>
-
-#include <QtWidgets/QMainWindow>
-
-#include "instance.hpp"
+#include <QtWidgets/QWidget>
 
 namespace Ui {
-    class Main;
+    class Instance;
 }
 
 namespace qfm1000::app::windows {
 
-    class Main : public QMainWindow {
+    class Instance : public QWidget {
     Q_OBJECT
 
     public:
 
-        explicit Main(QWidget *parent = nullptr);
+        explicit Instance(QWidget *parent = nullptr);
 
-        ~Main() override;
-
-    public slots:
-
-        void addInstance(quint64 id, qfm1000::app::windows::Instance *window);
-
-        void removeInstance(quint64 id);
+        ~Instance() override;
 
     private:
 
-        Ui::Main *ui;
-
-        QMap<quint64, Instance *> *instanceWindows;
+        Ui::Instance *ui;
 
         void connectSignals();
 
         void initUi();
-
-        void updateWindowTitle();
-
-    signals:
-
-        void displayAbout();
-
-        void actionFileOpen();
 
     };
 

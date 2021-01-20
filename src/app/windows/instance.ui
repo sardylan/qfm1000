@@ -1,30 +1,30 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
-    <class>EEPROM</class>
-    <widget class="QWidget" name="eepromWidget">
+    <class>Instance</class>
+    <widget class="QWidget" name="Instance">
         <property name="geometry">
             <rect>
                 <x>0</x>
                 <y>0</y>
-                <width>640</width>
-                <height>480</height>
+                <width>684</width>
+                <height>645</height>
             </rect>
         </property>
         <property name="windowTitle">
-            <string>Form</string>
+            <string>MainWindow</string>
         </property>
         <property name="windowIcon">
             <iconset resource="../qfm1000.qrc">
                 <normaloff>:/icons/application</normaloff>:/icons/application
             </iconset>
         </property>
-        <layout class="QGridLayout" name="gridLayout_2" rowstretch="0,1">
+        <layout class="QGridLayout" name="gridLayout" rowstretch="0,1">
             <item row="0" column="0">
                 <widget class="QGroupBox" name="eepromGroupBox">
                     <property name="title">
-                        <string>EEPROM Configurations</string>
+                        <string>Instance Configurations</string>
                     </property>
-                    <layout class="QGridLayout" name="gridLayout" columnstretch="0,1,0,1">
+                    <layout class="QGridLayout" name="configGridLayout" columnstretch="0,1,0,1">
                         <item row="0" column="0">
                             <widget class="QLabel" name="frequencyBandLabel">
                                 <property name="text">

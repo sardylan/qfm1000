@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
     <class>Main</class>
-    <widget class="QMainWindow" name="mainWindow">
+    <widget class="QMainWindow" name="Main">
         <property name="geometry">
             <rect>
                 <x>0</x>
@@ -28,38 +28,20 @@
             <layout class="QGridLayout" name="gridLayout">
                 <item row="0" column="0">
                     <widget class="QMdiArea" name="mdiArea">
-                        <property name="frameShape">
-                            <enum>QFrame::NoFrame</enum>
-                        </property>
-                        <property name="frameShadow">
-                            <enum>QFrame::Plain</enum>
-                        </property>
                         <property name="verticalScrollBarPolicy">
                             <enum>Qt::ScrollBarAsNeeded</enum>
                         </property>
                         <property name="horizontalScrollBarPolicy">
                             <enum>Qt::ScrollBarAsNeeded</enum>
                         </property>
-                        <property name="sizeAdjustPolicy">
-                            <enum>QAbstractScrollArea::AdjustToContents</enum>
-                        </property>
                         <property name="viewMode">
                             <enum>QMdiArea::TabbedView</enum>
-                        </property>
-                        <property name="documentMode">
-                            <bool>true</bool>
                         </property>
                         <property name="tabsClosable">
                             <bool>true</bool>
                         </property>
                         <property name="tabsMovable">
                             <bool>true</bool>
-                        </property>
-                        <property name="tabShape">
-                            <enum>QTabWidget::Rounded</enum>
-                        </property>
-                        <property name="tabPosition">
-                            <enum>QTabWidget::North</enum>
                         </property>
                     </widget>
                 </item>

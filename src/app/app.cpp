@@ -25,6 +25,7 @@
 
 #include <QtWidgets/QApplication>
 #include <QtWidgets/QMessageBox>
+#include <QtWidgets/QFileDialog>
 
 #include "app.hpp"
 #include "version.hpp"
@@ -115,9 +116,13 @@ int main(int argc, char *argv[]) {
 
 QFM1000::QFM1000(QObject *parent) : QObject(parent) {
     mainWindow = new windows::Main();
+
+    counter = 0;
+    instances = new QMap<quint64, Instance *>();
 }
 
 QFM1000::~QFM1000() {
+    delete instances;
     delete mainWindow;
 }
 
@@ -139,12 +144,54 @@ void QFM1000::connectSignals() const {
     qInfo() << "Connecting signals";
 
     connect(mainWindow, &windows::Main::displayAbout, this, &QFM1000::displayAbout);
+
+    connect(mainWindow, &windows::Main::actionFileOpen, this, &QFM1000::actionFileOpen);
 }
 
 void QFM1000::stop() {
     qInfo() << "Stop";
 
     mainWindow->close();
+}
+
+void QFM1000::actionFileOpen() {
+    qInfo() << "Action File Open";
+
+    QFileDialog fileDialog(mainWindow, Qt::Dialog);
+    fileDialog.setAcceptMode(QFileDialog::AcceptOpen);
+    fileDialog.setFileMode(QFileDialog::ExistingFiles);
+    fileDialog.setNameFilters(EEPROM_FILES_NAME_FILTERS);
+    fileDialog.exec();
+
+    QStringList selectedFiles = fileDialog.selectedFiles();
+    qDebug() << "Files to open:" << selectedFiles;
+
+    for (const QString &selectedFile:selectedFiles) {
+        qDebug() << "Loading" << selectedFile;
+
+        quint64 id = counter;
+        counter++;
+
+        qDebug() << "Generating new Instance with ID" << id;
+
+        auto *instance = new Instance(id);
+
+        if (!eeprom::FileManager::loadFromFile(instance->getEeprom(), selectedFile)) {
+            qWarning() << "Unable to load EEPROM from" << selectedFile;
+            delete instance;
+            continue;
+        }
+
+        instances->insert(instance->getId(), instance);
+
+        QMetaObject::invokeMethod(
+                mainWindow,
+                "addInstance",
+                Qt::QueuedConnection,
+                Q_ARG(quint64, id),
+                Q_ARG(qfm1000::app::windows::Instance*, instance->getWindow())
+        );
+    }
 }
 
 void QFM1000::displayAbout() {
