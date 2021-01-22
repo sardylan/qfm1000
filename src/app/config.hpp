@@ -18,48 +18,60 @@
  */
 
 
-#ifndef __QFM1000__QFM1000__STATUS__H
-#define __QFM1000__QFM1000__STATUS__H
+#ifndef __QFM1000__QFM1000__CONFIG__H
+#define __QFM1000__QFM1000__CONFIG__H
 
-#include <QtCore/QtGlobal>
-#include <QtCore/QObject>
 #include <QtCore/QString>
-#include <QtCore/QByteArray>
 
 #include <QtSerialPort/QSerialPort>
 
 namespace qfm1000::app {
 
-    class Status : public QObject {
-    Q_OBJECT
+    class Config {
 
     public:
 
-        explicit Status(QObject *parent = nullptr);
+        class InoProg {
 
-        ~Status() override;
+        public:
 
-        [[nodiscard]] const QString &getSerialPortName() const;
+            [[nodiscard]] const QString &getPortName() const;
 
-        void setSerialPortName(const QString &newValue);
+            void setPortName(const QString &newValue);
 
-        [[nodiscard]] bool isSerialPortWorking() const;
+            [[nodiscard]] QSerialPort::BaudRate getPortSpeed() const;
 
-        void setSerialPortWorking(bool newValue);
+            void setPortSpeed(QSerialPort::BaudRate newValue);
 
-        [[nodiscard]] quint64 getInstanceId() const;
+        private:
 
-        void setInstanceId(quint64 newValue);
+            QString portName;
+            QSerialPort::BaudRate portSpeed;
+
+        };
+
+        Config();
+
+        ~Config();
+
+        void update(Config *config);
+
+        [[nodiscard]] InoProg *getInoProg() const;
+
+        void load();
+
+        void save();
+
+        static void registerMetaTypes();
 
     private:
 
-        QString serialPortName;
-        bool serialPortWorking;
-
-        quint64 instanceId;
+        InoProg *inoProg;
 
     };
 
 }
+
+Q_DECLARE_METATYPE(qfm1000::app::Config)
 
 #endif

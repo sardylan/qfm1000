@@ -6,9 +6,15 @@
             <rect>
                 <x>0</x>
                 <y>0</y>
-                <width>739</width>
-                <height>571</height>
+                <width>533</width>
+                <height>400</height>
             </rect>
+        </property>
+        <property name="minimumSize">
+            <size>
+                <width>533</width>
+                <height>400</height>
+            </size>
         </property>
         <property name="windowTitle">
             <string>MainWindow</string>
@@ -20,31 +26,60 @@
         </property>
         <layout class="QGridLayout" name="gridLayout" rowstretch="0,1,0">
             <item row="1" column="0">
-                <widget class="QTableView" name="channelsTableView"/>
+                <widget class="QTableView" name="channelsTableView">
+                    <property name="minimumSize">
+                        <size>
+                            <width>0</width>
+                            <height>50</height>
+                        </size>
+                    </property>
+                </widget>
+            </item>
+            <item row="2" column="0">
+                <widget class="QTextEdit" name="hexDataTextEdit">
+                    <property name="minimumSize">
+                        <size>
+                            <width>0</width>
+                            <height>50</height>
+                        </size>
+                    </property>
+                    <property name="font">
+                        <font>
+                            <family>Roboto</family>
+                        </font>
+                    </property>
+                    <property name="readOnly">
+                        <bool>true</bool>
+                    </property>
+                    <property name="markdown">
+                        <string>
+
+
+                        </string>
+                    </property>
+                    <property name="html">
+                        <string>&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
+                            &lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style
+                            type=&quot;text/css&quot;&gt;
+                            p, li { white-space: pre-wrap; }
+                            &lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:'Roboto'; font-size:9pt;
+                            font-weight:400; font-style:normal;&quot;&gt;
+                            &lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px;
+                            -qt-block-indent:0; text-indent:0px;&quot;&gt; &lt;/p&gt;
+                            &lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px;
+                            -qt-block-indent:0; text-indent:0px;&quot;&gt; &lt;/p&gt;
+                            &lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px;
+                            -qt-block-indent:0; text-indent:0px;&quot;&gt; &lt;/p&gt;&lt;/body&gt;&lt;/html&gt;
+                        </string>
+                    </property>
+                </widget>
             </item>
             <item row="0" column="0">
                 <widget class="QGroupBox" name="eepromGroupBox">
                     <property name="title">
                         <string>Instance Configurations</string>
                     </property>
-                    <layout class="QGridLayout" name="configGridLayout" columnstretch="0,1,0,1">
-                        <item row="0" column="0">
-                            <widget class="QLabel" name="frequencyBandLabel">
-                                <property name="text">
-                                    <string>Frequency Band</string>
-                                </property>
-                            </widget>
-                        </item>
-                        <item row="0" column="1">
-                            <widget class="QComboBox" name="frequencyBandComboBox"/>
-                        </item>
-                        <item row="0" column="2" colspan="2">
-                            <widget class="QCheckBox" name="beepCheckBox">
-                                <property name="text">
-                                    <string>Buttons beep</string>
-                                </property>
-                            </widget>
-                        </item>
+                    <layout class="QGridLayout" name="configGridLayout" columnstretch="0,0,0,1">
                         <item row="1" column="0">
                             <widget class="QLabel" name="defaultChannelLabel">
                                 <property name="text">
@@ -52,27 +87,10 @@
                                 </property>
                             </widget>
                         </item>
-                        <item row="1" column="1">
-                            <widget class="QComboBox" name="defaultChannelComboBox"/>
-                        </item>
-                        <item row="1" column="2">
-                            <widget class="QLabel" name="lowPowerLabel">
-                                <property name="text">
-                                    <string>Low Power</string>
-                                </property>
-                            </widget>
-                        </item>
-                        <item row="1" column="3">
+                        <item row="2" column="1" colspan="2">
                             <widget class="QComboBox" name="lowPowerComboBox"/>
                         </item>
-                        <item row="2" column="0">
-                            <widget class="QLabel" name="totLabel">
-                                <property name="text">
-                                    <string>TOT</string>
-                                </property>
-                            </widget>
-                        </item>
-                        <item row="2" column="3">
+                        <item row="3" column="2">
                             <widget class="QSpinBox" name="totSpinBox">
                                 <property name="wrapping">
                                     <bool>false</bool>
@@ -88,7 +106,37 @@
                                 </property>
                             </widget>
                         </item>
-                        <item row="2" column="1" colspan="2">
+                        <item row="0" column="1" colspan="2">
+                            <widget class="QComboBox" name="frequencyBandComboBox"/>
+                        </item>
+                        <item row="0" column="3">
+                            <spacer name="horizontalSpacer">
+                                <property name="orientation">
+                                    <enum>Qt::Horizontal</enum>
+                                </property>
+                                <property name="sizeHint" stdset="0">
+                                    <size>
+                                        <width>40</width>
+                                        <height>20</height>
+                                    </size>
+                                </property>
+                            </spacer>
+                        </item>
+                        <item row="0" column="0">
+                            <widget class="QLabel" name="frequencyBandLabel">
+                                <property name="text">
+                                    <string>Frequency Band</string>
+                                </property>
+                            </widget>
+                        </item>
+                        <item row="2" column="0">
+                            <widget class="QLabel" name="lowPowerLabel">
+                                <property name="text">
+                                    <string>Low Power</string>
+                                </property>
+                            </widget>
+                        </item>
+                        <item row="3" column="1">
                             <widget class="QSlider" name="totSlider">
                                 <property name="maximum">
                                     <number>255</number>
@@ -110,33 +158,24 @@
                                 </property>
                             </widget>
                         </item>
+                        <item row="4" column="0" colspan="3">
+                            <widget class="QCheckBox" name="beepCheckBox">
+                                <property name="text">
+                                    <string>Buttons beep</string>
+                                </property>
+                            </widget>
+                        </item>
+                        <item row="3" column="0">
+                            <widget class="QLabel" name="totLabel">
+                                <property name="text">
+                                    <string>TOT</string>
+                                </property>
+                            </widget>
+                        </item>
+                        <item row="1" column="1" colspan="2">
+                            <widget class="QComboBox" name="defaultChannelComboBox"/>
+                        </item>
                     </layout>
-                </widget>
-            </item>
-            <item row="2" column="0">
-                <widget class="QTextEdit" name="hexDataTextEdit">
-                    <property name="font">
-                        <font>
-                            <family>Roboto</family>
-                        </font>
-                    </property>
-                    <property name="readOnly">
-                        <bool>true</bool>
-                    </property>
-                    <property name="markdown">
-                        <string/>
-                    </property>
-                    <property name="html">
-                        <string>&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
-                            &lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style
-                            type=&quot;text/css&quot;&gt;
-                            p, li { white-space: pre-wrap; }
-                            &lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:'Roboto'; font-size:9pt;
-                            font-weight:400; font-style:normal;&quot;&gt;
-                            &lt;p style=&quot;-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px;
-                            margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;br /&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;
-                        </string>
-                    </property>
                 </widget>
             </item>
         </layout>

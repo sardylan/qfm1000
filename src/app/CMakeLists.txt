@@ -15,9 +15,13 @@ add_executable(qfm1000
         WIN32 MACOSX_BUNDLE
         windows/main.cpp windows/main.hpp windows/main.ui
         windows/about.cpp windows/about.hpp windows/about.ui
+        windows/config.cpp windows/config.hpp windows/config.ui
         windows/instance.cpp windows/instance.hpp windows/instance.ui
         instance.cpp instance.hpp
+        status.cpp status.hpp
+        config.cpp config.hpp
         app.cpp app.hpp
+        default.hpp
         version.hpp
         qfm1000.rc
         qfm1000.qrc

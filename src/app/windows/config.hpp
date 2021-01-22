@@ -18,39 +18,53 @@
  */
 
 
-#include "status.hpp"
+#ifndef __QFM1000__QFM1000__WINDOWS__CONFIG__H
+#define __QFM1000__QFM1000__WINDOWS__CONFIG__H
 
-using namespace qfm1000::app;
+#include <QtWidgets/QDialog>
 
-Status::Status(QObject *parent) : QObject(parent) {
-    Status::serialPortName = "";
-    Status::serialPortWorking = false;
-    Status::instanceId = 0;
+#include "../config.hpp"
+
+namespace Ui {
+    class Config;
 }
 
-Status::~Status() = default;
+namespace qfm1000::app::windows {
 
-const QString &Status::getSerialPortName() const {
-    return serialPortName;
+    class Config : public QDialog {
+    Q_OBJECT
+
+    public:
+
+        explicit Config(QWidget *parent = nullptr);
+
+        ~Config() override;
+
+        void setCurrentConfig(app::Config *config);
+
+    private:
+
+        Ui::Config *ui;
+
+        app::Config *currentConfig;
+        app::Config *newConfig;
+
+        void connectSignals();
+
+        void initUi();
+
+    private slots:
+
+        void load();
+
+        void save();
+
+    signals:
+
+        void updateConfig(qfm1000::app::Config *config);
+
+    };
+
 }
 
-void Status::setSerialPortName(const QString &newValue) {
-    Status::serialPortName = newValue;
-}
-
-bool Status::isSerialPortWorking() const {
-    return serialPortWorking;
-}
-
-void Status::setSerialPortWorking(bool newValue) {
-    Status::serialPortWorking = newValue;
-}
-
-quint64 Status::getInstanceId() const {
-    return instanceId;
-}
-
-void Status::setInstanceId(quint64 newValue) {
-    Status::instanceId = newValue;
-}
-
+#endif

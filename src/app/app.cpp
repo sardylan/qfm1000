@@ -33,6 +33,7 @@
 #include "version.hpp"
 
 #include "windows/about.hpp"
+#include "windows/config.hpp"
 
 #include "../eeprom/filemanager.hpp"
 
@@ -96,6 +97,7 @@ int main(int argc, char *argv[]) {
 
     qfm1000::eeprom::EEPROM::registerMetaTypes();
     qfm1000::inoprog::InoProg::registerMetaTypes();
+    qfm1000::app::Config::registerMetaTypes();
 
     QApplication application(argc, argv);
 
@@ -113,10 +115,17 @@ int main(int argc, char *argv[]) {
         qWarning() << "Unable to set Control Handler";
 #endif
 
-    return QApplication::exec();
+    int result = QApplication::exec();
+
+    delete mainApplication;
+
+    return result;
 }
 
 QFM1000::QFM1000(QObject *parent) : QObject(parent) {
+    status = new Status();
+    config = new Config();
+
     mainWindow = new windows::Main();
 
     counter = 0;
@@ -126,6 +135,8 @@ QFM1000::QFM1000(QObject *parent) : QObject(parent) {
 QFM1000::~QFM1000() {
     delete instances;
     delete mainWindow;
+    delete config;
+    delete status;
 }
 
 void QFM1000::entryPoint() {
@@ -140,6 +151,11 @@ void QFM1000::start() {
     QFontDatabase::addApplicationFont(":/fonts/RobotoMono-VariableFont_wght.ttf");
     QFontDatabase::addApplicationFont(":/fonts/RobotoMono-Italic-VariableFont_wght.ttf");
 
+    config->load();
+    config->save();
+
+    updateMainWindowFromConfig();
+
     connectSignals();
 
     mainWindow->show();
@@ -149,6 +165,7 @@ void QFM1000::connectSignals() const {
     qInfo() << "Connecting signals";
 
     connect(mainWindow, &windows::Main::displayAbout, this, &QFM1000::displayAbout);
+    connect(mainWindow, &windows::Main::actionConfiguration, this, &QFM1000::actionConfiguration);
 
     connect(mainWindow, &windows::Main::actionFileOpen, this, &QFM1000::actionFileOpen);
 }
@@ -208,4 +225,37 @@ void QFM1000::displayAbout() {
     windows::About aboutWindow;
     aboutWindow.setWindowModality(Qt::ApplicationModal);
     aboutWindow.exec();
+}
+
+void QFM1000::actionConfiguration() {
+    qInfo() << "Action Configuration";
+
+    qDebug() << "Creating Configuration window dialog";
+    auto *configWindow = new windows::Config();
+    configWindow->setWindowModality(Qt::ApplicationModal);
+    configWindow->setCurrentConfig(QFM1000::config);
+
+    connect(configWindow, &windows::Config::updateConfig, this, &QFM1000::updateConfig, Qt::QueuedConnection);
+    connect(configWindow, &windows::Config::finished, configWindow, &windows::Config::deleteLater,
+            Qt::QueuedConnection);
+
+    configWindow->exec();
+}
+
+void QFM1000::updateConfig(Config *newConfig) {
+    qInfo() << "Updating config";
+
+    qDebug() << "Updating config from new config";
+    QFM1000::config->update(newConfig);
+
+    updateMainWindowFromConfig();
+
+    QFM1000::config->save();
+}
+
+void QFM1000::updateMainWindowFromConfig() {
+    qInfo() << "Updating main window from config";
+
+    QMetaObject::invokeMethod(mainWindow, "updateSerialPortName", Qt::QueuedConnection,
+                              Q_ARG(QString, config->getInoProg()->getPortName()));
 }

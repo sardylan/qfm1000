@@ -23,9 +23,11 @@
 
 #include <QtCore/QtGlobal>
 #include <QtCore/QList>
+#include <QtCore/QTimer>
 #include <QtCore/QMap>
 
 #include <QtWidgets/QMainWindow>
+#include <QtWidgets/QLabel>
 
 #include "instance.hpp"
 
@@ -50,21 +52,41 @@ namespace qfm1000::app::windows {
 
         void removeInstance(quint64 id);
 
+        void updateSerialPortName(const QString &portName);
+
+        void updateSerialPortWorking(bool working);
+
     private:
 
         Ui::Main *ui;
 
         QMap<quint64, Instance *> *instanceWindows;
 
+        QTimer *clockTimer;
+        QLabel *statusBarClockLabel;
+
+        QLabel *statusBarSerialPortLabel;
+
         void connectSignals();
 
         void initUi();
 
+        void initStatusBar();
+
         void updateWindowTitle();
+
+        static void
+        applyStatusBarLabelStyle(QLabel *label, const QString &toolTip = "", const QString &defaultText = "");
+
+    private slots:
+
+        void updateStatusBarClock();
 
     signals:
 
         void displayAbout();
+
+        void actionConfiguration();
 
         void actionFileOpen();
 

@@ -20,6 +20,7 @@
 
 #include <QtCore/QDebug>
 #include <QtCore/QMap>
+#include <QtCore/QDateTime>
 
 #include "main.hpp"
 #include "ui_main.h"
@@ -31,11 +32,19 @@ Main::Main(QWidget *parent) : QMainWindow(parent), ui(new Ui::Main) {
 
     instanceWindows = new QMap<quint64, Instance *>();
 
+    clockTimer = new QTimer();
+    statusBarClockLabel = new QLabel();
+    statusBarSerialPortLabel = new QLabel();
+
     connectSignals();
     initUi();
 }
 
 Main::~Main() {
+    delete statusBarSerialPortLabel;
+    delete statusBarClockLabel;
+    delete clockTimer;
+
     delete instanceWindows;
 
     delete ui;
@@ -44,15 +53,41 @@ Main::~Main() {
 void Main::connectSignals() {
     qInfo() << "Connecting signals";
 
-    connect(ui->actionAbout, &QAction::triggered, this, &Main::displayAbout);
+    connect(ui->actionAbout, &QAction::triggered, this, &Main::displayAbout, Qt::QueuedConnection);
+    connect(ui->actionConfiguration, &QAction::triggered, this, &Main::actionConfiguration, Qt::QueuedConnection);
 
-    connect(ui->actionFileOpen, &QAction::triggered, this, &Main::actionFileOpen);
+    connect(ui->actionFileOpen, &QAction::triggered, this, &Main::actionFileOpen, Qt::QueuedConnection);
 }
 
 void Main::initUi() {
     qInfo() << "Initalizing UI";
 
     updateWindowTitle();
+
+    initStatusBar();
+}
+
+void Main::initStatusBar() {
+    qInfo() << "Initalizing Status Bar";
+
+    qDebug() << "Initalizing Serial Port widget";
+    ui->statusBar->addPermanentWidget(statusBarSerialPortLabel);
+    applyStatusBarLabelStyle(statusBarSerialPortLabel, "InoProg serial port");
+    statusBarSerialPortLabel->setEnabled(false);
+
+    qDebug() << "Initalizing Clock widget";
+    ui->statusBar->addPermanentWidget(statusBarClockLabel);
+    applyStatusBarLabelStyle(statusBarClockLabel);
+    statusBarClockLabel->setStyleSheet("");
+    clockTimer->setInterval(1000);
+    clockTimer->setSingleShot(false);
+    connect(clockTimer, &QTimer::timeout, this, &Main::updateStatusBarClock, Qt::QueuedConnection);
+    clockTimer->start();
+    QMetaObject::invokeMethod(this, &Main::updateStatusBarClock, Qt::QueuedConnection);
+}
+
+void Main::updateStatusBarClock() {
+    statusBarClockLabel->setText(QDateTime::currentDateTime().toString("yyyy-MM-dd HH:mm:ss"));
 }
 
 void Main::updateWindowTitle() {
@@ -77,4 +112,22 @@ void Main::removeInstance(quint64 id) {
     Instance *instance = instanceWindows->value(id);
     ui->mdiArea->removeSubWindow(instance);
     instanceWindows->remove(id);
+}
+
+void Main::updateSerialPortName(const QString &portName) {
+    statusBarSerialPortLabel->setText(portName);
+}
+
+void Main::updateSerialPortWorking(bool working) {
+    statusBarSerialPortLabel->setEnabled(working);
+}
+
+void Main::applyStatusBarLabelStyle(QLabel *label, const QString &toolTip, const QString &defaultText) {
+    label->setStyleSheet("margin-right: 10px");
+
+    if (toolTip.size() > 0)
+        label->setToolTip(toolTip);
+
+    if (defaultText.size() > 0)
+        label->setText(defaultText);
 }

@@ -42,6 +42,9 @@ BOOL WINAPI ctrlHandler(DWORD ctrlHandler);
 #include <QtCore/QMap>
 
 #include "instance.hpp"
+#include "status.hpp"
+#include "config.hpp"
+
 #include "windows/main.hpp"
 
 #include "../eeprom/eeprom.hpp"
@@ -68,6 +71,9 @@ namespace qfm1000::app {
 
     private:
 
+        Status *status;
+        Config *config;
+
         windows::Main *mainWindow;
 
         quint64 counter;
@@ -75,11 +81,17 @@ namespace qfm1000::app {
 
         void connectSignals() const;
 
+        void updateMainWindowFromConfig();
+
     private slots:
 
         void actionFileOpen();
 
-        static void displayAbout();
+        void displayAbout();
+
+        void actionConfiguration();
+
+        void updateConfig(qfm1000::app::Config *config);
 
     signals:
 
