@@ -6,13 +6,13 @@
             <rect>
                 <x>0</x>
                 <y>0</y>
-                <width>400</width>
+                <width>500</width>
                 <height>300</height>
             </rect>
         </property>
         <property name="minimumSize">
             <size>
-                <width>400</width>
+                <width>500</width>
                 <height>300</height>
             </size>
         </property>
@@ -37,9 +37,7 @@
                         <enum>Qt::Horizontal</enum>
                     </property>
                     <property name="standardButtons">
-                        <set>
-                            QDialogButtonBox::Apply|QDialogButtonBox::Close|QDialogButtonBox::Ok|QDialogButtonBox::RestoreDefaults
-                        </set>
+                        <set>QDialogButtonBox::Apply|QDialogButtonBox::Close|QDialogButtonBox::Ok|QDialogButtonBox::Reset|QDialogButtonBox::RestoreDefaults</set>
                     </property>
                 </widget>
             </item>
@@ -50,10 +48,70 @@
                     </property>
                     <widget class="QWidget" name="inoProg">
                         <attribute name="title">
-                            <string>InoProg</string>
+                            <string>InoProg Serial Port</string>
                         </attribute>
-                        <layout class="QGridLayout" name="gridLayout_2" rowstretch="0,0,1" columnstretch="0,1">
+                        <layout class="QGridLayout" name="gridLayout_2" rowstretch="0,0,0,1" columnstretch="0,1,0,1">
+                            <item row="0" column="0">
+                                <widget class="QLabel" name="inoProgPortNameLabel">
+                                    <property name="text">
+                                        <string>Port Name</string>
+                                    </property>
+                                </widget>
+                            </item>
+                            <item row="0" column="1">
+                                <widget class="QComboBox" name="inoProgPortNameComboBox"/>
+                            </item>
+                            <item row="0" column="2">
+                                <widget class="QLabel" name="inoProgDataBitsLabel">
+                                    <property name="text">
+                                        <string>Data bits</string>
+                                    </property>
+                                </widget>
+                            </item>
+                            <item row="0" column="3">
+                                <widget class="QComboBox" name="inoProgDataBitsComboBox"/>
+                            </item>
+                            <item row="1" column="0">
+                                <widget class="QLabel" name="inoProgBaudRateLabel">
+                                    <property name="text">
+                                        <string>Baud Rate</string>
+                                    </property>
+                                </widget>
+                            </item>
+                            <item row="1" column="1">
+                                <widget class="QComboBox" name="inoProgBaudRateComboBox"/>
+                            </item>
+                            <item row="1" column="2">
+                                <widget class="QLabel" name="inoProgParityLabel">
+                                    <property name="text">
+                                        <string>Parity</string>
+                                    </property>
+                                </widget>
+                            </item>
+                            <item row="1" column="3">
+                                <widget class="QComboBox" name="inoProgParityComboBox"/>
+                            </item>
                             <item row="2" column="0">
+                                <widget class="QLabel" name="inoProgFlowControlLabel">
+                                    <property name="text">
+                                        <string>Flow Control</string>
+                                    </property>
+                                </widget>
+                            </item>
+                            <item row="2" column="1">
+                                <widget class="QComboBox" name="inoProgFlowControlComboBox"/>
+                            </item>
+                            <item row="2" column="2">
+                                <widget class="QLabel" name="inoProgStopBitsLabel">
+                                    <property name="text">
+                                        <string>Stop bits</string>
+                                    </property>
+                                </widget>
+                            </item>
+                            <item row="2" column="3">
+                                <widget class="QComboBox" name="inoProgStopBitsComboBox"/>
+                            </item>
+                            <item row="3" column="0">
                                 <spacer name="inoProgVerticalSpacer">
                                     <property name="orientation">
                                         <enum>Qt::Vertical</enum>
@@ -65,26 +123,6 @@
                                         </size>
                                     </property>
                                 </spacer>
-                            </item>
-                            <item row="0" column="1">
-                                <widget class="QComboBox" name="inoProgPortNameComboBox"/>
-                            </item>
-                            <item row="0" column="0">
-                                <widget class="QLabel" name="inoProgPortNameLabel">
-                                    <property name="text">
-                                        <string>Port Name</string>
-                                    </property>
-                                </widget>
-                            </item>
-                            <item row="1" column="1">
-                                <widget class="QComboBox" name="inoProgPortSpeedComboBox"/>
-                            </item>
-                            <item row="1" column="0">
-                                <widget class="QLabel" name="inoProgPortSpeedLabel">
-                                    <property name="text">
-                                        <string>Port Speed</string>
-                                    </property>
-                                </widget>
                             </item>
                         </layout>
                     </widget>

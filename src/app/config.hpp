@@ -39,14 +39,34 @@ namespace qfm1000::app {
 
             void setPortName(const QString &newValue);
 
-            [[nodiscard]] QSerialPort::BaudRate getPortSpeed() const;
+            [[nodiscard]] QSerialPort::BaudRate getBaudRate() const;
 
-            void setPortSpeed(QSerialPort::BaudRate newValue);
+            void setBaudRate(QSerialPort::BaudRate newValue);
+
+            [[nodiscard]] QSerialPort::DataBits getDataBits() const;
+
+            void setDataBits(QSerialPort::DataBits newValue);
+
+            [[nodiscard]] QSerialPort::Parity getParity() const;
+
+            void setParity(QSerialPort::Parity newValue);
+
+            [[nodiscard]] QSerialPort::StopBits getStopBits() const;
+
+            void setStopBits(QSerialPort::StopBits newValue);
+
+            [[nodiscard]] QSerialPort::FlowControl getFlowControl() const;
+
+            void setFlowControl(QSerialPort::FlowControl newValue);
 
         private:
 
             QString portName;
-            QSerialPort::BaudRate portSpeed;
+            QSerialPort::BaudRate baudRate;
+            QSerialPort::DataBits dataBits;
+            QSerialPort::Parity parity;
+            QSerialPort::StopBits stopBits;
+            QSerialPort::FlowControl flowControl;
 
         };
 

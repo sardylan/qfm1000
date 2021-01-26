@@ -22,9 +22,12 @@
 #include <QtCore/QMap>
 #include <QtCore/QDateTime>
 
+#include <utilities/serialport.hpp>
+
 #include "main.hpp"
 #include "ui_main.h"
 
+using namespace qfm1000;
 using namespace qfm1000::app::windows;
 
 Main::Main(QWidget *parent) : QMainWindow(parent), ui(new Ui::Main) {
@@ -70,7 +73,7 @@ void Main::initUi() {
 void Main::initStatusBar() {
     qInfo() << "Initalizing Status Bar";
 
-    qDebug() << "Initalizing Serial Port widget";
+    qDebug() << "Initalizing Serial Port Name widget";
     ui->statusBar->addPermanentWidget(statusBarSerialPortLabel);
     applyStatusBarLabelStyle(statusBarSerialPortLabel, "InoProg serial port");
     statusBarSerialPortLabel->setEnabled(false);
@@ -114,8 +117,23 @@ void Main::removeInstance(quint64 id) {
     instanceWindows->remove(id);
 }
 
-void Main::updateSerialPortName(const QString &portName) {
-    statusBarSerialPortLabel->setText(portName);
+void Main::updateSerialPortLabel(
+        const QString &portName,
+        const QSerialPort::BaudRate &baudRate,
+        const QSerialPort::DataBits &dataBits,
+        const QSerialPort::Parity &parity,
+        const QSerialPort::StopBits &stopBits,
+        const QSerialPort::FlowControl &flowControl
+) {
+    QString serialPortText = utilities::SerialPort::prettyConfig(
+            portName,
+            baudRate,
+            dataBits,
+            parity,
+            stopBits,
+            flowControl
+    );
+    statusBarSerialPortLabel->setText(serialPortText);
 }
 
 void Main::updateSerialPortWorking(bool working) {

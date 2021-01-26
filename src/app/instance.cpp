@@ -29,6 +29,7 @@ Instance::Instance(quint64 id, QObject *parent) : QObject(parent), id(id) {
     Instance::oldEeprom = new eeprom::EEPROM();
     Instance::eeprom = new eeprom::EEPROM();
 
+
     Instance::window = new windows::Instance();
 }
 

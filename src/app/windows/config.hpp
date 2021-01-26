@@ -21,7 +21,12 @@
 #ifndef __QFM1000__QFM1000__WINDOWS__CONFIG__H
 #define __QFM1000__QFM1000__WINDOWS__CONFIG__H
 
+#include <QtCore/QVariant>
+
 #include <QtWidgets/QDialog>
+#include <QtWidgets/QComboBox>
+
+#include <QtSerialPort/QSerialPort>
 
 #include "../config.hpp"
 
@@ -53,11 +58,34 @@ namespace qfm1000::app::windows {
 
         void initUi();
 
+        static void initSerialPortWidgets(
+                QComboBox *portNameComboBox,
+                QComboBox *baudRateComboBox,
+                QComboBox *dataBitsComboBox,
+                QComboBox *parityComboBox,
+                QComboBox *stopBitsComboBox,
+                QComboBox *flowControlComboBox
+        );
+
+        static void selectInitialPortNameValue(QComboBox *comboBox, const QString& initialValue);
+
+        static void selectInitialBaudRateValue(QComboBox *comboBox, QSerialPort::BaudRate initialValue);
+
+        static void selectInitialDataBitsValue(QComboBox *comboBox, QSerialPort::DataBits initialValue);
+
+        static void selectInitialParityValue(QComboBox *comboBox, QSerialPort::Parity initialValue);
+
+        static void selectInitialStopBitsValue(QComboBox *comboBox, QSerialPort::StopBits initialValue);
+
+        static void selectInitialFlowControlValue(QComboBox *comboBox, QSerialPort::FlowControl initialValue);
+
     private slots:
 
         void load();
 
         void save();
+
+        void restoreDefault();
 
     signals:
 

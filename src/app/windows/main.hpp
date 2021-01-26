@@ -29,6 +29,8 @@
 #include <QtWidgets/QMainWindow>
 #include <QtWidgets/QLabel>
 
+#include <QtSerialPort/QSerialPort>
+
 #include "instance.hpp"
 
 namespace Ui {
@@ -52,7 +54,14 @@ namespace qfm1000::app::windows {
 
         void removeInstance(quint64 id);
 
-        void updateSerialPortName(const QString &portName);
+        void updateSerialPortLabel(
+                const QString &portName,
+                const QSerialPort::BaudRate &baudRate,
+                const QSerialPort::DataBits &dataBits,
+                const QSerialPort::Parity &parity,
+                const QSerialPort::StopBits &stopBits,
+                const QSerialPort::FlowControl &flowControl
+        );
 
         void updateSerialPortWorking(bool working);
 

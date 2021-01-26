@@ -2,7 +2,8 @@ find_package(Qt5 REQUIRED COMPONENTS
         Core)
 
 add_library(utilities
-        service.cpp service.hpp)
+        service.cpp service.hpp
+        serialport.cpp serialport.hpp)
 
 target_link_libraries(utilities
         Qt5::Core)

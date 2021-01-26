@@ -41,7 +41,11 @@ void Config::update(Config *config) {
     qInfo() << "Updating config from new Config";
 
     inoProg->setPortName(config->getInoProg()->getPortName());
-    inoProg->setPortSpeed(config->getInoProg()->getPortSpeed());
+    inoProg->setBaudRate(config->getInoProg()->getBaudRate());
+    inoProg->setDataBits(config->getInoProg()->getDataBits());
+    inoProg->setParity(config->getInoProg()->getParity());
+    inoProg->setStopBits(config->getInoProg()->getStopBits());
+    inoProg->setFlowControl(config->getInoProg()->getFlowControl());
 }
 
 Config::InoProg *Config::getInoProg() const {
@@ -56,12 +60,44 @@ void Config::InoProg::setPortName(const QString &newValue) {
     InoProg::portName = newValue;
 }
 
-QSerialPort::BaudRate Config::InoProg::getPortSpeed() const {
-    return portSpeed;
+QSerialPort::BaudRate Config::InoProg::getBaudRate() const {
+    return baudRate;
 }
 
-void Config::InoProg::setPortSpeed(QSerialPort::BaudRate newValue) {
-    InoProg::portSpeed = newValue;
+void Config::InoProg::setBaudRate(QSerialPort::BaudRate newValue) {
+    InoProg::baudRate = newValue;
+}
+
+QSerialPort::DataBits Config::InoProg::getDataBits() const {
+    return dataBits;
+}
+
+void Config::InoProg::setDataBits(QSerialPort::DataBits newValue) {
+    InoProg::dataBits = newValue;
+}
+
+QSerialPort::Parity Config::InoProg::getParity() const {
+    return parity;
+}
+
+void Config::InoProg::setParity(QSerialPort::Parity newValue) {
+    InoProg::parity = newValue;
+}
+
+QSerialPort::StopBits Config::InoProg::getStopBits() const {
+    return stopBits;
+}
+
+void Config::InoProg::setStopBits(QSerialPort::StopBits newValue) {
+    InoProg::stopBits = newValue;
+}
+
+QSerialPort::FlowControl Config::InoProg::getFlowControl() const {
+    return flowControl;
+}
+
+void Config::InoProg::setFlowControl(QSerialPort::FlowControl newValue) {
+    InoProg::flowControl = newValue;
 }
 
 void Config::load() {
@@ -70,9 +106,18 @@ void Config::load() {
     QSettings settings;
 
     settings.beginGroup(CONFIG_INOPROG_TAG);
-    inoProg->setPortName(settings.value(CONFIG_INOPROG_PORTNAME_TAG, CONFIG_INOPROG_PORTNAME_DEFAULT).toString());
-    inoProg->setPortSpeed(settings.value(CONFIG_INOPROG_PORTSPEED_TAG,
-                                         CONFIG_INOPROG_PORTSPEED_DEFAULT).value<QSerialPort::BaudRate>());
+    inoProg->setPortName(settings.value(CONFIG_SERIALPORT_PORTNAME_TAG,
+                                        CONFIG_INOPROG_PORTNAME_DEFAULT).toString());
+    inoProg->setBaudRate(settings.value(CONFIG_SERIALPORT_BAUDRATE_TAG,
+                                        CONFIG_INOPROG_BAUDRATE_DEFAULT).value<QSerialPort::BaudRate>());
+    inoProg->setDataBits(settings.value(CONFIG_SERIALPORT_DATABITS_TAG,
+                                        CONFIG_INOPROG_DATABITS_DEFAULT).value<QSerialPort::DataBits>());
+    inoProg->setParity(settings.value(CONFIG_SERIALPORT_PARITY_TAG,
+                                      CONFIG_INOPROG_PARITY_DEFAULT).value<QSerialPort::Parity>());
+    inoProg->setStopBits(settings.value(CONFIG_SERIALPORT_STOPBITS_TAG,
+                                        CONFIG_INOPROG_STOPBITS_DEFAULT).value<QSerialPort::StopBits>());
+    inoProg->setFlowControl(settings.value(CONFIG_SERIALPORT_FLOWCONTROL_TAG,
+                                           CONFIG_INOPROG_FLOWCONTROL_DEFAULT).value<QSerialPort::FlowControl>());
     settings.endGroup();
 }
 
@@ -82,8 +127,12 @@ void Config::save() {
     QSettings settings;
 
     settings.beginGroup(CONFIG_INOPROG_TAG);
-    settings.setValue(CONFIG_INOPROG_PORTNAME_TAG, inoProg->getPortName());
-    settings.setValue(CONFIG_INOPROG_PORTSPEED_TAG, inoProg->getPortSpeed());
+    settings.setValue(CONFIG_SERIALPORT_PORTNAME_TAG, inoProg->getPortName());
+    settings.setValue(CONFIG_SERIALPORT_BAUDRATE_TAG, inoProg->getBaudRate());
+    settings.setValue(CONFIG_SERIALPORT_DATABITS_TAG, inoProg->getDataBits());
+    settings.setValue(CONFIG_SERIALPORT_PARITY_TAG, inoProg->getParity());
+    settings.setValue(CONFIG_SERIALPORT_STOPBITS_TAG, inoProg->getStopBits());
+    settings.setValue(CONFIG_SERIALPORT_FLOWCONTROL_TAG, inoProg->getFlowControl());
     settings.endGroup();
 }
 

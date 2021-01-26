@@ -29,6 +29,8 @@
 #include <QtWidgets/QMessageBox>
 #include <QtWidgets/QFileDialog>
 
+#include <QtSerialPort/QSerialPort>
+
 #include "app.hpp"
 #include "version.hpp"
 
@@ -256,6 +258,15 @@ void QFM1000::updateConfig(Config *newConfig) {
 void QFM1000::updateMainWindowFromConfig() {
     qInfo() << "Updating main window from config";
 
-    QMetaObject::invokeMethod(mainWindow, "updateSerialPortName", Qt::QueuedConnection,
-                              Q_ARG(QString, config->getInoProg()->getPortName()));
+    QMetaObject::invokeMethod(
+            mainWindow,
+            "updateSerialPortLabel",
+            Qt::QueuedConnection,
+            Q_ARG(QString, config->getInoProg()->getPortName()),
+            Q_ARG(QSerialPort::BaudRate, config->getInoProg()->getBaudRate()),
+            Q_ARG(QSerialPort::DataBits, config->getInoProg()->getDataBits()),
+            Q_ARG(QSerialPort::Parity, config->getInoProg()->getParity()),
+            Q_ARG(QSerialPort::StopBits, config->getInoProg()->getStopBits()),
+            Q_ARG(QSerialPort::FlowControl, config->getInoProg()->getFlowControl())
+    );
 }
