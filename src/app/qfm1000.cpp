@@ -19,9 +19,7 @@
 
 
 #include <QtCore/QDebug>
-#include <QtCore/QThread>
 #include <QtCore/QFile>
-#include <QtCore/QCoreApplication>
 
 #include <QtGui/QFontDatabase>
 
@@ -31,98 +29,15 @@
 
 #include <QtSerialPort/QSerialPort>
 
-#include "app.hpp"
-#include "version.hpp"
+#include <eeprom/filemanager.hpp>
+
+#include "qfm1000.hpp"
 
 #include "windows/about.hpp"
 #include "windows/config.hpp"
 
-#include "../eeprom/filemanager.hpp"
 
 using namespace qfm1000::app;
-
-qfm1000::app::QFM1000 *mainApplication;
-
-#ifdef Q_OS_LINUX
-
-void signalHandler(int signal) {
-    switch (signal) {
-        case SIGINT:
-        case SIGTERM:
-            mainApplication->stop();
-            break;
-
-        default:
-            return;
-    }
-}
-
-#endif
-
-#ifdef Q_OS_WINDOWS
-
-BOOL WINAPI ctrlHandler(DWORD fdwCtrlType) {
-    switch (fdwCtrlType) {
-        case CTRL_C_EVENT:
-        case CTRL_CLOSE_EVENT:
-            mainApplication->stop();
-            return TRUE;
-
-        default:
-            return FALSE;
-    }
-}
-
-#endif
-
-
-int main(int argc, char *argv[]) {
-    QCoreApplication::setApplicationName(APPLICATION_NAME);
-    QCoreApplication::setApplicationVersion(APPLICATION_VERSION);
-
-    QCoreApplication::setOrganizationName(ORGANIZATION_NAME);
-    QCoreApplication::setOrganizationDomain(ORGANIZATION_DOMAIN);
-
-    qSetMessagePattern("\x1b[94;1m[\x1b[96;1m%{time yyyy-MM-dd hh:mm:ss.zzz}\x1b[94;1m]\x1b[39;0m "
-                       "PID:\x1b[31m%{pid}\x1b[39m "
-                       "TID:\x1b[91m%{threadid}\x1b[39m "
-                       "["
-                       "%{if-debug}\x1b[37m DEBUG  \x1b[39m%{endif}"
-                       "%{if-info}\x1b[92m INFO   \x1b[39m%{endif}"
-                       "%{if-warning}\x1b[93mWARNING \x1b[39m%{endif}"
-                       "%{if-critical}\x1b[91mCRITICAL\x1b[39m%{endif}"
-                       "%{if-fatal}\x1b[91;5m FATAL  \x1b[39;25m%{endif}"
-                       "]: "
-                       "%{file}:%{line} "
-                       "[\x1b[97m%{function}()\x1b[39m] "
-                       "%{message}");
-
-    qfm1000::eeprom::EEPROM::registerMetaTypes();
-    qfm1000::inoprog::InoProg::registerMetaTypes();
-    qfm1000::app::Config::registerMetaTypes();
-
-    QApplication application(argc, argv);
-
-    mainApplication = new QFM1000();
-    QApplication::connect(mainApplication, &QFM1000::finished, []() { QCoreApplication::exit(); });
-    mainApplication->entryPoint();
-
-#ifdef Q_OS_LINUX
-    signal(SIGINT, signalHandler);
-    signal(SIGTERM, signalHandler);
-#endif
-
-#ifdef Q_OS_WINDOWS
-    if (SetConsoleCtrlHandler(ctrlHandler, TRUE) != TRUE)
-        qWarning() << "Unable to set Control Handler";
-#endif
-
-    int result = QApplication::exec();
-
-    delete mainApplication;
-
-    return result;
-}
 
 QFM1000::QFM1000(QObject *parent) : QObject(parent) {
     status = new Status();
@@ -135,6 +50,9 @@ QFM1000::QFM1000(QObject *parent) : QObject(parent) {
 }
 
 QFM1000::~QFM1000() {
+    for (Instance *instance: instances->values())
+        delete instance;
+
     delete instances;
     delete mainWindow;
     delete config;
@@ -150,9 +68,11 @@ void QFM1000::entryPoint() {
 void QFM1000::start() {
     qInfo() << "Start";
 
+    qDebug() << "Loading fonts";
     QFontDatabase::addApplicationFont(":/fonts/RobotoMono-VariableFont_wght.ttf");
     QFontDatabase::addApplicationFont(":/fonts/RobotoMono-Italic-VariableFont_wght.ttf");
 
+    qDebug() << "Loading config";
     config->load();
     config->save();
 
@@ -160,6 +80,7 @@ void QFM1000::start() {
 
     connectSignals();
 
+    qDebug() << "Displaying main window";
     mainWindow->show();
 }
 
@@ -200,17 +121,21 @@ void QFM1000::actionFileOpen() {
 
         auto *instance = new Instance(id);
 
+        qDebug() << "Loading data from file";
         if (!eeprom::FileManager::loadFromFile(instance->getEeprom(), selectedFile)) {
             qWarning() << "Unable to load EEPROM from" << selectedFile;
             delete instance;
             continue;
         }
 
+        qDebug() << "Setting instance params";
         instance->setFileName(selectedFile);
         instance->resetStatus();
 
+        qDebug() << "Adding instance in instances map";
         instances->insert(instance->getId(), instance);
 
+        qDebug() << "Adding instance to window";
         QMetaObject::invokeMethod(
                 mainWindow,
                 "addInstance",
@@ -224,9 +149,17 @@ void QFM1000::actionFileOpen() {
 void QFM1000::displayAbout() {
     qInfo() << "Displaying about";
 
-    windows::About aboutWindow;
-    aboutWindow.setWindowModality(Qt::ApplicationModal);
-    aboutWindow.exec();
+    qDebug() << "Creating Abouit window";
+    auto *aboutWindow = new windows::About();
+
+    qDebug() << "Connecting signals";
+    connect(aboutWindow, &QDialog::finished, aboutWindow, &QObject::deleteLater, Qt::QueuedConnection);
+
+    qDebug() << "Setting params";
+    aboutWindow->setWindowModality(Qt::ApplicationModal);
+
+    qDebug() << "Displaying dialog";
+    QMetaObject::invokeMethod(aboutWindow, &QDialog::exec, Qt::QueuedConnection);
 }
 
 void QFM1000::actionConfiguration() {
@@ -234,14 +167,17 @@ void QFM1000::actionConfiguration() {
 
     qDebug() << "Creating Configuration window dialog";
     auto *configWindow = new windows::Config();
+
+    qDebug() << "Connecting signals";
+    connect(configWindow, &QDialog::finished, configWindow, &QObject::deleteLater, Qt::QueuedConnection);
+    connect(configWindow, &windows::Config::updateConfig, this, &QFM1000::updateConfig, Qt::QueuedConnection);
+
+    qDebug() << "Setting params";
     configWindow->setWindowModality(Qt::ApplicationModal);
     configWindow->setCurrentConfig(QFM1000::config);
 
-    connect(configWindow, &windows::Config::updateConfig, this, &QFM1000::updateConfig, Qt::QueuedConnection);
-    connect(configWindow, &windows::Config::finished, configWindow, &windows::Config::deleteLater,
-            Qt::QueuedConnection);
-
-    configWindow->exec();
+    qDebug() << "Displaying dialog";
+    QMetaObject::invokeMethod(configWindow, &QDialog::exec, Qt::QueuedConnection);
 }
 
 void QFM1000::updateConfig(Config *newConfig) {
@@ -252,6 +188,7 @@ void QFM1000::updateConfig(Config *newConfig) {
 
     updateMainWindowFromConfig();
 
+    qDebug() << "Saving config";
     QFM1000::config->save();
 }
 

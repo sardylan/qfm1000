@@ -18,24 +18,8 @@
  */
 
 
-#ifndef __QFM1000__QFM1000__MAIN__H
-#define __QFM1000__QFM1000__MAIN__H
-
-#ifdef Q_OS_LINUX
-
-#include <csignal>
-
-void signalHandler(int signal);
-
-#endif
-
-#ifdef Q_OS_WINDOWS
-
-#include <windows.h>
-
-BOOL WINAPI ctrlHandler(DWORD ctrlHandler);
-
-#endif
+#ifndef __QFM1000__QFM1000__QFM1000__H
+#define __QFM1000__QFM1000__QFM1000__H
 
 #include <QtCore/QtGlobal>
 #include <QtCore/QObject>

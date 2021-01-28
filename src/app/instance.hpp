@@ -69,6 +69,7 @@ namespace qfm1000::app {
 
         windows::Instance *window;
 
+        void connectSignals();
 
     };
 

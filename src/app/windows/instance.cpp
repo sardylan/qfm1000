@@ -31,11 +31,15 @@ using namespace qfm1000::app::windows;
 Instance::Instance(QWidget *parent) : QWidget(parent), ui(new Ui::Instance) {
     ui->setupUi(this);
 
+    hexEditor = new widgets::HexEditor();
+
     connectSignals();
     initUi();
 }
 
 Instance::~Instance() {
+    delete hexEditor;
+
     delete ui;
 }
 
@@ -46,13 +50,41 @@ void Instance::connectSignals() {
 
 void Instance::initUi() {
     qInfo() << "Initalizing UI";
+
+    ui->hexDataScrollArea->setWidget(hexEditor);
+    ui->hexDataScrollArea->setWidgetResizable(true);
 }
 
 void Instance::updateFileName(const QString &filename) {
+    qInfo() << "Updating filename";
+
     if (filename.size() == 0) {
         setWindowTitle("<not saved>");
         return;
     }
 
     setWindowTitle(filename);
+}
+
+void Instance::dataUpdated(const QByteArray &value) {
+    qInfo() << "Data updated";
+
+    QMetaObject::invokeMethod(
+            hexEditor,
+            "setData",
+            Qt::QueuedConnection,
+            Q_ARG(const QByteArray, value)
+    );
+}
+
+void Instance::byteUpdated(int pos, quint8 value) {
+    qInfo() << "Byte updated";
+
+    QMetaObject::invokeMethod(
+            hexEditor,
+            "setByte",
+            Qt::QueuedConnection,
+            Q_ARG(int, pos),
+            Q_ARG(const char, value)
+    );
 }

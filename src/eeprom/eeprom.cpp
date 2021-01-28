@@ -49,7 +49,11 @@ bool EEPROM::setData(const QByteArray &newValue) {
 
     EEPROM::data = newValue;
 
-    return detectRadioType();
+    bool result = detectRadioType();
+    if (result)
+        QMetaObject::invokeMethod(this, "dataUpdated", Qt::QueuedConnection, Q_ARG(const QByteArray, data));
+
+    return result;
 }
 
 FrequencyBand EEPROM::getFrequencyBand() const {

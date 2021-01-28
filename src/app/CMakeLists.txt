@@ -20,7 +20,8 @@ add_executable(qfm1000
         instance.cpp instance.hpp
         status.cpp status.hpp
         config.cpp config.hpp
-        app.cpp app.hpp
+        qfm1000.cpp qfm1000.hpp
+        main.cpp main.hpp
         default.hpp
         version.hpp
         qfm1000.rc
@@ -31,6 +32,7 @@ target_link_libraries(qfm1000
         utilities
         eeprom
         inoprog
+        widgets
         Qt5::Core
         Qt5::Gui
         Qt5::Svg

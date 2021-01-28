@@ -29,8 +29,9 @@ Instance::Instance(quint64 id, QObject *parent) : QObject(parent), id(id) {
     Instance::oldEeprom = new eeprom::EEPROM();
     Instance::eeprom = new eeprom::EEPROM();
 
-
     Instance::window = new windows::Instance();
+
+    connectSignals();
 }
 
 Instance::~Instance() {
@@ -61,8 +62,17 @@ const QString &Instance::getFileName() const {
 }
 
 void Instance::setFileName(const QString &newValue) {
+    qInfo() << "Setting file name";
+
     Instance::fileName = newValue;
     Instance::window->updateFileName(Instance::fileName);
+}
+
+void Instance::connectSignals() {
+    qInfo() << "Connecting signals";
+
+    connect(eeprom, &eeprom::EEPROM::byteUpdated, window, &windows::Instance::byteUpdated);
+    connect(eeprom, &eeprom::EEPROM::dataUpdated, window, &windows::Instance::dataUpdated);
 }
 
 void Instance::resetStatus() {

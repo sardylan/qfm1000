@@ -227,6 +227,8 @@ namespace qfm1000::eeprom {
 
         void byteUpdated(int pos, quint8 value);
 
+        void dataUpdated(const QByteArray &data);
+
     };
 
 }

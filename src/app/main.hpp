@@ -18,50 +18,23 @@
  */
 
 
-#ifndef __QFM1000__QFM1000__WINDOWS__EEPROM__H
-#define __QFM1000__QFM1000__WINDOWS__EEPROM__H
+#ifndef __QFM1000__QFM1000__MAIN__H
+#define __QFM1000__QFM1000__MAIN__H
 
-#include <QtCore/QString>
+#ifdef Q_OS_LINUX
 
-#include <QtWidgets/QWidget>
+#include <csignal>
 
-#include <widgets/hexeditor.hpp>
+void signalHandler(int signal);
 
-namespace Ui {
-    class Instance;
-}
+#endif
 
-namespace qfm1000::app::windows {
+#ifdef Q_OS_WINDOWS
 
-    class Instance : public QWidget {
-    Q_OBJECT
+#include <windows.h>
 
-    public:
+BOOL WINAPI ctrlHandler(DWORD ctrlHandler);
 
-        explicit Instance(QWidget *parent = nullptr);
-
-        ~Instance() override;
-
-    public slots:
-
-        void updateFileName(const QString &filename);
-
-        void dataUpdated(const QByteArray &value);
-
-        void byteUpdated(int pos, quint8 value);
-
-    private:
-
-        Ui::Instance *ui;
-
-        widgets::HexEditor *hexEditor;
-
-        void connectSignals();
-
-        void initUi();
-
-    };
-
-}
+#endif
 
 #endif
