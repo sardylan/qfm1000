@@ -30,7 +30,7 @@
 #define HEXEDITOR_MARGIN_TOP_DEFAULT 10
 #define HEXEDITOR_MARGIN_LEFT_DEFAULT 2
 
-#define HEXEDITOR_CELL_SIZE_VERTICAL_DEFAULT 12
+#define HEXEDITOR_CELL_SIZE_VERTICAL_DEFAULT 16
 #define HEXEDITOR_CELL_SIZE_HORIZONTAL_DEFAULT 20
 
 #define HEXEDITOR_FONT_SIZE_DEFAULT 10
@@ -77,7 +77,7 @@ namespace qfm1000::widgets {
 
         void invokeUpdate();
 
-        void paintPositions(QPainter &painter, int posSize, int row, int offset) const;
+        void paintPositions(QPainter &painter, int posSize, int marginHex, int row, int offset) const;
 
         void paintHexData(QPainter &painter, int marginHex, int row, int offset);
 
