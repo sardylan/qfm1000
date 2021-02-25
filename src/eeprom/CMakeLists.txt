@@ -4,18 +4,28 @@ find_package(Qt5 REQUIRED COMPONENTS
 add_library(eeprom
         eeprom.cpp eeprom.hpp
         filemanager.cpp filemanager.hpp
-        values.cpp values.hpp)
+        values.cpp values.hpp
+        model.cpp model.cpp)
 
 target_link_libraries(eeprom
         Qt5::Core)
 
 target_include_directories(eeprom PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
 
-add_executable(eeprom-test
+add_executable(eeprom-eeprom-test
         test/eeprom.cpp test/eeprom.hpp)
 
-target_link_libraries(eeprom-test
+target_link_libraries(eeprom-eeprom-test
         eeprom Qt5::Core Qt5::Test)
 
-add_test(eeprom-test
-        eeprom-test -o test-result-eeprom.xml,xunitxml)
+add_test(eeprom-eeprom-test
+        eeprom-eeprom-test -o test-result-eeprom-eeprom.xml,xunitxml)
+
+add_executable(eeprom-values-test
+        test/values.cpp test/values.hpp)
+
+target_link_libraries(eeprom-values-test
+        eeprom Qt5::Core Qt5::Test)
+
+add_test(eeprom-values-test
+        eeprom-values-test -o test-result-eeprom-values.xml,xunitxml)
