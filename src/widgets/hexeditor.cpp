@@ -20,10 +20,12 @@
 
 #include <QtCore/QDebug>
 #include <QtCore/QtGlobal>
+#include <QtCore/QChar>
 #include <QtCore/QString>
 
 #include <QtGui/QPainter>
 #include <QtGui/QFontDatabase>
+#include <QtGui/QPaintEvent>
 
 #include "hexeditor.hpp"
 
@@ -39,6 +41,10 @@ HexEditor::HexEditor(QWidget *parent) : QWidget(parent) {
     cellSizeHorizontal = HEXEDITOR_CELL_SIZE_HORIZONTAL_DEFAULT;
 
     fontSize = HEXEDITOR_FONT_SIZE_DEFAULT;
+
+    rows = 0;
+    addressesSize = 0;
+    marginHex = 0;
 }
 
 HexEditor::~HexEditor() = default;
@@ -51,6 +57,11 @@ void HexEditor::setData(const QByteArray &newValue) {
     qInfo() << "Setting data";
 
     HexEditor::data = newValue;
+    qDebug() << "Data size" << data.size();
+
+    updateRows();
+    updatePosSize();
+
     invokeUpdate();
 }
 
@@ -62,6 +73,9 @@ void HexEditor::setPageSize(int newValue) {
     qInfo() << "Setting page size";
 
     HexEditor::pageSize = newValue;
+
+    updateRows();
+
     invokeUpdate();
 }
 
@@ -74,6 +88,15 @@ void HexEditor::setByte(int pos, const char &byte) {
     HexEditor::data.replace(pos, 1, &byte);
 }
 
+void HexEditor::updateRows() {
+    rows = (data.size() / pageSize) + 1;
+}
+
+void HexEditor::updatePosSize() {
+    addressesSize = QString::number(data.size(), 16).size();
+    marginHex = (addressesSize + 1) * cellSizeHorizontal;
+}
+
 void HexEditor::invokeUpdate() {
     qInfo() << "Invoking widget update";
 
@@ -81,52 +104,45 @@ void HexEditor::invokeUpdate() {
 }
 
 void HexEditor::paintEvent(QPaintEvent *event) {
-    qInfo() << "Paint event";
-
-    QWidget::paintEvent(event);
-
     QPainter painter(this);
+    painter.eraseRect(event->rect());
+
     painter.setRenderHint(QPainter::TextAntialiasing);
 
     QFont font = QFontDatabase::systemFont(QFontDatabase::FixedFont);
     font.setPointSize(fontSize);
     painter.setFont(font);
 
-    int rows = (data.size() / pageSize) + 1;
-    int posSize = QString::number(data.size(), 16).size();
-
-    int marginHex = (posSize + 1) * cellSizeHorizontal;
-
     setMinimumWidth(cellSizeHorizontal * 12);
     setMinimumHeight(cellSizeVertical * rows);
 
-    for (int row = 0; row < rows; row++) {
-        int offset = row * pageSize;
+    for (int page = 0; page < rows; page++) {
+        int offset = page * pageSize;
 
-        paintPositions(painter, posSize, marginHex, row, offset);
-        paintHexData(painter, marginHex, row, offset);
+        paintPageAddresses(painter, page, offset);
+        paintPageData(painter, page, offset);
     }
 
     painter.end();
 }
 
-void HexEditor::paintPositions(QPainter &painter, int posSize, int marginHex, int row, int offset) const {
+void HexEditor::paintPageAddresses(QPainter &painter, int page, int offset) const {
     QBrush origBrush = painter.brush();
     QPen origPen = painter.pen();
 
     int x = marginLeft;
-    int y = marginTop + (row * cellSizeVertical) + 1;
+    int y = marginTop + (page * cellSizeVertical) + 1;
 
     int start = offset;
     int end = offset + (pageSize - 1) < data.size() ? offset + (pageSize - 1) : data.size();
 
     painter.setBrush(QBrush("#404d54"));
     painter.setRenderHint(QPainter::Antialiasing, false);
-    painter.drawRect(QRect(0, (row * cellSizeVertical) - 1, marginHex, cellSizeVertical));
+    painter.drawRect(QRect(0, (page * cellSizeVertical) - 1, marginHex, cellSizeVertical));
 
     QString text = QString("%1-%2")
-            .arg(start, posSize, 16, QLatin1Char('0'))
-            .arg(end, posSize, 16, QLatin1Char('0'))
+            .arg(start, addressesSize, 16, QLatin1Char('0'))
+            .arg(end, addressesSize, 16, QLatin1Char('0'))
             .toUpper();
 
     painter.setPen(QPen("#CCCCCC"));
@@ -136,7 +152,7 @@ void HexEditor::paintPositions(QPainter &painter, int posSize, int marginHex, in
     painter.setPen(origPen);
 }
 
-void HexEditor::paintHexData(QPainter &painter, int marginHex, int row, int offset) {
+void HexEditor::paintPageData(QPainter &painter, int page, int offset) {
     QFont origFont = painter.font();
     QPen origPen = painter.pen();
 
@@ -146,7 +162,7 @@ void HexEditor::paintHexData(QPainter &painter, int marginHex, int row, int offs
     font.setWeight(QFont::ExtraBold);
     painter.setFont(font);
 
-    int y = marginTop + (row * cellSizeVertical + 1);
+    int y = marginTop + (page * cellSizeVertical) + 1;
 
     for (int col = 0; col < pageSize; col++) {
         int idx = offset + col;
@@ -154,7 +170,11 @@ void HexEditor::paintHexData(QPainter &painter, int marginHex, int row, int offs
             break;
 
         int x = marginLeft + marginHex + (col * cellSizeHorizontal);
-        QString text = QString::number(data[idx], 16).toUpper();
+        quint8 ch = data.at(idx);
+        QString text = QString("%1")
+                .arg(ch, 2, 16, QLatin1Char('0'))
+                .toUpper();
+        std::string textStr = text.toStdString();
         painter.drawText(x, y, text);
     }
 

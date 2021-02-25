@@ -75,11 +75,19 @@ namespace qfm1000::widgets {
 
         int fontSize;
 
+        int rows;
+        int addressesSize;
+        int marginHex;
+
+        void updateRows();
+
+        void updatePosSize();
+
         void invokeUpdate();
 
-        void paintPositions(QPainter &painter, int posSize, int marginHex, int row, int offset) const;
+        void paintPageAddresses(QPainter &painter, int page, int offset) const;
 
-        void paintHexData(QPainter &painter, int marginHex, int row, int offset);
+        void paintPageData(QPainter &painter, int page, int offset);
 
     };
 
