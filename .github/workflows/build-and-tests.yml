@@ -1,9 +1,13 @@
 name: Build and Tests
 on:
   push:
-    branches: [ master, staging, dev ]
+    branches: 
+      - master
+      - remake
   pull_request:
-    branches: [ master, staging, dev ]
+    branches:
+      - master
+      - remake
 env:
   BUILD_TYPE: Release
 jobs:
