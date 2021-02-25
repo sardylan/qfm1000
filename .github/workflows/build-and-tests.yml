@@ -25,10 +25,11 @@ jobs:
       - name: Install Qt
         shell: bash
         run: sudo apt install qt5-default libqt5svg5-dev libqt5serialport5-dev
-      - name: Downloading SonarQube Build Wrapper
-        shell: bash
-        working-directory: ${{runner.workspace}}
-        run: wget "https://sonarcloud.io/static/cpp/build-wrapper-linux-x86.zip" && unzip build-wrapper-linux-x86.zip && chmod 0755 build-wrapper-linux-x86/build-wrapper-linux-x86-64
+#       c++2a  a.k.a. C++20 is not supported yet by SonarQube
+#       - name: Downloading SonarQube Build Wrapper
+#         shell: bash
+#         working-directory: ${{runner.workspace}}
+#         run: wget "https://sonarcloud.io/static/cpp/build-wrapper-linux-x86.zip" && unzip build-wrapper-linux-x86.zip && chmod 0755 build-wrapper-linux-x86/build-wrapper-linux-x86-64
       - name: Create Build Environment
         run: cmake -E make_directory ${{runner.workspace}}/build
       - name: Configure CMake
@@ -43,8 +44,8 @@ jobs:
         working-directory: ${{runner.workspace}}/build
         shell: bash
         run: ctest -C $BUILD_TYPE
-      - name: SonarCloud Scan
-        uses: SonarSource/sonarcloud-github-action@master
+#       - name: SonarCloud Scan
+#         uses: SonarSource/sonarcloud-github-action@master
       - name: Send reports to CodeCov
         shell: bash
         run: bash <(curl -s https://codecov.io/bash)
