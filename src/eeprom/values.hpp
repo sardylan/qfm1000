@@ -27,6 +27,8 @@
 
 namespace qfm1000::eeprom::Values {
 
+    QString frequency(Frequency frequency);
+
     QString frequencyBand(FrequencyBand frequencyBand);
 
     QString flag(Flag flag);
@@ -36,6 +38,8 @@ namespace qfm1000::eeprom::Values {
     QString power(Power power);
 
     QString squelch(Squelch squelch);
+
+    QString shift(Frequency freqTx, Frequency freqRx);
 
 }
 

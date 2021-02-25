@@ -18,9 +18,25 @@
  */
 
 
+#include <QtCore/QtCore>
+#include <QtCore/QtMath>
+
 #include "values.hpp"
 
 using namespace qfm1000::eeprom;
+
+QString Values::frequency(Frequency frequency) {
+    QString frequencyNumbers = QString("%1").arg(frequency, 9, 10, QLatin1Char('0'));
+    QString MHz = frequencyNumbers.mid(0, 3);
+    QString kHz = frequencyNumbers.mid(3, 3);
+    QString hz = frequencyNumbers.mid(6, 3);
+
+    QString frequencyString = QString("%1.%2").arg(MHz).arg(kHz);
+    if (hz.at(0) != '0')
+        frequencyString.append(".").append(hz.mid(0, 1));
+
+    return frequencyString;
+}
 
 QString Values::frequencyBand(FrequencyBand frequencyBand) {
     switch (frequencyBand) {
@@ -265,4 +281,15 @@ QString Values::squelch(Squelch squelch) {
         default:
             return "";
     }
+}
+
+QString Values::shift(Frequency freqTx, Frequency freqRx) {
+    qint64 shift = (qint64) freqTx - (qint64) freqRx;
+    float khz = (float) shift / 1000;
+    QString value = QString::number(khz, 'f', 1);
+
+    if (freqTx > freqRx)
+        value.insert(0, "+");
+
+    return value;
 }
