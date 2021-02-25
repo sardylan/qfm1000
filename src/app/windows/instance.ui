@@ -36,7 +36,11 @@
                 </widget>
             </item>
             <item row="2" column="0">
-                <widget class="QScrollArea" name="hexDataScrollArea"/>
+                <widget class="QScrollArea" name="hexDataScrollArea">
+                    <property name="widgetResizable">
+                        <bool>true</bool>
+                    </property>
+                </widget>
             </item>
             <item row="0" column="0">
                 <widget class="QGroupBox" name="eepromGroupBox">
