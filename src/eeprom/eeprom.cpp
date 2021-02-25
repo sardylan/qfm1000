@@ -50,8 +50,10 @@ bool EEPROM::setData(const QByteArray &newValue) {
     EEPROM::data = newValue;
 
     bool result = detectRadioType();
-    if (result)
-        QMetaObject::invokeMethod(this, "dataUpdated", Qt::QueuedConnection, Q_ARG(const QByteArray, data));
+    if (!result)
+        qWarning() << "Unable to detect radio type";
+
+    QMetaObject::invokeMethod(this, "dataUpdated", Qt::QueuedConnection, Q_ARG(const QByteArray, data));
 
     return result;
 }
