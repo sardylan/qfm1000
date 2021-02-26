@@ -19,6 +19,7 @@
 
 
 #include <QtCore/QDebug>
+#include <QtCore/QItemSelectionModel>
 
 #include <QtGui/QFont>
 #include <QtGui/QFontDatabase>
@@ -28,8 +29,10 @@
 
 using namespace qfm1000::app::windows;
 
-Instance::Instance(QWidget *parent) : QWidget(parent), ui(new Ui::Instance) {
+Instance::Instance(QAbstractItemModel *model, QWidget *parent) : QWidget(parent), ui(new Ui::Instance) {
     ui->setupUi(this);
+
+    ui->channelsTableView->setModel(model);
 
     hexEditor = new widgets::HexEditor();
 
@@ -46,6 +49,8 @@ Instance::~Instance() {
 void Instance::connectSignals() {
     qInfo() << "Connecting signals";
 
+    connect(ui->channelsTableView->selectionModel(), &QItemSelectionModel::selectionChanged,
+            this, &Instance::channelSelectionChanged);
 }
 
 void Instance::initUi() {
@@ -73,7 +78,7 @@ void Instance::dataUpdated(const QByteArray &value) {
             hexEditor,
             "setData",
             Qt::QueuedConnection,
-            Q_ARG(const QByteArray, value)
+            Q_ARG(QByteArray, value)
     );
 }
 
@@ -85,6 +90,11 @@ void Instance::byteUpdated(int pos, quint8 value) {
             "setByte",
             Qt::QueuedConnection,
             Q_ARG(int, pos),
-            Q_ARG(const char, value)
+            Q_ARG(char, value)
     );
+}
+
+void Instance::channelSelectionChanged(const QItemSelection &selected, const QItemSelection &deselected) {
+    qInfo() << "Item selected:" << selected
+            << "Item deselected:" << deselected;
 }

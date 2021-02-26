@@ -22,6 +22,8 @@
 #define __QFM1000__QFM1000__WINDOWS__EEPROM__H
 
 #include <QtCore/QString>
+#include <QtCore/QAbstractItemModel>
+#include <QtCore/QItemSelection>
 
 #include <QtWidgets/QWidget>
 
@@ -38,7 +40,7 @@ namespace qfm1000::app::windows {
 
     public:
 
-        explicit Instance(QWidget *parent = nullptr);
+        explicit Instance(QAbstractItemModel *model, QWidget *parent = nullptr);
 
         ~Instance() override;
 
@@ -59,6 +61,10 @@ namespace qfm1000::app::windows {
         void connectSignals();
 
         void initUi();
+
+    private slots:
+
+        void channelSelectionChanged(const QItemSelection &selected, const QItemSelection &deselected);
 
     };
 

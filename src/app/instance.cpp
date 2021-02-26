@@ -29,13 +29,17 @@ Instance::Instance(quint64 id, QObject *parent) : QObject(parent), id(id) {
     Instance::oldEeprom = new eeprom::EEPROM();
     Instance::eeprom = new eeprom::EEPROM();
 
-    Instance::window = new windows::Instance();
+    Instance::tableModel = new eeprom::TableModel(Instance::eeprom);
+
+    Instance::window = new windows::Instance(Instance::tableModel);
 
     connectSignals();
 }
 
 Instance::~Instance() {
     delete Instance::window;
+
+    delete Instance::tableModel;
 
     delete Instance::oldEeprom;
     delete Instance::eeprom;

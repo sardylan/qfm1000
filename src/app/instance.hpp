@@ -27,6 +27,7 @@
 #include <QtCore/QString>
 
 #include <eeprom/eeprom.hpp>
+#include <eeprom/model.hpp>
 
 #include "windows/instance.hpp"
 
@@ -66,6 +67,8 @@ namespace qfm1000::app {
 
         eeprom::EEPROM *eeprom;
         eeprom::EEPROM *oldEeprom;
+
+        eeprom::TableModel *tableModel;
 
         windows::Instance *window;
 
