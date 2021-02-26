@@ -35,7 +35,11 @@ namespace qfm1000::eeprom {
 
         [[maybe_unused]] void frequency();
 
+        [[maybe_unused]] void frequency_data();
+
         [[maybe_unused]] void shift();
+
+        [[maybe_unused]] void shift_data();
 
     };
 
