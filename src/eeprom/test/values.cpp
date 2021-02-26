@@ -26,6 +26,54 @@ int main(int argc, char *argv[]) {
     QTEST_MAIN_IMPL(ValuesTest)
 }
 
+[[maybe_unused]] void ValuesTest::parseFrequencyString() {
+    QFETCH(QString, input);
+    QFETCH(Frequency, expected);
+
+    Frequency actual = Values::parseFrequencyString(input);
+    QCOMPARE(actual, expected);
+}
+
+[[maybe_unused]] void ValuesTest::parseFrequencyString_data() {
+    QTest::addColumn<QString>("input");
+    QTest::addColumn<Frequency>("expected");
+
+    QTest::newRow("empty") << "" << 0u;
+
+    QTest::newRow("one digit") << "1" << 0u;
+    QTest::newRow("two digits") << "10" << 0u;
+
+    QTest::newRow("three digits") << "100" << 100000000u;
+    QTest::newRow("three digits VHF low") << "144" << 144000000u;
+    QTest::newRow("three digits VHF high") << "145" << 145000000u;
+    QTest::newRow("three digits UHF low") << "430" << 430000000u;
+    QTest::newRow("three digits UHF high") << "440" << 440000000u;
+
+    QTest::newRow("four digits VHF") << "1451" << 145100000u;
+    QTest::newRow("five digits VHF") << "14512" << 145120000u;
+    QTest::newRow("six digits VHF round") << "145125" << 145125000u;
+    QTest::newRow("six digits VHF half") << "144887" << 144887000u;
+    QTest::newRow("seven digits VHF with 500 Hz") << "1448875" << 144887500u;
+
+    QTest::newRow("four digits with dot VHF") << "145.1" << 145100000u;
+    QTest::newRow("five digits with dot VHF") << "145.12" << 145120000u;
+    QTest::newRow("six digits with dot VHF") << "145.125" << 145125000u;
+    QTest::newRow("six digits with one dot VHF with 500 Hz") << "144.8875" << 144887500u;
+    QTest::newRow("six digits with two dot VHF with 500 Hz") << "144.887.5" << 144887500u;
+
+    QTest::newRow("four digits UHF") << "4301" << 430100000u;
+    QTest::newRow("five digits UHF") << "43015" << 430150000u;
+    QTest::newRow("six digits UHF round") << "430175" << 430175000u;
+    QTest::newRow("six digits UHF half") << "430837" << 430837000u;
+    QTest::newRow("seven digits UHF with 500 Hz") << "4308375" << 430837500u;
+
+    QTest::newRow("four digits with dot UHF") << "430.1" << 430100000u;
+    QTest::newRow("five digits with dot UHF") << "430.12" << 430120000u;
+    QTest::newRow("six digits with dot UHF") << "430.125" << 430125000u;
+    QTest::newRow("six digits with one dot UHF with 500 Hz") << "430.8875" << 430887500u;
+    QTest::newRow("six digits with two dot UHF with 500 Hz") << "430.887.5" << 430887500u;
+}
+
 [[maybe_unused]] void ValuesTest::frequency() {
     QFETCH(Frequency, input);
     QFETCH(QString, expected);
