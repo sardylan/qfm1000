@@ -59,8 +59,6 @@ namespace qfm1000::eeprom {
 
         EEPROM *eeprom;
 
-        static unsigned int strFreqToInt(QString input);
-
     };
 
 }

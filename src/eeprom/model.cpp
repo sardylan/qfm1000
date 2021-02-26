@@ -29,9 +29,7 @@ TableModel::TableModel(EEPROM *eeprom, QObject *parent) : QAbstractTableModel(pa
     TableModel::eeprom = eeprom;
 }
 
-TableModel::~TableModel() {
-
-}
+TableModel::~TableModel() = default;
 
 int TableModel::rowCount(const QModelIndex &parent) const {
     Q_UNUSED(parent);
@@ -118,46 +116,46 @@ QVariant TableModel::headerData(int section, Qt::Orientation orientation, int ro
 
 bool TableModel::setData(const QModelIndex &index, const QVariant &value, int role) {
     if (index.isValid() && role == Qt::EditRole) {
-//        int channel = index.row();
-        unsigned int newValue = 0;
+        Channel channel = index.row();
+        Frequency newFrequency;
 
         switch (index.column()) {
             case 0:
-                newValue = strFreqToInt(value.toString());
-                if (newValue == 0)
+                newFrequency = Values::parseFrequencyString(value.toString());
+                if (newFrequency == 0)
                     return false;
-//                eeprom->setChannelRxFreq(channel, newValue, status->getFrequencyBand());
+                eeprom->setChannelRxFreq(channel, newFrequency);
                 break;
 
             case 1:
-                newValue = strFreqToInt(value.toString());
-                if (newValue == 0)
+                newFrequency = Values::parseFrequencyString(value.toString());
+                if (newFrequency == 0)
                     return false;
-//                eeprom->setChannelTxFreq(channel, newValue, status->getFrequencyBand());
+                eeprom->setChannelTxFreq(channel, newFrequency);
                 break;
 
             case 3:
-//                eeprom->setChannelRxCtcss(channel, value.toUInt());
+                eeprom->setChannelRxCtcss(channel, value.value<CTCSS>());
                 break;
 
             case 4:
-//                eeprom->setChannelTxCtcss(channel, value.toUInt());
+                eeprom->setChannelTxCtcss(channel, value.value<CTCSS>());
                 break;
 
             case 5:
-//                eeprom->setChannelSquelch(channel, value.toUInt());
+                eeprom->setChannelSquelch(channel, value.value<Squelch>());
                 break;
 
             case 6:
-//                eeprom->setChannelPower(channel, value.toUInt());
+                eeprom->setChannelPower(channel, value.value<Power>());
                 break;
 
             case 7:
-//                eeprom->setChannelSelectiveCalling(channel, value.toBool());
+                eeprom->setChannelSelectiveCalling(channel, value.value<Flag>());
                 break;
 
             case 8:
-//                eeprom->setChannelCpuOffset(channel, value.toBool());
+                eeprom->setChannelCpuOffset(channel, value.value<Flag>());
                 break;
 
             default:
@@ -181,25 +179,4 @@ Qt::ItemFlags TableModel::flags(const QModelIndex &index) const {
 
     Qt::ItemFlags itemFlags = QAbstractTableModel::flags(index) | Qt::ItemIsEditable;
     return itemFlags;
-}
-
-unsigned int TableModel::strFreqToInt(QString input) {
-    if (input.contains(QRegExp(R"(^\d{3}\.{0,1}$)"))) {
-        QRegExp regExp(R"(^(\d{3})\.{0,1}$)");
-        regExp.indexIn(input);
-        return regExp.cap(1).leftJustified(3, '0').toUInt() * 1000000;
-    } else if (input.contains(QRegExp(R"(^\d{3}\.{0,1}\d{0,3}$)"))) {
-        QRegExp regExp(R"(^(\d{3})\.{0,1}(\d{0,3})$)");
-        regExp.indexIn(input);
-        return regExp.cap(1).toUInt() * 1000000
-               + regExp.cap(2).leftJustified(3, '0').toUInt() * 1000;
-    } else if (input.contains(QRegExp(R"(^\d{3}\.{0,1}\d{0,3}\.{0,1}\d{0,3}$)"))) {
-        QRegExp regExp(R"(^(\d{3})\.{0,1}(\d{0,3})\.{0,1}(\d{0,3})$)");
-        regExp.indexIn(input);
-        return regExp.cap(1).toUInt() * 1000000
-               + regExp.cap(2).leftJustified(3, '0').toUInt() * 1000
-               + regExp.cap(3).leftJustified(3, '0').toUInt();
-    } else {
-        return 0;
-    }
 }
