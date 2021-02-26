@@ -27,6 +27,8 @@
 
 namespace qfm1000::eeprom::Values {
 
+    Frequency parseFrequencyString(const QString& frequencyString);
+
     QString frequency(Frequency frequency);
 
     QString frequencyBand(FrequencyBand frequencyBand);
