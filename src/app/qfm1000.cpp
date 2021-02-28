@@ -34,6 +34,7 @@
 #include "qfm1000.hpp"
 
 #include "windows/about.hpp"
+#include "windows/license.hpp"
 #include "windows/config.hpp"
 
 
@@ -88,6 +89,8 @@ void QFM1000::connectSignals() const {
     qInfo() << "Connecting signals";
 
     connect(mainWindow, &windows::Main::displayAbout, this, &QFM1000::displayAbout);
+    connect(mainWindow, &windows::Main::displayLicense, this, &QFM1000::displayLicense);
+
     connect(mainWindow, &windows::Main::actionConfiguration, this, &QFM1000::actionConfiguration);
 
     connect(mainWindow, &windows::Main::actionFileOpen, this, &QFM1000::actionFileOpen);
@@ -149,7 +152,7 @@ void QFM1000::actionFileOpen() {
 void QFM1000::displayAbout() {
     qInfo() << "Displaying about";
 
-    qDebug() << "Creating Abouit window";
+    qDebug() << "Creating About window";
     auto *aboutWindow = new windows::About();
 
     qDebug() << "Connecting signals";
@@ -160,6 +163,22 @@ void QFM1000::displayAbout() {
 
     qDebug() << "Displaying dialog";
     QMetaObject::invokeMethod(aboutWindow, &QDialog::exec, Qt::QueuedConnection);
+}
+
+void QFM1000::displayLicense() {
+    qInfo() << "Displaying license";
+
+    qDebug() << "Creating License window";
+    auto *licenseWindow = new windows::License();
+
+    qDebug() << "Connecting signals";
+    connect(licenseWindow, &QDialog::finished, licenseWindow, &QObject::deleteLater, Qt::QueuedConnection);
+
+    qDebug() << "Setting params";
+    licenseWindow->setWindowModality(Qt::ApplicationModal);
+
+    qDebug() << "Displaying dialog";
+    QMetaObject::invokeMethod(licenseWindow, &QDialog::exec, Qt::QueuedConnection);
 }
 
 void QFM1000::actionConfiguration() {

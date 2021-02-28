@@ -6,10 +6,15 @@
 
     <qresource prefix="/files/text">
         <file alias="about">../../resources/text/about.html</file>
+        <file alias="gpl-3.0.md">../../resources/text/gpl-3.0.md</file>
     </qresource>
 
     <qresource prefix="/icons">
         <file alias="application">../../icons/application.svg</file>
+    </qresource>
+
+    <qresource prefix="/images/licenses">
+        <file alias="gpl-v3.svg">../../resources/images/licenses/gpl-v3-logo.svg</file>
     </qresource>
 
     <qresource prefix="/action/application">

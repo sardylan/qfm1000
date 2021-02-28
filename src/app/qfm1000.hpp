@@ -73,6 +73,8 @@ namespace qfm1000::app {
 
         void displayAbout();
 
+        void displayLicense();
+
         void actionConfiguration();
 
         void updateConfig(qfm1000::app::Config *config);

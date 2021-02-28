@@ -30,54 +30,45 @@
 #include <QtWidgets/QPushButton>
 #include <QtWidgets/QDialogButtonBox>
 
-#include "about.hpp"
-#include "ui_about.h"
+#include "license.hpp"
+#include "ui_license.h"
 
 using namespace qfm1000::app::windows;
 
-About::About(QWidget *parent) : QDialog(parent), ui(new Ui::About) {
+License::License(QWidget *parent) : QDialog(parent), ui(new Ui::License) {
     ui->setupUi(this);
 
     connectSignals();
     initUi();
 }
 
-About::~About() {
+License::~License() {
     delete ui;
 }
 
-void About::connectSignals() {
+void License::connectSignals() {
     qInfo() << "Connecting signals";
 
-    connect(ui->buttonBox->button(QDialogButtonBox::Close), &QAbstractButton::clicked, this, &About::close);
+    connect(ui->buttonBox->button(QDialogButtonBox::Close), &QAbstractButton::clicked, this, &License::close);
 }
 
-void About::initUi() {
+void License::initUi() {
     qInfo() << "Initalizing UI";
 
-    QFont titleFont = ui->titleLabel->font();
-    titleFont.setBold(true);
-    titleFont.setPointSize(18);
-    ui->titleLabel->setFont(titleFont);
-    ui->titleLabel->setText(QString("%1\n%2")
-                                    .arg(QCoreApplication::applicationName())
-                                    .arg(QCoreApplication::applicationVersion()));
-
-    QByteArray data = readFile(":/icons/application");
+    QByteArray data = readFile(":/images/licenses/gpl-v3.svg");
     QPixmap pixmap;
     pixmap.loadFromData(data);
-    const QPixmap &cropped = pixmap.copy(QRect(0, 256, 1024, 512));
-    const QPixmap &scaled = cropped.scaledToHeight(64, Qt::SmoothTransformation);
+    const QPixmap &scaled = pixmap.scaledToHeight(31, Qt::SmoothTransformation);
     ui->imageLabel->setPixmap(scaled);
 
-    data = readFile(":/files/text/about");
-    ui->textLabel->setTextFormat(Qt::RichText);
+    data = readFile(":/files/text/gpl-3.0.md");
+    ui->textLabel->setTextFormat(Qt::MarkdownText);
     ui->textLabel->setAlignment(Qt::AlignJustify);
     ui->textLabel->setText(QString(data));
     ui->textLabel->setWordWrap(true);
 }
 
-QByteArray About::readFile(const QString &path) {
+QByteArray License::readFile(const QString &path) {
     qInfo() << "Reading file" << path;
 
     QFile file(path);

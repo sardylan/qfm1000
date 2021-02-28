@@ -95,6 +95,8 @@ namespace qfm1000::app::windows {
 
         void displayAbout();
 
+        void displayLicense();
+
         void actionConfiguration();
 
         void actionFileOpen();

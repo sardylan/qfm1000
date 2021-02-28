@@ -97,6 +97,8 @@
                     <string>Help</string>
                 </property>
                 <addaction name="actionAbout"/>
+                <addaction name="separator"/>
+                <addaction name="actionLicense"/>
             </widget>
             <addaction name="menuFile"/>
             <addaction name="menuEdit"/>
@@ -298,6 +300,19 @@
             </property>
             <property name="shortcut">
                 <string>F1</string>
+            </property>
+        </action>
+        <action name="actionLicense">
+            <property name="icon">
+                <iconset resource="../qfm1000.qrc">
+                    <normaloff>:/images/licenses/gpl-v3.svg</normaloff>:/images/licenses/gpl-v3.svg
+                </iconset>
+            </property>
+            <property name="text">
+                <string>&amp;License</string>
+            </property>
+            <property name="shortcut">
+                <string>F12</string>
             </property>
         </action>
     </widget>

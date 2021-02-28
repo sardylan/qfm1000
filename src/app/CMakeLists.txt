@@ -15,6 +15,7 @@ add_executable(qfm1000
         WIN32 MACOSX_BUNDLE
         windows/main.cpp windows/main.hpp windows/main.ui
         windows/about.cpp windows/about.hpp windows/about.ui
+        windows/license.cpp windows/license.hpp windows/license.ui
         windows/config.cpp windows/config.hpp windows/config.ui
         windows/instance.cpp windows/instance.hpp windows/instance.ui
         instance.cpp instance.hpp

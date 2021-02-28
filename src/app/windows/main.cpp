@@ -57,6 +57,8 @@ void Main::connectSignals() {
     qInfo() << "Connecting signals";
 
     connect(ui->actionAbout, &QAction::triggered, this, &Main::displayAbout, Qt::QueuedConnection);
+    connect(ui->actionLicense, &QAction::triggered, this, &Main::displayLicense, Qt::QueuedConnection);
+
     connect(ui->actionConfiguration, &QAction::triggered, this, &Main::actionConfiguration, Qt::QueuedConnection);
 
     connect(ui->actionFileOpen, &QAction::triggered, this, &Main::actionFileOpen, Qt::QueuedConnection);
