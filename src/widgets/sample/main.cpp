@@ -16,6 +16,8 @@ int main(int argc, char **argv) {
     QScrollArea scrollArea;
     scrollArea.setWidget(&hexEditor);
     scrollArea.setWidgetResizable(true);
+    scrollArea.setFixedWidth(320);
+    scrollArea.setFixedHeight(160);
     scrollArea.show();
 
     QByteArray data = QByteArray(
@@ -30,6 +32,13 @@ int main(int argc, char **argv) {
     );
 
     QMetaObject::invokeMethod(&hexEditor, "setData", Qt::QueuedConnection, Q_ARG(QByteArray, data));
+
+    QMetaObject::invokeMethod(&hexEditor, "setByteSelected", Qt::QueuedConnection, Q_ARG(int, 3), Q_ARG(bool, true));
+    QMetaObject::invokeMethod(&hexEditor, "setByteSelected", Qt::QueuedConnection, Q_ARG(int, 7), Q_ARG(bool, true));
+    QMetaObject::invokeMethod(&hexEditor, "setByteSelected", Qt::QueuedConnection, Q_ARG(int, 3), Q_ARG(bool, false));
+    QMetaObject::invokeMethod(&hexEditor, "setByteSelected", Qt::QueuedConnection, Q_ARG(int, 14), Q_ARG(bool, true));
+    QMetaObject::invokeMethod(&hexEditor, "setByteSelected", Qt::QueuedConnection, Q_ARG(int, 7), Q_ARG(bool, false));
+    QMetaObject::invokeMethod(&hexEditor, "setByteSelected", Qt::QueuedConnection, Q_ARG(int, 14), Q_ARG(bool, false));
 
     return QApplication::exec();
 }
