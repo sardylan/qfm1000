@@ -6,8 +6,8 @@
             <rect>
                 <x>0</x>
                 <y>0</y>
-                <width>320</width>
-                <height>240</height>
+                <width>480</width>
+                <height>360</height>
             </rect>
         </property>
         <property name="windowTitle">
@@ -18,7 +18,7 @@
                 <normaloff>:/icons/application</normaloff>:/icons/application
             </iconset>
         </property>
-        <layout class="QVBoxLayout" name="verticalLayout">
+        <layout class="QVBoxLayout" name="verticalLayout" stretch="0,0,1,0">
             <item>
                 <widget class="QLabel" name="titleLabel">
                     <property name="text">
@@ -46,26 +46,32 @@
                 </widget>
             </item>
             <item>
-                <spacer name="verticalSpacer">
-                    <property name="orientation">
-                        <enum>Qt::Vertical</enum>
+                <widget class="QScrollArea" name="scrollArea">
+                    <property name="widgetResizable">
+                        <bool>true</bool>
                     </property>
-                    <property name="sizeHint" stdset="0">
-                        <size>
-                            <width>20</width>
-                            <height>40</height>
-                        </size>
-                    </property>
-                </spacer>
-            </item>
-            <item>
-                <widget class="QLabel" name="textLabel">
-                    <property name="text">
-                        <string>textLabel</string>
-                    </property>
-                    <property name="alignment">
-                        <set>Qt::AlignCenter</set>
-                    </property>
+                    <widget class="QWidget" name="scrollAreaWidgetContents">
+                        <property name="geometry">
+                            <rect>
+                                <x>0</x>
+                                <y>0</y>
+                                <width>464</width>
+                                <height>260</height>
+                            </rect>
+                        </property>
+                        <layout class="QVBoxLayout" name="verticalLayout_2">
+                            <item>
+                                <widget class="QLabel" name="textLabel">
+                                    <property name="text">
+                                        <string>textLabel</string>
+                                    </property>
+                                    <property name="alignment">
+                                        <set>Qt::AlignCenter</set>
+                                    </property>
+                                </widget>
+                            </item>
+                        </layout>
+                    </widget>
                 </widget>
             </item>
             <item>

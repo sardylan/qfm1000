@@ -22,6 +22,9 @@
 #include <QtCore/QString>
 #include <QtCore/QFile>
 #include <QtCore/QCoreApplication>
+#include <QtCore/QRect>
+
+#include <QtGui/QPixmap>
 
 #include <QtWidgets/QAbstractButton>
 #include <QtWidgets/QPushButton>
@@ -63,12 +66,17 @@ void About::initUi() {
     QByteArray data = readFile(":/icons/application");
     QPixmap pixmap;
     pixmap.loadFromData(data);
-    ui->imageLabel->setPixmap(pixmap.scaledToHeight(128, Qt::SmoothTransformation));
+
+    const QPixmap &cropped = pixmap.copy(QRect(0, 256, 1024, 512));
+    const QPixmap &scaled = cropped.scaledToHeight(64, Qt::SmoothTransformation);
+
+    ui->imageLabel->setPixmap(scaled);
 
     data = readFile(":/files/text/about");
     ui->textLabel->setTextFormat(Qt::RichText);
     ui->textLabel->setAlignment(Qt::AlignJustify);
     ui->textLabel->setText(QString(data));
+    ui->textLabel->setWordWrap(true);
 }
 
 QByteArray About::readFile(const QString &path) {
