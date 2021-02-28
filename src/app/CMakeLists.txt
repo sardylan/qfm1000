@@ -54,9 +54,9 @@ if (WIN32)
             POST_BUILD
             COMMAND ${QT5_DEPLOYQT_BIN} $<TARGET_FILE:qfm1000> ${QFM1000_DEPLOYQT_TYPE} --dir ${PROJECT_BINARY_DIR}/windeployqt)
 
-    install(DIRECTORY ${PROJECT_BINARY_DIR}/windeployqt/
-            DESTINATION ${QFM1000_TARGET_INSTALL_DIR}
-            COMPONENT qtlibs)
+    #install(DIRECTORY ${PROJECT_BINARY_DIR}/windeployqt/
+    #        DESTINATION ${QFM1000_TARGET_INSTALL_DIR}
+    #        COMPONENT qtlibs)
 elseif (APPLE)
     set_target_properties(qfm1000
             PROPERTIES
