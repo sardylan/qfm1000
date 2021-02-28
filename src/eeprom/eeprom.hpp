@@ -129,6 +129,22 @@ namespace qfm1000::eeprom {
         SINAD_24DB = 6
     };
 
+    enum class Param {
+        NONE,
+        PARAM_FREQ_RX,
+        PARAM_FREQ_TX,
+        PARAM_CTCSS_RX,
+        PARAM_CTCSS_TX,
+        PARAM_POWER,
+        PARAM_SQUELCH,
+        PARAM_SELECTIVE_CALLING,
+        PARAM_CPU_OFFSET,
+        PARAM_STARTUP_CHANNEL,
+        PARAM_KEY_BEEP,
+        PARAM_TOT,
+        PARAM_LOW_POWER,
+    };
+
     class EEPROM : public QObject {
     Q_OBJECT
 
@@ -200,7 +216,9 @@ namespace qfm1000::eeprom {
 
         void setLowPower(Power lowPower);
 
-        [[nodiscard]] int computeOffset(Channel channel) const;
+        [[nodiscard]] int firstAffectedByte(Param param, Channel channel = 0u) const;
+
+        static int byteSize(Param param);
 
         static void registerMetaTypes();
 
@@ -231,6 +249,8 @@ namespace qfm1000::eeprom {
 
     };
 
+    QDebug operator<<(QDebug debug, const Param &param);
+
 }
 
 Q_DECLARE_METATYPE(qfm1000::eeprom::FrequencyBand)
@@ -242,5 +262,7 @@ Q_DECLARE_METATYPE(qfm1000::eeprom::CTCSS)
 Q_DECLARE_METATYPE(qfm1000::eeprom::Power)
 
 Q_DECLARE_METATYPE(qfm1000::eeprom::Squelch)
+
+Q_DECLARE_METATYPE(qfm1000::eeprom::Param)
 
 #endif

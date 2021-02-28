@@ -31,6 +31,10 @@ TableModel::TableModel(EEPROM *eeprom, QObject *parent) : QAbstractTableModel(pa
 
 TableModel::~TableModel() = default;
 
+EEPROM *TableModel::getEeprom() const {
+    return eeprom;
+}
+
 int TableModel::rowCount(const QModelIndex &parent) const {
     Q_UNUSED(parent);
     return CHANNELS_COUNT;
@@ -63,9 +67,9 @@ QVariant TableModel::data(const QModelIndex &index, int role) const {
             case 4:
                 return Values::ctcss(eeprom->getChannelTxCtcss(channel));
             case 5:
-                return Values::squelch(eeprom->getChannelSquelch(channel));
-            case 6:
                 return Values::power(eeprom->getChannelPower(channel));
+            case 6:
+                return Values::squelch(eeprom->getChannelSquelch(channel));
             case 7:
                 return Values::flag(eeprom->getChannelSelectiveCalling(channel));
             case 8:
@@ -97,9 +101,9 @@ QVariant TableModel::headerData(int section, Qt::Orientation orientation, int ro
             case 4:
                 return tr("TX CTCSS");
             case 5:
-                return tr("Squelch");
-            case 6:
                 return tr("Power");
+            case 6:
+                return tr("Squelch");
             case 7:
                 return tr("Selective Calling");
             case 8:
@@ -143,11 +147,11 @@ bool TableModel::setData(const QModelIndex &index, const QVariant &value, int ro
                 break;
 
             case 5:
-                eeprom->setChannelSquelch(channel, value.value<Squelch>());
+                eeprom->setChannelPower(channel, value.value<Power>());
                 break;
 
             case 6:
-                eeprom->setChannelPower(channel, value.value<Power>());
+                eeprom->setChannelSquelch(channel, value.value<Squelch>());
                 break;
 
             case 7:
@@ -179,4 +183,50 @@ Qt::ItemFlags TableModel::flags(const QModelIndex &index) const {
 
     Qt::ItemFlags itemFlags = QAbstractTableModel::flags(index) | Qt::ItemIsEditable;
     return itemFlags;
+}
+
+int TableModel::paramToColumn(Param param) {
+    switch (param) {
+        case Param::PARAM_FREQ_RX:
+            return 0;
+        case Param::PARAM_FREQ_TX:
+            return 1;
+        case Param::PARAM_CTCSS_RX:
+            return 3;
+        case Param::PARAM_CTCSS_TX:
+            return 4;
+        case Param::PARAM_POWER:
+            return 5;
+        case Param::PARAM_SQUELCH:
+            return 6;
+        case Param::PARAM_SELECTIVE_CALLING:
+            return 7;
+        case Param::PARAM_CPU_OFFSET:
+            return 8;
+        default:
+            return -1;
+    }
+}
+
+Param TableModel::columnToParam(int column) {
+    switch (column) {
+        case 0:
+            return Param::PARAM_FREQ_RX;
+        case 1:
+            return Param::PARAM_FREQ_TX;
+        case 3:
+            return Param::PARAM_CTCSS_RX;
+        case 4:
+            return Param::PARAM_CTCSS_TX;
+        case 5:
+            return Param::PARAM_POWER;
+        case 6:
+            return Param::PARAM_SQUELCH;
+        case 7:
+            return Param::PARAM_SELECTIVE_CALLING;
+        case 8:
+            return Param::PARAM_CPU_OFFSET;
+        default:
+            return Param::NONE;
+    }
 }

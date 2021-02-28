@@ -26,6 +26,7 @@
 #include <QtGui/QPainter>
 #include <QtGui/QFontDatabase>
 #include <QtGui/QPaintEvent>
+#include <QtGui/QBrush>
 
 #include "hexeditor.hpp"
 
@@ -45,6 +46,8 @@ HexEditor::HexEditor(QWidget *parent) : QWidget(parent) {
     rows = 0;
     addressesSize = 0;
     marginHex = 0;
+
+    initSelectionMap();
 }
 
 HexEditor::~HexEditor() = default;
@@ -61,6 +64,8 @@ void HexEditor::setData(const QByteArray &newValue) {
 
     updateRows();
     updatePosSize();
+
+    initSelectionMap();
 
     invokeUpdate();
 }
@@ -86,6 +91,18 @@ void HexEditor::setByte(int pos, const char &byte) {
         return;
 
     HexEditor::data.replace(pos, 1, &byte);
+}
+
+void HexEditor::setByteSelected(int bytePosition, bool selected) {
+    selectionMap.insert(bytePosition, selected);
+    invokeUpdate();
+}
+
+void HexEditor::initSelectionMap() {
+    selectionMap.clear();
+
+    for (int i = 0; i < data.size(); i++)
+        selectionMap.insert(i, false);
 }
 
 void HexEditor::updateRows() {
@@ -157,6 +174,7 @@ void HexEditor::paintPageData(QPainter &painter, int page, int offset) {
     QPen origPen = painter.pen();
 
     painter.setPen(QPen("#222222"));
+    painter.setBackground(QBrush(Qt::red));
 
     QFont font = painter.font();
     font.setWeight(QFont::ExtraBold);
@@ -169,13 +187,20 @@ void HexEditor::paintPageData(QPainter &painter, int page, int offset) {
         if (idx >= data.size())
             break;
 
+        bool selected = selectionMap.value(idx, false);
+
         int x = marginLeft + marginHex + (col * cellSizeHorizontal);
         quint8 ch = data.at(idx);
         QString text = QString("%1")
                 .arg(ch, 2, 16, QLatin1Char('0'))
                 .toUpper();
-        std::string textStr = text.toStdString();
+
+        if (selected)
+            painter.setBackgroundMode(Qt::OpaqueMode);
+
         painter.drawText(x, y, text);
+
+        painter.setBackgroundMode(Qt::TransparentMode);
     }
 
     painter.setFont(origFont);

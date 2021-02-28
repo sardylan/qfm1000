@@ -22,6 +22,7 @@
 #define __QFM1000__WIDGETS__HEXEDITOR__H
 
 #include <QtCore/QByteArray>
+#include <QtCore/QMap>
 
 #include <QtWidgets/QWidget>
 
@@ -58,6 +59,8 @@ namespace qfm1000::widgets {
 
         void setByte(int pos, const char &byte);
 
+        void setByteSelected(int bytePosition, bool selected);
+
     protected:
 
         void paintEvent(QPaintEvent *event) override;
@@ -66,6 +69,8 @@ namespace qfm1000::widgets {
 
         QByteArray data;
         int pageSize;
+
+        QMap<int, bool> selectionMap;
 
         int marginTop;
         int marginLeft;
@@ -78,6 +83,8 @@ namespace qfm1000::widgets {
         int rows;
         int addressesSize;
         int marginHex;
+
+        void initSelectionMap();
 
         void updateRows();
 

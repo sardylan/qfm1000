@@ -20,19 +20,24 @@
 
 #include <QtCore/QDebug>
 #include <QtCore/QItemSelectionModel>
+#include <QtCore/QModelIndex>
 
 #include <QtGui/QFont>
 #include <QtGui/QFontDatabase>
+
+#include <eeprom/eeprom.hpp>
+#include <eeprom/model.hpp>
 
 #include "instance.hpp"
 #include "ui_instance.h"
 
 using namespace qfm1000::app::windows;
 
-Instance::Instance(QAbstractItemModel *model, QWidget *parent) : QWidget(parent), ui(new Ui::Instance) {
+Instance::Instance(eeprom::TableModel *model, QWidget *parent) : QWidget(parent), ui(new Ui::Instance) {
     ui->setupUi(this);
 
-    ui->channelsTableView->setModel(model);
+    Instance::model = model;
+    ui->channelsTableView->setModel(Instance::model);
 
     hexEditor = new widgets::HexEditor();
 
@@ -95,6 +100,43 @@ void Instance::byteUpdated(int pos, quint8 value) {
 }
 
 void Instance::channelSelectionChanged(const QItemSelection &selected, const QItemSelection &deselected) {
-    qInfo() << "Item selected:" << selected
-            << "Item deselected:" << deselected;
+    for (QModelIndex modelIndex: deselected.indexes()) {
+        int column = modelIndex.column();
+        eeprom::Param param = eeprom::TableModel::columnToParam(column);
+        if (param == eeprom::Param::NONE)
+            continue;
+
+        int channel = modelIndex.row();
+
+        int firstAffectedByte = model->getEeprom()->firstAffectedByte(param, channel);
+        int byteSize = eeprom::EEPROM::byteSize(param);
+
+        qDebug() << "Deelected" << param << "for channel" << channel
+                 << " - "
+                 << byteSize << "bytes from" << firstAffectedByte;
+
+        for (int i = 0; i < byteSize; i++)
+            QMetaObject::invokeMethod(hexEditor, "setByteSelected", Qt::QueuedConnection,
+                                      Q_ARG(int, firstAffectedByte + i), Q_ARG(bool, false));
+    }
+
+    for (QModelIndex modelIndex: selected.indexes()) {
+        int column = modelIndex.column();
+        eeprom::Param param = eeprom::TableModel::columnToParam(column);
+        if (param == eeprom::Param::NONE)
+            continue;
+
+        int channel = modelIndex.row();
+
+        int firstAffectedByte = model->getEeprom()->firstAffectedByte(param, channel);
+        int byteSize = eeprom::EEPROM::byteSize(param);
+
+        qDebug() << "Selected" << param << "for channel" << channel
+                 << " - "
+                 << byteSize << "bytes from" << firstAffectedByte;
+
+        for (int i = 0; i < byteSize; i++)
+            QMetaObject::invokeMethod(hexEditor, "setByteSelected", Qt::QueuedConnection,
+                                      Q_ARG(int, firstAffectedByte + i), Q_ARG(bool, true));
+    }
 }

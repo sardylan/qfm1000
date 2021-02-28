@@ -27,6 +27,8 @@
 
 #include <QtWidgets/QWidget>
 
+#include <eeprom/model.hpp>
+
 #include <widgets/hexeditor.hpp>
 
 namespace Ui {
@@ -40,7 +42,7 @@ namespace qfm1000::app::windows {
 
     public:
 
-        explicit Instance(QAbstractItemModel *model, QWidget *parent = nullptr);
+        explicit Instance(eeprom::TableModel *model, QWidget *parent = nullptr);
 
         ~Instance() override;
 
@@ -55,6 +57,8 @@ namespace qfm1000::app::windows {
     private:
 
         Ui::Instance *ui;
+
+        eeprom::TableModel* model;
 
         widgets::HexEditor *hexEditor;
 

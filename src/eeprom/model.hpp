@@ -41,6 +41,8 @@ namespace qfm1000::eeprom {
 
         ~TableModel() override;
 
+        [[nodiscard]] EEPROM *getEeprom() const;
+
         [[nodiscard]] int rowCount(const QModelIndex &parent) const override;
 
         [[nodiscard]] int columnCount(const QModelIndex &parent) const override;
@@ -54,6 +56,10 @@ namespace qfm1000::eeprom {
         bool setData(const QModelIndex &index, const QVariant &value, int role) override;
 
         bool setData(const QModelIndex &index, const QVariant &value);
+
+        static int paramToColumn(Param param);
+
+        static eeprom::Param columnToParam(int column);
 
     private:
 
