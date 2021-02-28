@@ -25,7 +25,7 @@
 #include <QtCore/QMutex>
 #include <QtSerialPort/QSerialPort>
 
-#include "../utilities/service.hpp"
+#include <utilities/service.hpp>
 
 #define INOPROG_EEPROM_PAGE_SIZE 8
 #define INOPROG_EEPROM_PAGE_COUNT 256
@@ -43,11 +43,11 @@ namespace qfm1000::inoprog {
     typedef quint8 PageNum;
 
     enum class InoProgError {
-        ERROR_NO_ANSWER,
-        ERROR_NOT_READY,
-        ERROR_UNABLE_OPEN_SERIAL,
-        ERROR_SERIAL_PORT,
-        ERROR_PAGE
+        INOPROG_ERROR_NO_ANSWER,
+        INOPROG_ERROR_NOT_READY,
+        INOPROG_ERROR_UNABLE_OPEN_SERIAL,
+        INOPROG_ERROR_SERIAL_PORT,
+        INOPROG_ERROR_PAGE
     };
 
     class InoProg : public utilities::Service {

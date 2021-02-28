@@ -101,7 +101,7 @@ void InoProg::programmerStart() {
 
         if (serialPort.bytesAvailable() < 1) {
             qCritical() << "Arduino not answering";
-            emitError(InoProgError::ERROR_NO_ANSWER);
+            emitError(InoProgError::INOPROG_ERROR_NO_ANSWER);
             programmerStop(false);
             return;
         }
@@ -109,7 +109,7 @@ void InoProg::programmerStart() {
         QByteArray data = serialPort.read(1);
         if (data.at(0) != INOPROG_PROTOCOL_READY) {
             qCritical() << "Arduino not ready";
-            emitError(InoProgError::ERROR_NOT_READY);
+            emitError(InoProgError::INOPROG_ERROR_NOT_READY);
             programmerStop(false);
             return;
         }
@@ -119,7 +119,7 @@ void InoProg::programmerStart() {
         QMetaObject::invokeMethod(this, &InoProg::connected, Qt::QueuedConnection);
     } else {
         qCritical() << "Unable to open serial port";
-        emitError(InoProgError::ERROR_UNABLE_OPEN_SERIAL);
+        emitError(InoProgError::INOPROG_ERROR_UNABLE_OPEN_SERIAL);
         programmerStop(false);
     }
 }
@@ -139,7 +139,7 @@ void InoProg::errorOccurred(QSerialPort::SerialPortError serialPortError) {
         return;
 
     qCritical() << "ERROR:" << serialPortError;
-    emitError(InoProgError::ERROR_SERIAL_PORT);
+    emitError(InoProgError::INOPROG_ERROR_SERIAL_PORT);
 
     stop();
 }
@@ -162,7 +162,7 @@ QByteArray InoProg::readEeprom() {
 
             if (pageData.size() != INOPROG_EEPROM_PAGE_SIZE) {
                 qCritical() << "Error reading page" << pageNum;
-                emitError(InoProgError::ERROR_PAGE);
+                emitError(InoProgError::INOPROG_ERROR_PAGE);
                 eepromData.clear();
                 break;
             }
@@ -180,7 +180,7 @@ QByteArray InoProg::readEeprom() {
         }
     } else {
         qCritical() << "Serial port is not ready";
-        emitError(InoProgError::ERROR_SERIAL_PORT);
+        emitError(InoProgError::INOPROG_ERROR_SERIAL_PORT);
         eepromData.clear();
     }
 
@@ -206,7 +206,7 @@ void InoProg::writeEeprom(const QByteArray &data) {
 
             if (!result) {
                 qCritical() << "Error writing page" << pageNum;
-                emitError(InoProgError::ERROR_PAGE);
+                emitError(InoProgError::INOPROG_ERROR_PAGE);
                 errors = true;
                 break;
             }
@@ -222,7 +222,7 @@ void InoProg::writeEeprom(const QByteArray &data) {
         }
     } else {
         qCritical() << "Serial port is not ready";
-        emitError(InoProgError::ERROR_SERIAL_PORT);
+        emitError(InoProgError::INOPROG_ERROR_SERIAL_PORT);
     }
 
     mutex.unlock();

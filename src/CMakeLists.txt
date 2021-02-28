@@ -1,4 +1,16 @@
-add_compile_options(-Wall -Wextra -pedantic -Werror)
+if (CMAKE_CXX_COMPILER_ID STREQUAL "Clang")
+    message(STATUS "CLang compiler detected.")
+elseif (CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
+    message(STATUS "GCC compiler detected. Adding compile flags for errors.")
+    add_compile_options(-Wall -Wextra -pedantic -Werror)
+elseif (CMAKE_CXX_COMPILER_ID STREQUAL "Intel")
+    message(STATUS "Intel compiler detected.")
+elseif (CMAKE_CXX_COMPILER_ID STREQUAL "MSVC")
+    message(STATUS "MSCV compiler detected. Adding compile flags for errors.")
+    add_compile_options(/Wall)
+else()
+	message(STATUS "Unalbe to detect compiler automatically.")
+endif()
 
 include_directories(.)
 
