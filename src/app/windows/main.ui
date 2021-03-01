@@ -35,7 +35,10 @@
                             <enum>Qt::ScrollBarAsNeeded</enum>
                         </property>
                         <property name="viewMode">
-                            <enum>QMdiArea::TabbedView</enum>
+                            <enum>QMdiArea::SubWindowView</enum>
+                        </property>
+                        <property name="documentMode">
+                            <bool>true</bool>
                         </property>
                         <property name="tabsClosable">
                             <bool>true</bool>
