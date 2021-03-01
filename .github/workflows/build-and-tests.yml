@@ -1,4 +1,4 @@
-name: Build and Tests
+name: Build and Test
 on:
   push:
     branches: 
@@ -10,42 +10,101 @@ on:
       - remake
 env:
   BUILD_TYPE: Release
+  SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 jobs:
-  build:
-    name: Build and Tests
-    runs-on: ubuntu-20.04
-    env:
-      SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+  build_and_test_linux:
+    name: Build and Test Linux
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os:
+          - ubuntu-20.04
+          - ubuntu-18.04
     steps:
-      - name: Checkout
+      - name: "Checkout"
         uses: actions/checkout@v2
         with:
           fetch-depth: 0
-      - name: Install Qt
+      - name: "Install Qt"
         shell: bash
         run: sudo apt install qt5-default libqt5svg5-dev libqt5serialport5-dev
-#       c++2a  a.k.a. C++20 is not supported yet by SonarQube
-#       - name: Downloading SonarQube Build Wrapper
-#         shell: bash
-#         working-directory: ${{runner.workspace}}
-#         run: wget "https://sonarcloud.io/static/cpp/build-wrapper-linux-x86.zip" && unzip build-wrapper-linux-x86.zip && chmod 0755 build-wrapper-linux-x86/build-wrapper-linux-x86-64
-      - name: Create Build Environment
+      - name: "Create Build Environment"
         run: cmake -E make_directory ${{runner.workspace}}/build
-      - name: Configure CMake
+      - name: "Configure CMake"
         shell: bash
         working-directory: ${{runner.workspace}}/build
         run: cmake $GITHUB_WORKSPACE -DCMAKE_BUILD_TYPE=$BUILD_TYPE
-      - name: Build
+      - name: "Build"
         working-directory: ${{runner.workspace}}/build
         shell: bash
-        run: ${{runner.workspace}}/build-wrapper-linux-x86/build-wrapper-linux-x86-64 --out-dir ${{runner.workspace}}/qfm1000 cmake --build . --config $BUILD_TYPE
-      - name: Test
+        run: cmake --build . --config $BUILD_TYPE
+      - name: "Test"
         working-directory: ${{runner.workspace}}/build
         shell: bash
         run: ctest -C $BUILD_TYPE
-#       - name: SonarCloud Scan
-#         uses: SonarSource/sonarcloud-github-action@master
-      - name: Send reports to CodeCov
+      - name: "Send reports to CodeCov"
+        uses: codecov/codecov-action@v1
+  build_and_test_windows:
+    name: Build and Test Windows
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os:
+          - windows-2019
+    steps:
+      - name: "Checkout"
+        uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+      - name: "Install Qt"
+        uses: jurplel/install-qt-action@v2
+        with:
+          version: "5.15.2"
+      - name: "Create Build Environment"
+        run: cmake -E make_directory ${{runner.workspace}}/build
+      - name: "Configure CMake"
+        working-directory: ${{runner.workspace}}/build
+        run: cmake $GITHUB_WORKSPACE -DCMAKE_BUILD_TYPE=$BUILD_TYPE
+      - name: "Build"
+        working-directory: ${{runner.workspace}}/build
+        run: cmake --build . --config $BUILD_TYPE
+      - name: "Test"
+        working-directory: ${{runner.workspace}}/build
+        run: ctest -C $BUILD_TYPE
+      - name: "Send reports to CodeCov"
+        uses: codecov/codecov-action@v1
+  build_and_test_macos:
+    name: Build and Test MAcOS
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os:
+          - macos-10.15
+          - macos-11.0
+    steps:
+      - name: "Checkout"
+        uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+      - name: "Install Qt"
+        uses: jurplel/install-qt-action@v2
+        with:
+          version: "5.15.2"
+          arch: "clang_64"
+      - name: "Create Build Environment"
+        run: cmake -E make_directory ${{runner.workspace}}/build
+      - name: "Configure CMake"
         shell: bash
-        run: bash <(curl -s https://codecov.io/bash)
+        working-directory: ${{runner.workspace}}/build
+        run: cmake $GITHUB_WORKSPACE -DCMAKE_BUILD_TYPE=$BUILD_TYPE
+      - name: "Build"
+        working-directory: ${{runner.workspace}}/build
+        shell: bash
+        run: cmake --build . --config $BUILD_TYPE
+      - name: "Test"
+        working-directory: ${{runner.workspace}}/build
+        shell: bash
+        run: ctest -C $BUILD_TYPE
+      - name: "Send reports to CodeCov"
+        uses: codecov/codecov-action@v1
