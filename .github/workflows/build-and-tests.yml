@@ -14,7 +14,7 @@ env:
   GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 jobs:
   build_and_test_linux:
-    name: Build and Test Linux
+    name: Build and Test
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
@@ -34,7 +34,7 @@ jobs:
       - name: "Configure CMake"
         shell: bash
         working-directory: ${{runner.workspace}}/build
-        run: cmake $GITHUB_WORKSPACE -DCMAKE_BUILD_TYPE=$BUILD_TYPE
+        run: cmake ${{runner.workspace}} -DCMAKE_BUILD_TYPE=$BUILD_TYPE
       - name: "Build"
         working-directory: ${{runner.workspace}}/build
         shell: bash
@@ -46,7 +46,7 @@ jobs:
       - name: "Send reports to CodeCov"
         uses: codecov/codecov-action@v1
   build_and_test_windows:
-    name: Build and Test Windows
+    name: Build and Test
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
@@ -62,20 +62,20 @@ jobs:
         with:
           version: "5.15.2"
       - name: "Create Build Environment"
-        run: cmake -E make_directory ${{runner.workspace}}/build
+        run: cmake -E make_directory ${{runner.workspace}}\build
       - name: "Configure CMake"
-        working-directory: ${{runner.workspace}}/build
-        run: cmake $GITHUB_WORKSPACE -DCMAKE_BUILD_TYPE=$BUILD_TYPE
+        working-directory: ${{runner.workspace}}\build
+        run: cmake ${{runner.workspace}} -DCMAKE_BUILD_TYPE=$BUILD_TYPE -DQT5_PREFIX="D:\a\qfm1000\Qt\5.15.2\msvc2019_64"
       - name: "Build"
-        working-directory: ${{runner.workspace}}/build
+        working-directory: ${{runner.workspace}}\build
         run: cmake --build . --config $BUILD_TYPE
       - name: "Test"
-        working-directory: ${{runner.workspace}}/build
+        working-directory: ${{runner.workspace}}\build
         run: ctest -C $BUILD_TYPE
       - name: "Send reports to CodeCov"
         uses: codecov/codecov-action@v1
   build_and_test_macos:
-    name: Build and Test MAcOS
+    name: Build and Test
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
@@ -97,7 +97,7 @@ jobs:
       - name: "Configure CMake"
         shell: bash
         working-directory: ${{runner.workspace}}/build
-        run: cmake $GITHUB_WORKSPACE -DCMAKE_BUILD_TYPE=$BUILD_TYPE
+        run: cmake ${{runner.workspace}} -DCMAKE_BUILD_TYPE=$BUILD_TYPE
       - name: "Build"
         working-directory: ${{runner.workspace}}/build
         shell: bash
