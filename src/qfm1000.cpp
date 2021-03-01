@@ -226,7 +226,11 @@ void QFM1000::readArduinoEeprom() {
                               Q_ARG(QString, config->getArduinoPortName()),
                               Q_ARG(QSerialPort::BaudRate, config->getArduinoPortSpeed()));
 
+#if QT_VERSION > QT_VERSION_CHECK(5, 12, 0)
     QMetaObject::invokeMethod(window, &ArduinoWindow::exec, Qt::QueuedConnection);
+#else
+    QMetaObject::invokeMethod(this, "exec", Qt::QueuedConnection);
+#endif
 }
 
 void QFM1000::writeArduinoEeprom() {
@@ -272,5 +276,9 @@ void QFM1000::writeArduinoEeprom() {
                               Q_ARG(QString, config->getArduinoPortName()),
                               Q_ARG(QSerialPort::BaudRate, config->getArduinoPortSpeed()));
 
+#if QT_VERSION > QT_VERSION_CHECK(5, 12, 0)
     QMetaObject::invokeMethod(window, &ArduinoWindow::exec, Qt::QueuedConnection);
+#else
+    QMetaObject::invokeMethod(this, "exec", Qt::QueuedConnection);
+#endif
 }

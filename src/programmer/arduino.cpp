@@ -63,7 +63,12 @@ void ArduinoProgrammer::init(const QString &portName, QSerialPort::BaudRate port
     if (data.at(0) == ARDUINO_PROGRAMMER_PROTOCOL_READY) {
         ready = true;
         serialPort->clear();
+
+#if QT_VERSION > QT_VERSION_CHECK(5, 12, 0)
         QMetaObject::invokeMethod(this, &ArduinoProgrammer::connected, Qt::QueuedConnection);
+#else
+        QMetaObject::invokeMethod(this, "connected", Qt::QueuedConnection);
+#endif
     }
 }
 
@@ -71,7 +76,12 @@ void ArduinoProgrammer::close() {
     if (serialPort->isOpen()) {
         serialPort->clear();
         serialPort->close();
+
+#if QT_VERSION > QT_VERSION_CHECK(5, 12, 0)
         QMetaObject::invokeMethod(this, &ArduinoProgrammer::disconnected, Qt::QueuedConnection);
+#else
+        QMetaObject::invokeMethod(this, "disconnected", Qt::QueuedConnection);
+#endif
     }
 
     ready = false;
@@ -87,7 +97,11 @@ void ArduinoProgrammer::errorOccurred(QSerialPort::SerialPortError serialPortErr
 
     qDebug() << "ERROR:" << serialPortError;
 
+#if QT_VERSION > QT_VERSION_CHECK(5, 12, 0)
     QMetaObject::invokeMethod(this, &ArduinoProgrammer::error, Qt::QueuedConnection);
+#else
+    QMetaObject::invokeMethod(this, "error", Qt::QueuedConnection);
+#endif
 
     close();
 }
@@ -122,7 +136,12 @@ void ArduinoProgrammer::readEeprom() {
 
     if (i == ARDUINO_PROGRAMMER_EEPROM_PAGE_COUNT) {
         QMetaObject::invokeMethod(this, "eepromRead", Qt::QueuedConnection, Q_ARG(QByteArray, eepromData));
+
+#if QT_VERSION > QT_VERSION_CHECK(5, 12, 0)
         QMetaObject::invokeMethod(this, &ArduinoProgrammer::readCompleted, Qt::QueuedConnection);
+#else
+        QMetaObject::invokeMethod(this, "readCompleted", Qt::QueuedConnection);
+#endif
     }
 }
 
@@ -143,7 +162,11 @@ void ArduinoProgrammer::writeEeprom(const QByteArray &data) {
     }
 
     if (i == ARDUINO_PROGRAMMER_EEPROM_PAGE_COUNT)
-        QMetaObject::invokeMethod(this, &ArduinoProgrammer::writeCompleted, Qt::DirectConnection);
+#if QT_VERSION > QT_VERSION_CHECK(5, 12, 0)
+        QMetaObject::invokeMethod(this, &ArduinoProgrammer::writeCompleted, Qt::QueuedConnection);
+#else
+    QMetaObject::invokeMethod(this, "writeCompleted", Qt::QueuedConnection);
+#endif
 }
 
 void ArduinoProgrammer::readPage(quint8 num) {
