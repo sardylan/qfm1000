@@ -117,7 +117,11 @@ void HexEditor::updatePosSize() {
 void HexEditor::invokeUpdate() {
     qInfo() << "Invoking widget update";
 
+#if QT_VERSION > QT_VERSION_CHECK(5, 12, 0)
     QMetaObject::invokeMethod(this, qOverload<>(&QWidget::update), Qt::QueuedConnection);
+#else
+    QMetaObject::invokeMethod(this, "update", Qt::QueuedConnection);
+#endif
 }
 
 void HexEditor::paintEvent(QPaintEvent *event) {
