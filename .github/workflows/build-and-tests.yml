@@ -34,7 +34,7 @@ jobs:
       - name: "Configure CMake"
         shell: bash
         working-directory: ${{runner.workspace}}/build
-        run: cmake ${{runner.workspace}} -DCMAKE_BUILD_TYPE=$BUILD_TYPE
+        run: cmake ${{runner.workspace}}/qfm1000 -DCMAKE_BUILD_TYPE=$BUILD_TYPE
       - name: "Build"
         working-directory: ${{runner.workspace}}/build
         shell: bash
@@ -65,7 +65,7 @@ jobs:
         run: cmake -E make_directory ${{runner.workspace}}\build
       - name: "Configure CMake"
         working-directory: ${{runner.workspace}}\build
-        run: cmake ${{runner.workspace}} -DCMAKE_BUILD_TYPE=$BUILD_TYPE -DQT5_PREFIX="D:\a\qfm1000\Qt\5.15.2\msvc2019_64"
+        run: cmake ${{runner.workspace}}/qfm1000 -DCMAKE_BUILD_TYPE=$BUILD_TYPE -DQT5_PREFIX="D:\a\qfm1000\Qt\5.15.2\msvc2019_64"
       - name: "Build"
         working-directory: ${{runner.workspace}}\build
         run: cmake --build . --config $BUILD_TYPE
@@ -97,7 +97,7 @@ jobs:
       - name: "Configure CMake"
         shell: bash
         working-directory: ${{runner.workspace}}/build
-        run: cmake ${{runner.workspace}} -DCMAKE_BUILD_TYPE=$BUILD_TYPE
+        run: cmake ${{runner.workspace}}/qfm1000 -DCMAKE_BUILD_TYPE=$BUILD_TYPE
       - name: "Build"
         working-directory: ${{runner.workspace}}/build
         shell: bash
