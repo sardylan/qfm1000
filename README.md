@@ -1,15 +1,19 @@
-# qFm1000
+# qFM1000
 
 > Simple tool for editing channels and configuration parameters of Philips FM1000 radio.
 
-[![Build status Shippable (Linux)](https://api.shippable.com/projects/5b90607f6217c20600d0beaa/badge?branch=master)](https://app.shippable.com/github/sardylan/qfm1000)
-[![Build status Travis (MacOS)](https://travis-ci.org/sardylan/qfm1000.svg?branch=master)](https://travis-ci.org/sardylan/qfm1000)
-[![Build status AppVeyor (Windows)](https://ci.appveyor.com/api/projects/status/hysni857ux6k3wyg?svg=true)](https://ci.appveyor.com/project/sardylan/qfm1000)
+[![CodeQL](https://github.com/sardylan/qfm1000/actions/workflows/codeql-analysis.yml/badge.svg?branch=master)](https://github.com/sardylan/qfm1000/actions/workflows/codeql-analysis.yml)
 [![Coverity Scan Build Status](https://scan.coverity.com/projects/13866/badge.svg)](https://scan.coverity.com/projects/sardylan-qfm1000)
 
-qFm1000 is a simple tool for editing channels and configuration parameters saved into the 24C16 EEPROM mounted inside any Philips FM1000 radio.
+[![Build and Test](https://github.com/sardylan/qfm1000/actions/workflows/build-and-tests-linux.yml/badge.svg)](https://github.com/sardylan/qfm1000/actions/workflows/build-and-tests-linux.yml)
+[![Build and Test](https://github.com/sardylan/qfm1000/actions/workflows/build-and-tests-windows.yml/badge.svg)](https://github.com/sardylan/qfm1000/actions/workflows/build-and-tests-windows.yml)
+[![Build and Test](https://github.com/sardylan/qfm1000/actions/workflows/build-and-tests-macos.yml/badge.svg)](https://github.com/sardylan/qfm1000/actions/workflows/build-and-tests-macos.yml)
 
-It's based on the Qt/C++ cross-platform framework and can be built using cmake in Linux, Mac and Windows with gcc, clang or Visual Studio.
+qFM1000 is a simple tool for editing channels and configuration parameters saved into the 24C16 EEPROM that
+you can find mounted inside any Philips FM1000 like radio.
+
+It's based on the Qt/C++ cross-platform framework and can be built using cmake in Linux, Windows, or MacOS with gcc,
+CLang or Visual Studio.
 
 ![qFm1000](doc/img/window_main_00.png)
 
@@ -17,18 +21,7 @@ It's based on the Qt/C++ cross-platform framework and can be built using cmake i
 
 All releases are created using CPack extension of CMake builder.
 
-### Linux
-
-There are some deb packages preapred for different Debian-based Linux distribution.
-Just pick up the one for your OS and install it using `dpkg -i <file>.deb`. 
-
-### MAC
-
-There is no pre-compiled version for MacOS, yet. Still working to produce a official DMG release.
-
-### Windows
-
-Windows build are created using the official releases of Qt. Just download the MSI package and install it.
+I'm currently working on a complete refactoring of this little program. You can find all progresses in `remake` branch.
 
 ## Changelog
 
@@ -80,14 +73,15 @@ Windows build are created using the official releases of Qt. Just download the M
 
 ## Development environment
 
-The whole project is based on CMake and developed under GNU/Linux Ubuntu 17.04 using JetBrains CLion IDE, but can be
-developed using any IDE, included [VIm](https://en.wikipedia.org/wiki/Vim_(text_editor)) or [Notepad](https://en.wikipedia.org/wiki/Microsoft_Notepad)
+The whole project is based on CMake and developed under GNU/Linux Ubuntu 20.04 using JetBrains CLion IDE, but can be
+developed using any IDE, included [VIm](https://en.wikipedia.org/wiki/Vim_(text_editor))
+or [Notepad](https://en.wikipedia.org/wiki/Microsoft_Notepad)
 
 Please have a look to [BUILD.md](BUILD.md) for installing required tools and libraries.
 
 ## Meta
 
-Luca Cireddu - [@sardylan](https://twitter.com/sardylan) - sardylan@gmail.com
+Luca Cireddu - IS0GVH - sardylan@gmail.com
 
 I wish to thanks all the people without whom this software cannot be made:
 
