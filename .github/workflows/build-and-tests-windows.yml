@@ -1,0 +1,44 @@
+name: Build and Test
+on:
+  push:
+    branches: 
+      - master
+      - remake
+  pull_request:
+    branches:
+      - master
+      - remake
+env:
+  BUILD_TYPE: Release
+  SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+jobs:
+  build_and_test_windows:
+    name: Build and Test
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os:
+          - windows-2019
+    steps:
+      - name: "Checkout"
+        uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+      - name: "Install Qt"
+        uses: jurplel/install-qt-action@v2
+        with:
+          version: "5.15.2"
+      - name: "Create Build Environment"
+        run: cmake -E make_directory ${{runner.workspace}}\build
+      - name: "Configure CMake"
+        working-directory: ${{runner.workspace}}\build
+        run: cmake ${{runner.workspace}}/qfm1000 -DCMAKE_BUILD_TYPE=$BUILD_TYPE -DQT5_PREFIX="D:\a\qfm1000\Qt\5.15.2\msvc2019_64"
+      - name: "Build"
+        working-directory: ${{runner.workspace}}\build
+        run: cmake --build . --config $BUILD_TYPE
+      - name: "Test"
+        working-directory: ${{runner.workspace}}\build
+        run: ctest -C $BUILD_TYPE
+      - name: "Send reports to CodeCov"
+        uses: codecov/codecov-action@v1
