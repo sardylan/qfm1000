@@ -1,0 +1,53 @@
+name: "Coverity Scan"
+on:
+  push:
+    branches:
+      - master
+      - remake
+  pull_request:
+    branches:
+      - master
+      - remake
+env:
+  BUILD_TYPE: Release
+  SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+  COVERITY_SCAN_TOKEN: ${{ secrets.COVERITY_SCAN_TOKEN }}
+jobs:
+  build_and_test_linux:
+    name: "Coverity Scan"
+    runs-on: ubuntu-20.04
+    steps:
+      - name: "Checkout"
+        uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+      - name: "Install Qt"
+        run: sudo apt install qt5-default libqt5svg5-dev libqt5serialport5-dev
+      - name: Download Coverity Build Tool
+        run: |
+          wget -q https://scan.coverity.com/download/cxx/linux64 --post-data "token=$COVERITY_SCAN_TOKEN&project=sardylan/qfm1000" -O cov-analysis-linux64.tar.gz
+          cmake -E make_directory ${{runner.workspace}}/cov-analysis-linux64
+          tar xzf cov-analysis-linux64.tar.gz --strip 1 -C ${{runner.workspace}}/cov-analysis-linux64
+      - name: "Create Build Environment"
+        run: cmake -E make_directory ${{runner.workspace}}/build
+      - name: "Configure CMake"
+        working-directory: ${{runner.workspace}}/build
+        run: cmake ${{runner.workspace}}/qfm1000 -DCMAKE_BUILD_TYPE=$BUILD_TYPE
+      - name: "Build"
+        working-directory: ${{runner.workspace}}/build
+        run: PATH=${{runner.workspace}}/cov-analysis-linux64/bin:$PATH cov-build --dir ${{runner.workspace}}/cov-int cmake --build . --config $BUILD_TYPE
+      - name: "Test"
+        working-directory: ${{runner.workspace}}/build
+        shell: bash
+        run: PATH=${{runner.workspace}}/cov-analysis-linux64/bin:$PATH ctest -C $BUILD_TYPE
+      - name: "Submit the result to Coverity Scan"
+        working-directory: ${{runner.workspace}}
+        run: |
+          tar czvf qfm1000.tgz cov-int
+          curl \
+            --form project=sardylan/qfm1000 \
+            --form token=$COVERITY_SCAN_TOKEN \
+            --form email=sardylan@gmail.com \
+            --form file=@qfm1000.tgz \
+            https://scan.coverity.com/builds?project=sardylan/qfm1000
