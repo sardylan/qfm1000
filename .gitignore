@@ -17,6 +17,7 @@
 *.lib
 *.exe
 *.out
+*.app
 *.mainApplication
 CMakeCache.txt
 CMakeFiles
@@ -70,4 +71,4 @@ com_crashlytics_export_strings.xml
 crashlytics.properties
 crashlytics-build.properties
 fabric.properties
-!.github/workflows/build-and-tests.yml
+!/.github/workflows/*.yml
