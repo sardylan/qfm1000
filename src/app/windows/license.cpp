@@ -61,8 +61,13 @@ void License::initUi() {
     const QPixmap &scaled = pixmap.scaledToHeight(31, Qt::SmoothTransformation);
     ui->imageLabel->setPixmap(scaled);
 
+#if QT_VERSION >= QT_VERSION_CHECK(5, 14, 0)
     data = readFile(":/files/text/gpl-3.0.md");
     ui->textLabel->setTextFormat(Qt::MarkdownText);
+#else
+    data = readFile(":/files/text/gpl-3.0.txt");
+#endif
+
     ui->textLabel->setAlignment(Qt::AlignJustify);
     ui->textLabel->setText(QString(data));
     ui->textLabel->setWordWrap(true);
