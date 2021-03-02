@@ -1,4 +1,4 @@
-name: Build and Test
+name: "Build and Test (Windows)"
 on:
   push:
     branches: 
@@ -14,7 +14,7 @@ env:
   GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 jobs:
   build_and_test_windows:
-    name: Build and Test
+    name: Build and Test (Windows)
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
