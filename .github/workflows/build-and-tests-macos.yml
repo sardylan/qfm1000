@@ -1,4 +1,4 @@
-name: CodeQL
+name: Build and Test
 on:
   push:
     branches: 
@@ -8,33 +8,29 @@ on:
     branches:
       - master
       - remake
-#  schedule:
-#    - cron: "17 15 * * 3"
 env:
   BUILD_TYPE: Release
   SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
   GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 jobs:
-  analyze:
-    name: Analyze
-    runs-on: ubuntu-latest
+  build_and_test_macos:
+    name: Build and Test
+    runs-on: ${{ matrix.os }}
     strategy:
-      fail-fast: false
       matrix:
-        language: 
-          - "cpp"
+        os:
+          - macos-10.15
+          - macos-11.0
     steps:
       - name: "Checkout"
         uses: actions/checkout@v2
         with:
           fetch-depth: 0
-      - name: Initialize CodeQL
-        uses: github/codeql-action/init@v1
-        with:
-          languages: ${{ matrix.language }}
       - name: "Install Qt"
-        shell: bash
-        run: sudo apt install qt5-default libqt5svg5-dev libqt5serialport5-dev
+        uses: jurplel/install-qt-action@v2
+        with:
+          version: "5.15.2"
+          arch: "clang_64"
       - name: "Create Build Environment"
         run: cmake -E make_directory ${{runner.workspace}}/build
       - name: "Configure CMake"
@@ -51,5 +47,3 @@ jobs:
         run: ctest -C $BUILD_TYPE
       - name: "Send reports to CodeCov"
         uses: codecov/codecov-action@v1
-      - name: "Perform CodeQL Analysis"
-        uses: github/codeql-action/analyze@v1
