@@ -162,7 +162,7 @@ void QFM1000::displayAbout() {
     aboutWindow->setWindowModality(Qt::ApplicationModal);
 
     qDebug() << "Displaying dialog";
-    QMetaObject::invokeMethod(aboutWindow, &QDialog::exec, Qt::QueuedConnection);
+    QMetaObject::invokeMethod(aboutWindow, "exec", Qt::QueuedConnection);
 }
 
 void QFM1000::displayLicense() {
@@ -178,7 +178,7 @@ void QFM1000::displayLicense() {
     licenseWindow->setWindowModality(Qt::ApplicationModal);
 
     qDebug() << "Displaying dialog";
-    QMetaObject::invokeMethod(licenseWindow, &QDialog::exec, Qt::QueuedConnection);
+    QMetaObject::invokeMethod(licenseWindow, "exec", Qt::QueuedConnection);
 }
 
 void QFM1000::actionConfiguration() {
@@ -196,7 +196,7 @@ void QFM1000::actionConfiguration() {
     configWindow->setCurrentConfig(QFM1000::config);
 
     qDebug() << "Displaying dialog";
-    QMetaObject::invokeMethod(configWindow, &QDialog::exec, Qt::QueuedConnection);
+    QMetaObject::invokeMethod(configWindow, "exec", Qt::QueuedConnection);
 }
 
 void QFM1000::updateConfig(Config *newConfig) {

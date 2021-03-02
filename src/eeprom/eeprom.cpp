@@ -360,7 +360,7 @@ void EEPROM::setChannelCpuOffset(Channel channel, Flag cpuOffset) {
             break;
     }
 
-    assign(offset + 7, byte);
+    assign(offset, byte);
 }
 
 Channel EEPROM::getStartupChannel() {

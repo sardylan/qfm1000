@@ -38,65 +38,65 @@ namespace qfm1000::eeprom {
 
     private slots:
 
-        [[maybe_unused]] void initTestCase();
+         void initTestCase();
 
-        [[maybe_unused]] void cleanupTestCase();
+         void cleanupTestCase();
 
-        [[maybe_unused]] void init();
+         void init();
 
-        [[maybe_unused]] void cleanup();
+         void cleanup();
 
-        [[maybe_unused]] void clear();
+         void clear();
 
-        [[maybe_unused]] void frequencyBand();
+         void frequencyBand();
 
-        [[maybe_unused]] void channelRxFreq();
+         void channelRxFreq();
 
-        [[maybe_unused]] void channelRxFreqBytes();
+         void channelRxFreqBytes();
 
-        [[maybe_unused]] void channelTxFreq();
+         void channelTxFreq();
 
-        [[maybe_unused]] void channelTxFreqBytes();
+         void channelTxFreqBytes();
 
-        [[maybe_unused]] void channelRxCtcss();
+         void channelRxCtcss();
 
-        [[maybe_unused]] void channelRxCtcssBytes();
+         void channelRxCtcssBytes();
 
-        [[maybe_unused]] void channelTxCtcss();
+         void channelTxCtcss();
 
-        [[maybe_unused]] void channelTxCtcssBytes();
+         void channelTxCtcssBytes();
 
-        [[maybe_unused]] void channelPower();
+         void channelPower();
 
-        [[maybe_unused]] void channelPowerBytes();
+         void channelPowerBytes();
 
-        [[maybe_unused]] void channelSquelch();
+         void channelSquelch();
 
-        [[maybe_unused]] void channelSquelchBytes();
+         void channelSquelchBytes();
 
-        [[maybe_unused]] void channelSelectiveCalling();
+         void channelSelectiveCalling();
 
-        [[maybe_unused]] void channelSelectiveCallingBytes();
+         void channelSelectiveCallingBytes();
 
-        [[maybe_unused]] void channelCpuOffset();
+         void channelCpuOffset();
 
-        [[maybe_unused]] void channelCpuOffsetBytes();
+         void channelCpuOffsetBytes();
 
-        [[maybe_unused]] void startupChannel();
+         void startupChannel();
 
-        [[maybe_unused]] void startupChannelBytes();
+         void startupChannelBytes();
 
-        [[maybe_unused]] void keyBeep();
+         void keyBeep();
 
-        [[maybe_unused]] void keyBeepBytes();
+         void keyBeepBytes();
 
-        [[maybe_unused]] void tot();
+         void tot();
 
-        [[maybe_unused]] void totBytes();
+         void totBytes();
 
-        [[maybe_unused]] void lowPower();
+         void lowPower();
 
-        [[maybe_unused]] void lowPowerBytes();
+         void lowPowerBytes();
 
     };
 

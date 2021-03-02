@@ -22,11 +22,9 @@
 
 using namespace qfm1000::eeprom;
 
-int main(int argc, char *argv[]) {
-    QTEST_MAIN_IMPL(ValuesTest)
-}
+QTEST_MAIN(ValuesTest)
 
-[[maybe_unused]] void ValuesTest::parseFrequencyString() {
+void ValuesTest::parseFrequencyString() {
     QFETCH(QString, input);
     QFETCH(Frequency, expected);
 
@@ -34,7 +32,7 @@ int main(int argc, char *argv[]) {
     QCOMPARE(actual, expected);
 }
 
-[[maybe_unused]] void ValuesTest::parseFrequencyString_data() {
+void ValuesTest::parseFrequencyString_data() {
     QTest::addColumn<QString>("input");
     QTest::addColumn<Frequency>("expected");
 
@@ -74,7 +72,7 @@ int main(int argc, char *argv[]) {
     QTest::newRow("six digits with two dot UHF with 500 Hz") << "430.887.5" << 430887500u;
 }
 
-[[maybe_unused]] void ValuesTest::frequency() {
+void ValuesTest::frequency() {
     QFETCH(Frequency, input);
     QFETCH(QString, expected);
 
@@ -82,7 +80,7 @@ int main(int argc, char *argv[]) {
     QCOMPARE(actual, expected);
 }
 
-[[maybe_unused]] void ValuesTest::frequency_data() {
+void ValuesTest::frequency_data() {
     QTest::addColumn<Frequency>("input");
     QTest::addColumn<QString>("expected");
 
@@ -111,7 +109,7 @@ int main(int argc, char *argv[]) {
     QTest::newRow("430837500 Hz") << 430837500u << "430.837.5";
 }
 
-[[maybe_unused]] void ValuesTest::shift() {
+void ValuesTest::shift() {
     QFETCH(Frequency, inputTx);
     QFETCH(Frequency, inputRx);
     QFETCH(QString, expected);
@@ -120,7 +118,7 @@ int main(int argc, char *argv[]) {
     QCOMPARE(actual, expected);
 }
 
-[[maybe_unused]] void ValuesTest::shift_data() {
+void ValuesTest::shift_data() {
     QTest::addColumn<Frequency>("inputTx");
     QTest::addColumn<Frequency>("inputRx");
     QTest::addColumn<QString>("expected");

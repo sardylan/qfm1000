@@ -116,7 +116,7 @@ void InoProg::programmerStart() {
 
         ready = true;
         serialPort.clear();
-        QMetaObject::invokeMethod(this, &InoProg::connected, Qt::QueuedConnection);
+        QMetaObject::invokeMethod(this, "connected", Qt::QueuedConnection);
     } else {
         qCritical() << "Unable to open serial port";
         emitError(InoProgError::INOPROG_ERROR_UNABLE_OPEN_SERIAL);
@@ -131,7 +131,7 @@ void InoProg::programmerStop(bool sendSignal) {
     ready = false;
 
     if (sendSignal)
-        QMetaObject::invokeMethod(this, &InoProg::disconnected, Qt::QueuedConnection);
+        QMetaObject::invokeMethod(this, "disconnected", Qt::QueuedConnection);
 }
 
 void InoProg::errorOccurred(QSerialPort::SerialPortError serialPortError) {
@@ -176,7 +176,7 @@ QByteArray InoProg::readEeprom() {
 
         if (eepromData.size() == INOPROG_EEPROM_PAGE_COUNT * INOPROG_EEPROM_PAGE_SIZE) {
             emitProgress(INOPROG_EEPROM_PAGE_COUNT);
-            QMetaObject::invokeMethod(this, &InoProg::readCompleted, Qt::QueuedConnection);
+            QMetaObject::invokeMethod(this, "readCompleted", Qt::QueuedConnection);
         }
     } else {
         qCritical() << "Serial port is not ready";
@@ -218,7 +218,7 @@ void InoProg::writeEeprom(const QByteArray &data) {
 
         if (!errors) {
             emitProgress(INOPROG_EEPROM_PAGE_COUNT);
-            QMetaObject::invokeMethod(this, &InoProg::writeCompleted, Qt::QueuedConnection);
+            QMetaObject::invokeMethod(this, "writeCompleted", Qt::QueuedConnection);
         }
     } else {
         qCritical() << "Serial port is not ready";

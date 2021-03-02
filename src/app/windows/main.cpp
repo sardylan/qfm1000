@@ -88,7 +88,7 @@ void Main::initStatusBar() {
     clockTimer->setSingleShot(false);
     connect(clockTimer, &QTimer::timeout, this, &Main::updateStatusBarClock, Qt::QueuedConnection);
     clockTimer->start();
-    QMetaObject::invokeMethod(this, &Main::updateStatusBarClock, Qt::QueuedConnection);
+    QMetaObject::invokeMethod(this, "updateStatusBarClock", Qt::QueuedConnection);
 }
 
 void Main::updateStatusBarClock() {

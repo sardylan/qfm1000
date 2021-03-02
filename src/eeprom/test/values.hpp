@@ -33,17 +33,17 @@ namespace qfm1000::eeprom {
 
     private slots:
 
-        [[maybe_unused]] void parseFrequencyString();
+        void parseFrequencyString();
 
-        [[maybe_unused]] void parseFrequencyString_data();
+        void parseFrequencyString_data();
 
-        [[maybe_unused]] void frequency();
+        void frequency();
 
-        [[maybe_unused]] void frequency_data();
+        void frequency_data();
 
-        [[maybe_unused]] void shift();
+        void shift();
 
-        [[maybe_unused]] void shift_data();
+        void shift_data();
 
     };
 
