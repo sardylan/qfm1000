@@ -77,6 +77,31 @@ QVariant TableModel::data(const QModelIndex &index, int role) const {
             default:
                 return QVariant();
         }
+    } else if (role == Qt::UserRole) {
+        int channel = index.row();
+
+        switch (index.column()) {
+            case 0:
+                return QVariant::fromValue(eeprom->getChannelRxFreq(channel));
+            case 1:
+                return QVariant::fromValue(eeprom->getChannelTxFreq(channel));
+            case 2:
+                return QVariant::fromValue(eeprom->getChannelTxFreq(channel) - eeprom->getChannelRxFreq(channel));
+            case 3:
+                return QVariant::fromValue(eeprom->getChannelRxCtcss(channel));
+            case 4:
+                return QVariant::fromValue(eeprom->getChannelTxCtcss(channel));
+            case 5:
+                return QVariant::fromValue(eeprom->getChannelPower(channel));
+            case 6:
+                return QVariant::fromValue(eeprom->getChannelSquelch(channel));
+            case 7:
+                return QVariant::fromValue(eeprom->getChannelSelectiveCalling(channel));
+            case 8:
+                return QVariant::fromValue(eeprom->getChannelCpuOffset(channel));
+            default:
+                return QVariant();
+        }
     } else if (role == Qt::TextAlignmentRole) {
         return Qt::AlignCenter;
     }

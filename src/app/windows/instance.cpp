@@ -28,6 +28,12 @@
 #include <eeprom/eeprom.hpp>
 #include <eeprom/model.hpp>
 
+#include <delegators/readonly.hpp>
+#include <delegators/flag.hpp>
+#include <delegators/ctcss.hpp>
+#include <delegators/power.hpp>
+#include <delegators/squelch.hpp>
+
 #include "instance.hpp"
 #include "ui_instance.h"
 
@@ -37,12 +43,11 @@ Instance::Instance(eeprom::TableModel *model, QWidget *parent) : QWidget(parent)
     ui->setupUi(this);
 
     Instance::model = model;
-    ui->channelsTableView->setModel(Instance::model);
 
     hexEditor = new widgets::HexEditor();
 
-    connectSignals();
     initUi();
+    connectSignals();
 }
 
 Instance::~Instance() {
@@ -60,6 +65,19 @@ void Instance::connectSignals() {
 
 void Instance::initUi() {
     qInfo() << "Initalizing UI";
+
+    ui->channelsTableView->setModel(Instance::model);
+
+    ui->channelsTableView->setItemDelegateForColumn(2, new delegators::ReadOnlyDelegate(this));
+    ui->channelsTableView->setItemDelegateForColumn(3, new delegators::CTCSSDelegate(this));
+    ui->channelsTableView->setItemDelegateForColumn(4, new delegators::CTCSSDelegate(this));
+
+    ui->channelsTableView->setItemDelegateForColumn(5, new delegators::PowerDelegate(this));
+    ui->channelsTableView->setItemDelegateForColumn(6, new delegators::SquelchDelegate(this));
+    ui->channelsTableView->setItemDelegateForColumn(7, new delegators::FlagDelegate(this));
+    ui->channelsTableView->setItemDelegateForColumn(8, new delegators::FlagDelegate(this));
+
+    ui->channelsTableView->resizeColumnsToContents();
 
     ui->hexDataScrollArea->setWidget(hexEditor);
     ui->hexDataScrollArea->setWidgetResizable(true);
