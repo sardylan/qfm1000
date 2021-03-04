@@ -87,10 +87,11 @@ void HexEditor::setPageSize(int newValue) {
 void HexEditor::setByte(int pos, const char &byte) {
     qInfo() << "Setting byte";
 
-    if (pos >= HexEditor::data.size())
+    if (pos < 0 || pos >= data.size())
         return;
 
-    HexEditor::data.replace(pos, 1, &byte);
+    data.replace(pos, 1, &byte, 1);
+    invokeUpdate();
 }
 
 void HexEditor::setByteSelected(int bytePosition, bool selected) {
