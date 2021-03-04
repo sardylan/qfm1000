@@ -10,9 +10,9 @@ function render() {
 
     inkscape \
         --without-gui \
-        --export-png=${OUTPUT_FILE} \
-        --export-width=${RES_WIDTH} \
-        --export-height=${RES_HEIGHT} \
+        --export-png="${OUTPUT_FILE}" \
+        --export-width="${RES_WIDTH}" \
+        --export-height="${RES_HEIGHT}" \
         ${INPUT_FILE}
 }
 
