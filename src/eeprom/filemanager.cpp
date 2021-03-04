@@ -118,7 +118,11 @@ FileFormat FileManager::detectFormat(const QByteArray &rawData) {
 
 QStringList FileManager::splitInLines(const QByteArray &rawData) {
     QString rawFileString = QString::fromLatin1(rawData);
-    QStringList rows = rawFileString.replace('\r', '\n').split('\n', QString::SkipEmptyParts);
+#if QT_VERSION >= QT_VERSION_CHECK(5, 15, 0)
+    auto rows = rawFileString.replace('\r', '\n').split('\n', Qt::SkipEmptyParts);
+#else
+    auto rows = rawFileString.replace('\r', '\n').split('\n', QString::SkipEmptyParts);
+#endif
     return rows;
 }
 
