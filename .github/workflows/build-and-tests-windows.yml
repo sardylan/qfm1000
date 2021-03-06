@@ -21,18 +21,17 @@ jobs:
       matrix:
         os:
           - windows-2019
-          - windows-2016
-        qt:
+        qt_ver:
           - 5.15.2
-          - 5.12.10
-          - 5.9.9
-        exclude:
+        qt_arch:
+          - win64_msvc2017_64
+        include:
           - os: windows-2016
-            qt: 5.15.2
-          - os: windows-2019
-            qt: 5.12.10
-          - os: windows-2019
-            qt: 5.9.9
+            qt_ver: 5.12.10
+            qt_arch: win32_msvc2015
+          - os: windows-2016
+            qt_ver: 5.9.9
+            qt_arch: win32_msvc2015
     steps:
       - name: "Checkout"
         uses: actions/checkout@v2
@@ -41,12 +40,13 @@ jobs:
       - name: "Install Qt"
         uses: jurplel/install-qt-action@v2
         with:
-          version: ${{ matrix.qt }}
+          version: ${{ matrix.qt_ver }}
+          arch: ${{ matrix.qt_arch }}
       - name: "Create Build Environment"
         run: cmake -E make_directory ${{runner.workspace}}\build
       - name: "Configure CMake"
         working-directory: ${{runner.workspace}}\build
-        run: cmake ${{runner.workspace}}/qfm1000 -DCMAKE_BUILD_TYPE=$BUILD_TYPE -DQT5_PREFIX="D:\a\qfm1000\Qt\5.15.2\msvc2019_64"
+        run: cmake ${{runner.workspace}}/qfm1000 -DCMAKE_BUILD_TYPE=$BUILD_TYPE -DQT5_PREFIX="D:\a\qfm1000\Qt\${{ matrix.qt_ver }}\${{ matrix.qt_arch }}"
       - name: "Build"
         working-directory: ${{runner.workspace}}\build
         run: cmake --build . --config $BUILD_TYPE
