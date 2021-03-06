@@ -9,9 +9,9 @@ elseif (CMAKE_CXX_COMPILER_ID STREQUAL "Intel")
 elseif (CMAKE_CXX_COMPILER_ID STREQUAL "MSVC")
     message(STATUS "MSCV compiler detected. Adding compile flags for errors.")
     add_compile_options(/Wall)
-else()
-	message(STATUS "Unable to detect compiler automatically: ${CMAKE_CXX_COMPILER_ID}")
-endif()
+else ()
+    message(STATUS "Unable to detect compiler automatically: ${CMAKE_CXX_COMPILER_ID}")
+endif ()
 
 include_directories(.)
 

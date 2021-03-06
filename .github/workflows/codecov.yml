@@ -1,46 +1,33 @@
-name: "Build and Test (MacOS)"
+name: "Build and Test (Linux)"
 on:
   push:
-    branches:
+    branches: 
       - main
   pull_request:
     branches:
       - main
 env:
-  BUILD_TYPE: Release
+  BUILD_TYPE: Debug
   SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
   GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 jobs:
-  build_and_test_macos:
-    name: Build and Test (MacOS)
-    runs-on: ${{ matrix.os }}
-    strategy:
-      fail-fast: false
-      matrix:
-        os:
-          - macos-10.15
-        qt_ver:
-          - 5.15.2
-          - 5.12.10
-          - 5.9.9
-        qt_arch:
-          - clang_64
+  build_and_test_linux:
+    name: Build and Test (Linux)
+    runs-on: ubuntu-20.04
     steps:
       - name: "Checkout"
         uses: actions/checkout@v2
         with:
           fetch-depth: 0
       - name: "Install Qt"
-        uses: jurplel/install-qt-action@v2
-        with:
-          version: ${{ matrix.qt_ver }}
-          arch: ${{ matrix.qt_arch }}
+        shell: bash
+        run: sudo apt install qt5-default libqt5svg5-dev libqt5serialport5-dev
       - name: "Create Build Environment"
         run: cmake -E make_directory ${{runner.workspace}}/build
       - name: "Configure CMake"
         shell: bash
         working-directory: ${{runner.workspace}}/build
-        run: cmake ${{runner.workspace}}/qfm1000 -DCMAKE_BUILD_TYPE=$BUILD_TYPE
+        run: cmake ${{runner.workspace}}/qfm1000 -DCMAKE_BUILD_TYPE=$BUILD_TYPE -DENABLE_COVERAGE=True
       - name: "Build"
         working-directory: ${{runner.workspace}}/build
         shell: bash
@@ -49,3 +36,9 @@ jobs:
         working-directory: ${{runner.workspace}}/build
         shell: bash
         run: ctest -C $BUILD_TYPE
+      - name: "Send reports to CodeCov"
+        uses: codecov/codecov-action@v1
+        with:
+          files:
+            ${{runner.workspace}}/build/src/eeprom/test-result-eeprom-eeprom.xml
+            ${{runner.workspace}}/build/src/eeprom/test-result-eeprom-values.xml

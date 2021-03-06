@@ -1,0 +1,8 @@
+ignore:
+  - "arduino/**/*"
+  - "build/**/*"
+  - "cmake/**/*"
+  - "desktop/**/*"
+  - "doc/**/*"
+  - "icons/**/*"
+  - "resources/**/*"
