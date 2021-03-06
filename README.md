@@ -4,6 +4,7 @@
 
 [![CodeQL](https://github.com/sardylan/qfm1000/actions/workflows/codeql-analysis.yml/badge.svg?branch=master)](https://github.com/sardylan/qfm1000/actions/workflows/codeql-analysis.yml)
 [![Coverity Scan Build Status](https://scan.coverity.com/projects/13866/badge.svg)](https://scan.coverity.com/projects/sardylan-qfm1000)
+[![FOSSA Status](https://app.fossa.com/api/projects/git%2Bgithub.com%2Fsardylan%2Fqfm1000.svg?type=shield)](https://app.fossa.com/projects/git%2Bgithub.com%2Fsardylan%2Fqfm1000?ref=badge_shield)
 
 [![Build and Test](https://github.com/sardylan/qfm1000/actions/workflows/build-and-tests-linux.yml/badge.svg)](https://github.com/sardylan/qfm1000/actions/workflows/build-and-tests-linux.yml)
 [![Build and Test](https://github.com/sardylan/qfm1000/actions/workflows/build-and-tests-windows.yml/badge.svg)](https://github.com/sardylan/qfm1000/actions/workflows/build-and-tests-windows.yml)
@@ -93,3 +94,7 @@ This program is free software: you can redistribute it and/or modify it under th
 License as published by the Free Software Foundation, either version 3 of the License.
 
 See [LICENSE.md](LICENSE.md) for more information.
+
+
+## License
+[![FOSSA Status](https://app.fossa.com/api/projects/git%2Bgithub.com%2Fsardylan%2Fqfm1000.svg?type=large)](https://app.fossa.com/projects/git%2Bgithub.com%2Fsardylan%2Fqfm1000?ref=badge_large)
