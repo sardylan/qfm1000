@@ -2,7 +2,7 @@
 
 > Simple tool for editing channels and configuration parameters of Philips FM1000 radio.
 
-[![CodeQL](https://github.com/sardylan/qfm1000/actions/workflows/codeql-analysis.yml/badge.svg?branch=master)](https://github.com/sardylan/qfm1000/actions/workflows/codeql-analysis.yml)
+[![CodeQL](https://github.com/sardylan/qfm1000/actions/workflows/codeql-analysis.yml/badge.svg?branch=main)](https://github.com/sardylan/qfm1000/actions/workflows/codeql-analysis.yml)
 [![Coverity Scan Build Status](https://scan.coverity.com/projects/13866/badge.svg)](https://scan.coverity.com/projects/sardylan-qfm1000)
 [![FOSSA Status](https://app.fossa.com/api/projects/git%2Bgithub.com%2Fsardylan%2Fqfm1000.svg?type=shield)](https://app.fossa.com/projects/git%2Bgithub.com%2Fsardylan%2Fqfm1000?ref=badge_shield)
 
