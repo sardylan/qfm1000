@@ -22,8 +22,7 @@
 #include <QtCore/QItemSelectionModel>
 #include <QtCore/QModelIndex>
 
-#include <QtGui/QFont>
-#include <QtGui/QFontDatabase>
+#include <QtWidgets/QComboBox>
 
 #include <eeprom/eeprom.hpp>
 #include <eeprom/model.hpp>
@@ -56,11 +55,112 @@ Instance::~Instance() {
     delete ui;
 }
 
+bool Instance::eventFilter(QObject *watched, QEvent *event) {
+    if (watched == ui->defaultChannelComboBox) {
+        int firstAffectedByte = model->getEeprom()->firstAffectedByte(eeprom::Param::PARAM_STARTUP_CHANNEL);
+
+        switch (event->type()) {
+            case QEvent::FocusIn: {
+                QMetaObject::invokeMethod(hexEditor, "setByteSelected", Qt::QueuedConnection,
+                                          Q_ARG(int, firstAffectedByte), Q_ARG(bool, true));
+            }
+                break;
+            case QEvent::FocusOut:
+                QMetaObject::invokeMethod(hexEditor, "setByteSelected", Qt::QueuedConnection,
+                                          Q_ARG(int, firstAffectedByte), Q_ARG(bool, false));
+                break;
+            default:
+                break;
+        }
+    } else if (watched == ui->lowPowerComboBox) {
+        int firstAffectedByte = model->getEeprom()->firstAffectedByte(eeprom::Param::PARAM_LOW_POWER);
+
+        switch (event->type()) {
+            case QEvent::FocusIn: {
+                QMetaObject::invokeMethod(hexEditor, "setByteSelected", Qt::QueuedConnection,
+                                          Q_ARG(int, firstAffectedByte), Q_ARG(bool, true));
+            }
+                break;
+            case QEvent::FocusOut:
+                QMetaObject::invokeMethod(hexEditor, "setByteSelected", Qt::QueuedConnection,
+                                          Q_ARG(int, firstAffectedByte), Q_ARG(bool, false));
+                break;
+            default:
+                break;
+        }
+    } else if (watched == ui->totSlider) {
+        int firstAffectedByte = model->getEeprom()->firstAffectedByte(eeprom::Param::PARAM_TOT);
+
+        switch (event->type()) {
+            case QEvent::FocusIn: {
+                QMetaObject::invokeMethod(hexEditor, "setByteSelected", Qt::QueuedConnection,
+                                          Q_ARG(int, firstAffectedByte), Q_ARG(bool, true));
+            }
+                break;
+            case QEvent::FocusOut:
+                QMetaObject::invokeMethod(hexEditor, "setByteSelected", Qt::QueuedConnection,
+                                          Q_ARG(int, firstAffectedByte), Q_ARG(bool, false));
+                break;
+            default:
+                break;
+        }
+    } else if (watched == ui->totSpinBox) {
+        int firstAffectedByte = model->getEeprom()->firstAffectedByte(eeprom::Param::PARAM_TOT);
+
+        switch (event->type()) {
+            case QEvent::FocusIn: {
+                QMetaObject::invokeMethod(hexEditor, "setByteSelected", Qt::QueuedConnection,
+                                          Q_ARG(int, firstAffectedByte), Q_ARG(bool, true));
+            }
+                break;
+            case QEvent::FocusOut:
+                QMetaObject::invokeMethod(hexEditor, "setByteSelected", Qt::QueuedConnection,
+                                          Q_ARG(int, firstAffectedByte), Q_ARG(bool, false));
+                break;
+            default:
+                break;
+        }
+    } else if (watched == ui->beepCheckBox) {
+        int firstAffectedByte = model->getEeprom()->firstAffectedByte(eeprom::Param::PARAM_KEY_BEEP);
+
+        switch (event->type()) {
+            case QEvent::FocusIn: {
+                QMetaObject::invokeMethod(hexEditor, "setByteSelected", Qt::QueuedConnection,
+                                          Q_ARG(int, firstAffectedByte), Q_ARG(bool, true));
+            }
+                break;
+            case QEvent::FocusOut:
+                QMetaObject::invokeMethod(hexEditor, "setByteSelected", Qt::QueuedConnection,
+                                          Q_ARG(int, firstAffectedByte), Q_ARG(bool, false));
+                break;
+            default:
+                break;
+        }
+    } else if (watched == ui->channelsTableView) {
+        switch (event->type()) {
+            case QEvent::FocusOut:
+                QMetaObject::invokeMethod(ui->channelsTableView->selectionModel(), "clear", Qt::QueuedConnection);
+                break;
+            default:
+                break;
+        }
+    }
+
+    return QObject::eventFilter(watched, event);
+}
+
 void Instance::connectSignals() {
     qInfo() << "Connecting signals";
 
     connect(ui->channelsTableView->selectionModel(), &QItemSelectionModel::selectionChanged,
             this, &Instance::channelSelectionChanged);
+
+    ui->defaultChannelComboBox->installEventFilter(this);
+    ui->lowPowerComboBox->installEventFilter(this);
+    ui->totSlider->installEventFilter(this);
+    ui->totSpinBox->installEventFilter(this);
+    ui->beepCheckBox->installEventFilter(this);
+    ui->channelsTableView->installEventFilter(this);
 }
 
 void Instance::initUi() {

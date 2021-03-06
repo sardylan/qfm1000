@@ -46,6 +46,8 @@ namespace qfm1000::app::windows {
 
         ~Instance() override;
 
+        bool eventFilter(QObject *watched, QEvent *event) override;
+
     public slots:
 
         void updateFileName(const QString &filename);
