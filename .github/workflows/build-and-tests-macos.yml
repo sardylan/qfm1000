@@ -17,10 +17,14 @@ jobs:
     name: Build and Test (MacOS)
     runs-on: ${{ matrix.os }}
     strategy:
+      fail-fast: false
       matrix:
         os:
           - macos-10.15
-          - macos-11.0
+        qt:
+          - 5.15.2
+          - 5.12.10
+          - 5.9.9
     steps:
       - name: "Checkout"
         uses: actions/checkout@v2
@@ -29,7 +33,7 @@ jobs:
       - name: "Install Qt"
         uses: jurplel/install-qt-action@v2
         with:
-          version: "5.15.2"
+          version: ${{ matrix.qt }}
           arch: "clang_64"
       - name: "Create Build Environment"
         run: cmake -E make_directory ${{runner.workspace}}/build

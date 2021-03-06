@@ -17,9 +17,22 @@ jobs:
     name: Build and Test (Windows)
     runs-on: ${{ matrix.os }}
     strategy:
+      fail-fast: false
       matrix:
         os:
           - windows-2019
+          - windows-2016
+        qt:
+          - 5.15.2
+          - 5.12.10
+          - 5.9.9
+        exclude:
+          - os: windows-2016
+            qt: 5.15.2
+          - os: windows-2019
+            qt: 5.12.10
+          - os: windows-2019
+            qt: 5.9.9
     steps:
       - name: "Checkout"
         uses: actions/checkout@v2
@@ -28,7 +41,7 @@ jobs:
       - name: "Install Qt"
         uses: jurplel/install-qt-action@v2
         with:
-          version: "5.15.2"
+          version: ${{ matrix.qt }}
       - name: "Create Build Environment"
         run: cmake -E make_directory ${{runner.workspace}}\build
       - name: "Configure CMake"
