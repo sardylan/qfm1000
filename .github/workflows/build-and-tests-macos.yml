@@ -53,5 +53,5 @@ jobs:
         uses: codecov/codecov-action@v1
         with:
           files:
-            - ${{runner.workspace}}/build/src/eeprom/test-result-eeprom-eeprom.xml
-            - ${{runner.workspace}}/build/src/eeprom/test-result-eeprom-values.xml
+            ${{runner.workspace}}/build/src/eeprom/test-result-eeprom-eeprom.xml
+            ${{runner.workspace}}/build/src/eeprom/test-result-eeprom-values.xml
