@@ -1,13 +1,11 @@
 name: "Build and Test (MacOS)"
 on:
   push:
-    branches: 
-      - master
-      - remake
+    branches:
+      - main
   pull_request:
     branches:
-      - master
-      - remake
+      - main
 env:
   BUILD_TYPE: Release
   SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}

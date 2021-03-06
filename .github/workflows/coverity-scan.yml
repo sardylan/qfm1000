@@ -2,12 +2,10 @@ name: "Coverity Scan"
 on:
   push:
     branches:
-      - master
-      - remake
+      - coverity_scan
   pull_request:
     branches:
-      - master
-      - remake
+      - coverity_scan
 env:
   BUILD_TYPE: Release
   SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}

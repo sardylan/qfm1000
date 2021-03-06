@@ -1,13 +1,11 @@
 name: CodeQL
 on:
   push:
-    branches: 
-      - master
-      - remake
+    branches:
+      - main
   pull_request:
     branches:
-      - master
-      - remake
+      - main
   schedule:
     - cron: "17 15 * * 3"
 env:
