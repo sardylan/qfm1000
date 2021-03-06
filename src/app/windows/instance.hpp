@@ -65,15 +65,17 @@ namespace qfm1000::app::windows {
 
         widgets::HexEditor *hexEditor;
 
-        void connectSignals();
-
         void initUi();
+
+        void connectSignals();
 
         void setByteSelected(int bytePosition, bool selected);
 
         void parseEvent(int bytePosition, QEvent *event);
 
     private slots:
+
+        void updateSpinBoxSuffix(int value);
 
         void channelSelectionChanged(const QItemSelection &selected, const QItemSelection &deselected);
 

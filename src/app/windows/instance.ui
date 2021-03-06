@@ -50,7 +50,7 @@
                                     <bool>true</bool>
                                 </property>
                                 <property name="suffix">
-                                    <string>seconds</string>
+                                    <string> seconds</string>
                                 </property>
                                 <property name="maximum">
                                     <number>255</number>
