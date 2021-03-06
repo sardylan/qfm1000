@@ -24,6 +24,7 @@
 #include <QtCore/QString>
 #include <QtCore/QAbstractItemModel>
 #include <QtCore/QItemSelection>
+#include <QtCore/QEvent>
 
 #include <QtWidgets/QWidget>
 
@@ -60,13 +61,17 @@ namespace qfm1000::app::windows {
 
         Ui::Instance *ui;
 
-        eeprom::TableModel* model;
+        eeprom::TableModel *model;
 
         widgets::HexEditor *hexEditor;
 
         void connectSignals();
 
         void initUi();
+
+        void setByteSelected(int bytePosition, bool selected);
+
+        void parseEvent(int bytePosition, QEvent *event);
 
     private slots:
 

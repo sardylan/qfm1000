@@ -58,84 +58,19 @@ Instance::~Instance() {
 bool Instance::eventFilter(QObject *watched, QEvent *event) {
     if (watched == ui->defaultChannelComboBox) {
         int firstAffectedByte = model->getEeprom()->firstAffectedByte(eeprom::Param::PARAM_STARTUP_CHANNEL);
-
-        switch (event->type()) {
-            case QEvent::FocusIn: {
-                QMetaObject::invokeMethod(hexEditor, "setByteSelected", Qt::QueuedConnection,
-                                          Q_ARG(int, firstAffectedByte), Q_ARG(bool, true));
-            }
-                break;
-            case QEvent::FocusOut:
-                QMetaObject::invokeMethod(hexEditor, "setByteSelected", Qt::QueuedConnection,
-                                          Q_ARG(int, firstAffectedByte), Q_ARG(bool, false));
-                break;
-            default:
-                break;
-        }
+        parseEvent(firstAffectedByte, event);
     } else if (watched == ui->lowPowerComboBox) {
         int firstAffectedByte = model->getEeprom()->firstAffectedByte(eeprom::Param::PARAM_LOW_POWER);
-
-        switch (event->type()) {
-            case QEvent::FocusIn: {
-                QMetaObject::invokeMethod(hexEditor, "setByteSelected", Qt::QueuedConnection,
-                                          Q_ARG(int, firstAffectedByte), Q_ARG(bool, true));
-            }
-                break;
-            case QEvent::FocusOut:
-                QMetaObject::invokeMethod(hexEditor, "setByteSelected", Qt::QueuedConnection,
-                                          Q_ARG(int, firstAffectedByte), Q_ARG(bool, false));
-                break;
-            default:
-                break;
-        }
+        parseEvent(firstAffectedByte, event);
     } else if (watched == ui->totSlider) {
         int firstAffectedByte = model->getEeprom()->firstAffectedByte(eeprom::Param::PARAM_TOT);
-
-        switch (event->type()) {
-            case QEvent::FocusIn: {
-                QMetaObject::invokeMethod(hexEditor, "setByteSelected", Qt::QueuedConnection,
-                                          Q_ARG(int, firstAffectedByte), Q_ARG(bool, true));
-            }
-                break;
-            case QEvent::FocusOut:
-                QMetaObject::invokeMethod(hexEditor, "setByteSelected", Qt::QueuedConnection,
-                                          Q_ARG(int, firstAffectedByte), Q_ARG(bool, false));
-                break;
-            default:
-                break;
-        }
+        parseEvent(firstAffectedByte, event);
     } else if (watched == ui->totSpinBox) {
         int firstAffectedByte = model->getEeprom()->firstAffectedByte(eeprom::Param::PARAM_TOT);
-
-        switch (event->type()) {
-            case QEvent::FocusIn: {
-                QMetaObject::invokeMethod(hexEditor, "setByteSelected", Qt::QueuedConnection,
-                                          Q_ARG(int, firstAffectedByte), Q_ARG(bool, true));
-            }
-                break;
-            case QEvent::FocusOut:
-                QMetaObject::invokeMethod(hexEditor, "setByteSelected", Qt::QueuedConnection,
-                                          Q_ARG(int, firstAffectedByte), Q_ARG(bool, false));
-                break;
-            default:
-                break;
-        }
+        parseEvent(firstAffectedByte, event);
     } else if (watched == ui->beepCheckBox) {
         int firstAffectedByte = model->getEeprom()->firstAffectedByte(eeprom::Param::PARAM_KEY_BEEP);
-
-        switch (event->type()) {
-            case QEvent::FocusIn: {
-                QMetaObject::invokeMethod(hexEditor, "setByteSelected", Qt::QueuedConnection,
-                                          Q_ARG(int, firstAffectedByte), Q_ARG(bool, true));
-            }
-                break;
-            case QEvent::FocusOut:
-                QMetaObject::invokeMethod(hexEditor, "setByteSelected", Qt::QueuedConnection,
-                                          Q_ARG(int, firstAffectedByte), Q_ARG(bool, false));
-                break;
-            default:
-                break;
-        }
+        parseEvent(firstAffectedByte, event);
     } else if (watched == ui->channelsTableView) {
         switch (event->type()) {
             case QEvent::FocusOut:
@@ -257,4 +192,26 @@ void Instance::channelSelectionChanged(const QItemSelection &selected, const QIt
             QMetaObject::invokeMethod(hexEditor, "setByteSelected", Qt::QueuedConnection,
                                       Q_ARG(int, firstAffectedByte + i), Q_ARG(bool, true));
     }
+}
+
+void Instance::parseEvent(int bytePosition, QEvent *event) {
+    switch (event->type()) {
+        case QEvent::FocusIn:
+            setByteSelected(bytePosition, true);
+
+            break;
+        case QEvent::FocusOut:
+            setByteSelected(bytePosition, false);
+
+            break;
+        default:
+            break;
+    }
+
+}
+
+void Instance::setByteSelected(int bytePosition, bool selected) {
+    QMetaObject::invokeMethod(hexEditor, "setByteSelected", Qt::QueuedConnection,
+                              Q_ARG(int, bytePosition), Q_ARG(bool, selected));
+
 }
