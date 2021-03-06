@@ -55,3 +55,7 @@ jobs:
         run: ctest -C $BUILD_TYPE
       - name: "Send reports to CodeCov"
         uses: codecov/codecov-action@v1
+        with:
+          files:
+            - ${{runner.workspace}}/build/src/eeprom/test-result-eeprom-eeprom.xml
+            - ${{runner.workspace}}/build/src/eeprom/test-result-eeprom-values.xml
