@@ -17,6 +17,7 @@ jobs:
     name: Build and Test (Windows)
     runs-on: ${{ matrix.os }}
     strategy:
+      fail-fast: false
       matrix:
         os:
           - windows-2019
@@ -24,6 +25,14 @@ jobs:
         qt:
           - 5.15.2
           - 5.12.10
+          - 5.9.9
+        exclude:
+          - os: windows-2016
+            qt: 5.15.2
+          - os: windows-2019
+            qt: 5.12.10
+          - os: windows-2019
+            qt: 5.9.9
     steps:
       - name: "Checkout"
         uses: actions/checkout@v2
