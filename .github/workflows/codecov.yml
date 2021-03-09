@@ -1,4 +1,4 @@
-name: "Build and Test (Linux)"
+name: "CodeCov"
 on:
   push:
     branches: 
@@ -12,7 +12,7 @@ env:
   GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 jobs:
   build_and_test_linux:
-    name: Build and Test (Linux)
+    name: CodeCov
     runs-on: ubuntu-20.04
     steps:
       - name: "Checkout"
