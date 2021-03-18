@@ -1,13 +1,11 @@
 /*
  * qFM1000
- * Copyright (C) 2017  Luca Cireddu
- * sardylan@gmail.com
- * http://www.lucacireddu.it
+ * Copyright (C) 2021  Luca Cireddu - IS0GVH
+ * sardylan@gmail.com - is0gvh@gmail.com
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
+ * the Free Software Foundation, either version 3 of the License.
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -18,6 +16,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
+
 
 #include <QtCore/QDebug>
 #include <QtCore/QThread>
