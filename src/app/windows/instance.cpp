@@ -77,14 +77,15 @@ bool Instance::eventFilter(QObject *watched, QEvent *event) {
     } else if (watched == ui->channelsTableView) {
         switch (event->type()) {
             case QEvent::FocusOut:
-                QMetaObject::invokeMethod(ui->channelsTableView->selectionModel(), "clear", Qt::QueuedConnection);
+                ui->channelsTableView->selectionModel()->clear();
+//                QMetaObject::invokeMethod(ui->channelsTableView->selectionModel(), "clear", Qt::QueuedConnection);
                 break;
             default:
                 break;
         }
     }
 
-    return QObject::eventFilter(watched, event);
+    return false;
 }
 
 void Instance::initUi() {
@@ -292,7 +293,7 @@ void Instance::channelSelectionChanged(const QItemSelection &selected, const QIt
         int firstAffectedByte = model->getEeprom()->firstAffectedByte(param, channel);
         int byteSize = eeprom::EEPROM::byteSize(param);
 
-        qDebug() << "Deelected" << param << "for channel" << channel
+        qDebug() << "Deselected" << param << "for channel" << channel
                  << " - "
                  << byteSize << "bytes from" << firstAffectedByte;
 
