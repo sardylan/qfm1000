@@ -96,6 +96,10 @@ namespace qfm1000::widgets {
 
         void paintPageData(QPainter &painter, int page, int offset);
 
+    signals:
+
+        void ensureVisible(int x, int y);
+
     };
 
 }

@@ -200,8 +200,13 @@ void HexEditor::paintPageData(QPainter &painter, int page, int offset) {
                 .arg(ch, 2, 16, QLatin1Char('0'))
                 .toUpper();
 
-        if (selected)
+        if (selected) {
+            QMetaObject::invokeMethod(this, "ensureVisible",
+                                      Qt::QueuedConnection,
+                                      Q_ARG(int, x), Q_ARG(int, y));
+
             painter.setBackgroundMode(Qt::OpaqueMode);
+        }
 
         painter.drawText(x, y, text);
 
