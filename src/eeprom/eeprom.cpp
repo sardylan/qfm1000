@@ -86,6 +86,8 @@ void EEPROM::setFrequencyBand(FrequencyBand newValue) {
             add300Mhz = true;
             break;
     }
+
+    QMetaObject::invokeMethod(this, "dataUpdated", Qt::QueuedConnection, Q_ARG(const QByteArray, data));
 }
 
 int EEPROM::getFirstChannelOffset() const {
@@ -370,10 +372,10 @@ Channel EEPROM::getStartupChannel() {
 }
 
 void EEPROM::setStartupChannel(Channel startupChannel) {
-    if (!isValidChannelNumber(startupChannel))
+    if (!isValidChannelNumber(startupChannel) && startupChannel != static_cast<Channel>(0xff))
         return;
 
-    auto byte = static_cast<quint8>(startupChannel < CHANNELS_COUNT ? startupChannel : (Channel) 0xff);
+    auto byte = static_cast<quint8>(startupChannel);
     int offset = firstAffectedByte(Param::PARAM_STARTUP_CHANNEL);
     assign(offset, byte);
 }
@@ -467,7 +469,7 @@ int EEPROM::byteSize(Param param) {
     switch (param) {
         case Param::PARAM_FREQ_RX:
         case Param::PARAM_FREQ_TX:
-            return  2;
+            return 2;
 
         case Param::PARAM_CTCSS_RX:
         case Param::PARAM_CTCSS_TX:
@@ -487,9 +489,17 @@ int EEPROM::byteSize(Param param) {
 }
 
 bool EEPROM::detectRadioType() {
-    firstChannelOffset = OFFSET_CHANNEL_FIRST;
+    firstChannelOffset = OFFSET_CHANNEL_FIRST_ALTERNATIVE;
     add300Mhz = true;
     Frequency frequency = getChannelRxFreq(0);
+    if (frequency >= 400000000 && frequency <= 480000000) {
+        frequencyBand = FrequencyBand::U0;
+        return true;
+    }
+
+    firstChannelOffset = OFFSET_CHANNEL_FIRST;
+    add300Mhz = true;
+    frequency = getChannelRxFreq(0);
     if (frequency >= 400000000 && frequency <= 480000000) {
         frequencyBand = FrequencyBand::U0;
         return true;
