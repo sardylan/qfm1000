@@ -57,6 +57,8 @@ namespace qfm1000::app::windows {
 
         void byteUpdated(int pos, quint8 value);
 
+        void loadValues();
+
     private:
 
         Ui::Instance *ui;
@@ -75,9 +77,21 @@ namespace qfm1000::app::windows {
 
     private slots:
 
+        void handleFrequencyBandChanges();
+
+        void handleStartupChannelChanges();
+
+        void handleLowPowerChanges();
+
+        void handleTotChanges();
+
+        void handleBeepChanges();
+
         void updateSpinBoxSuffix(int value);
 
         void channelSelectionChanged(const QItemSelection &selected, const QItemSelection &deselected);
+
+        void handleEnsureVisible(int x, int y);
 
     };
 

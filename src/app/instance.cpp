@@ -82,4 +82,6 @@ void Instance::connectSignals() {
 void Instance::resetStatus() {
     qInfo() << "Resetting status";
     Instance::oldEeprom->setData(eeprom->getData());
+
+    QMetaObject::invokeMethod(window, "loadValues", Qt::QueuedConnection);
 }
