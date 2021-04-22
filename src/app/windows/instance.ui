@@ -50,7 +50,7 @@
                                     <bool>true</bool>
                                 </property>
                                 <property name="suffix">
-                                    <string> seconds</string>
+                                    <string>seconds</string>
                                 </property>
                                 <property name="maximum">
                                     <number>255</number>
@@ -154,6 +154,16 @@
             </item>
         </layout>
     </widget>
+    <tabstops>
+        <tabstop>frequencyBandComboBox</tabstop>
+        <tabstop>defaultChannelComboBox</tabstop>
+        <tabstop>lowPowerComboBox</tabstop>
+        <tabstop>totSlider</tabstop>
+        <tabstop>totSpinBox</tabstop>
+        <tabstop>beepCheckBox</tabstop>
+        <tabstop>channelsTableView</tabstop>
+        <tabstop>hexDataScrollArea</tabstop>
+    </tabstops>
     <resources>
         <include location="../qfm1000.qrc"/>
     </resources>

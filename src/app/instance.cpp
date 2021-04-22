@@ -75,8 +75,8 @@ void Instance::setFileName(const QString &newValue) {
 void Instance::connectSignals() {
     qInfo() << "Connecting signals";
 
-    connect(eeprom, &eeprom::EEPROM::byteUpdated, window, &windows::Instance::byteUpdated);
-    connect(eeprom, &eeprom::EEPROM::dataUpdated, window, &windows::Instance::dataUpdated);
+    connect(eeprom, &eeprom::EEPROM::byteUpdated, window, &windows::Instance::byteUpdated, Qt::QueuedConnection);
+    connect(eeprom, &eeprom::EEPROM::dataUpdated, window, &windows::Instance::dataUpdated, Qt::QueuedConnection);
 }
 
 void Instance::resetStatus() {

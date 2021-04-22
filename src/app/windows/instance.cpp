@@ -74,15 +74,6 @@ bool Instance::eventFilter(QObject *watched, QEvent *event) {
     } else if (watched == ui->beepCheckBox) {
         int firstAffectedByte = model->getEeprom()->firstAffectedByte(eeprom::Param::PARAM_KEY_BEEP);
         parseEvent(firstAffectedByte, event);
-    } else if (watched == ui->channelsTableView) {
-        switch (event->type()) {
-            case QEvent::FocusOut:
-                ui->channelsTableView->selectionModel()->clear();
-//                QMetaObject::invokeMethod(ui->channelsTableView->selectionModel(), "clear", Qt::QueuedConnection);
-                break;
-            default:
-                break;
-        }
     }
 
     return false;
@@ -202,7 +193,6 @@ void Instance::connectSignals() {
     ui->totSlider->installEventFilter(this);
     ui->totSpinBox->installEventFilter(this);
     ui->beepCheckBox->installEventFilter(this);
-    ui->channelsTableView->installEventFilter(this);
 }
 
 void Instance::loadValues() {
@@ -326,17 +316,17 @@ void Instance::channelSelectionChanged(const QItemSelection &selected, const QIt
 void Instance::parseEvent(int bytePosition, QEvent *event) {
     switch (event->type()) {
         case QEvent::FocusIn:
+            ui->channelsTableView->selectionModel()->clear();
             setByteSelected(bytePosition, true);
-
             break;
+
         case QEvent::FocusOut:
             setByteSelected(bytePosition, false);
-
             break;
+
         default:
             break;
     }
-
 }
 
 void Instance::setByteSelected(int bytePosition, bool selected) {
