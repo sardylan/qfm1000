@@ -24,43 +24,34 @@
                 <normaloff>:/icons/application</normaloff>:/icons/application
             </iconset>
         </property>
-        <layout class="QGridLayout" name="mainGridLayout" rowstretch="0,1">
+        <layout class="QGridLayout" name="mainGridLayout" rowstretch="0,0">
             <item row="0" column="0">
                 <widget class="QGroupBox" name="eepromGroupBox">
                     <property name="title">
                         <string>Instance Configurations</string>
                     </property>
-                    <layout class="QGridLayout" name="configGridLayout" columnstretch="0,0,0,1">
-                        <item row="1" column="0">
-                            <widget class="QLabel" name="defaultChannelLabel">
+                    <layout class="QGridLayout" name="configGridLayout" columnstretch="0,0,0,0,0,1">
+                        <item row="0" column="0">
+                            <widget class="QLabel" name="frequencyBandLabel">
                                 <property name="text">
-                                    <string>Default channel</string>
-                                </property>
-                            </widget>
-                        </item>
-                        <item row="2" column="1" colspan="2">
-                            <widget class="QComboBox" name="lowPowerComboBox"/>
-                        </item>
-                        <item row="3" column="2">
-                            <widget class="QSpinBox" name="totSpinBox">
-                                <property name="wrapping">
-                                    <bool>false</bool>
-                                </property>
-                                <property name="frame">
-                                    <bool>true</bool>
-                                </property>
-                                <property name="suffix">
-                                    <string>seconds</string>
-                                </property>
-                                <property name="maximum">
-                                    <number>255</number>
+                                    <string>Frequency Band</string>
                                 </property>
                             </widget>
                         </item>
                         <item row="0" column="1" colspan="2">
                             <widget class="QComboBox" name="frequencyBandComboBox"/>
                         </item>
-                        <item row="0" column="3">
+                        <item row="0" column="3" colspan="2">
+                            <widget class="QCheckBox" name="mhzOffsetCheckBox">
+                                <property name="enabled">
+                                    <bool>false</bool>
+                                </property>
+                                <property name="text">
+                                    <string>+300 MHz offset (UHF)</string>
+                                </property>
+                            </widget>
+                        </item>
+                        <item row="0" column="5">
                             <spacer name="horizontalSpacer">
                                 <property name="orientation">
                                     <enum>Qt::Horizontal</enum>
@@ -73,21 +64,34 @@
                                 </property>
                             </spacer>
                         </item>
-                        <item row="0" column="0">
-                            <widget class="QLabel" name="frequencyBandLabel">
+                        <item row="1" column="0">
+                            <widget class="QLabel" name="defaultChannelLabel">
                                 <property name="text">
-                                    <string>Frequency Band</string>
+                                    <string>Default channel</string>
                                 </property>
                             </widget>
                         </item>
-                        <item row="2" column="0">
+                        <item row="1" column="1" colspan="2">
+                            <widget class="QComboBox" name="defaultChannelComboBox"/>
+                        </item>
+                        <item row="1" column="3">
                             <widget class="QLabel" name="lowPowerLabel">
                                 <property name="text">
                                     <string>Low Power</string>
                                 </property>
                             </widget>
                         </item>
-                        <item row="3" column="1">
+                        <item row="1" column="4">
+                            <widget class="QComboBox" name="lowPowerComboBox"/>
+                        </item>
+                        <item row="2" column="0">
+                            <widget class="QLabel" name="totLabel">
+                                <property name="text">
+                                    <string>TOT</string>
+                                </property>
+                            </widget>
+                        </item>
+                        <item row="2" column="1">
                             <widget class="QSlider" name="totSlider">
                                 <property name="maximum">
                                     <number>255</number>
@@ -109,22 +113,28 @@
                                 </property>
                             </widget>
                         </item>
-                        <item row="4" column="0" colspan="3">
+                        <item row="2" column="2">
+                            <widget class="QSpinBox" name="totSpinBox">
+                                <property name="wrapping">
+                                    <bool>false</bool>
+                                </property>
+                                <property name="frame">
+                                    <bool>true</bool>
+                                </property>
+                                <property name="suffix">
+                                    <string>seconds</string>
+                                </property>
+                                <property name="maximum">
+                                    <number>255</number>
+                                </property>
+                            </widget>
+                        </item>
+                        <item row="2" column="3" colspan="2">
                             <widget class="QCheckBox" name="beepCheckBox">
                                 <property name="text">
                                     <string>Buttons beep</string>
                                 </property>
                             </widget>
-                        </item>
-                        <item row="3" column="0">
-                            <widget class="QLabel" name="totLabel">
-                                <property name="text">
-                                    <string>TOT</string>
-                                </property>
-                            </widget>
-                        </item>
-                        <item row="1" column="1" colspan="2">
-                            <widget class="QComboBox" name="defaultChannelComboBox"/>
                         </item>
                     </layout>
                 </widget>
@@ -157,10 +167,8 @@
     <tabstops>
         <tabstop>frequencyBandComboBox</tabstop>
         <tabstop>defaultChannelComboBox</tabstop>
-        <tabstop>lowPowerComboBox</tabstop>
         <tabstop>totSlider</tabstop>
         <tabstop>totSpinBox</tabstop>
-        <tabstop>beepCheckBox</tabstop>
         <tabstop>channelsTableView</tabstop>
         <tabstop>hexDataScrollArea</tabstop>
     </tabstops>

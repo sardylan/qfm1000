@@ -206,6 +206,12 @@ void Instance::loadValues() {
             break;
         }
 
+    qDebug() << "Updating 300 MHz offset checkbox";
+    if (model->getEeprom()->getAdd300Mhz())
+        ui->mhzOffsetCheckBox->setChecked(true);
+    else
+        ui->mhzOffsetCheckBox->setChecked(false);
+
     qDebug() << "Setting initial value for default channel ComboBox";
     for (int i = 0; i < ui->defaultChannelComboBox->count(); i++)
         if (ui->defaultChannelComboBox->itemData(i).value<eeprom::Channel>() ==
@@ -254,6 +260,12 @@ void Instance::dataUpdated(const QByteArray &value) {
             "setData",
             Qt::QueuedConnection,
             Q_ARG(QByteArray, value)
+    );
+
+    QMetaObject::invokeMethod(
+            this,
+            "loadValues",
+            Qt::QueuedConnection
     );
 }
 

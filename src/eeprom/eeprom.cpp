@@ -53,7 +53,7 @@ bool EEPROM::setData(const QByteArray &newValue) {
     if (!result)
         qWarning() << "Unable to detect radio type";
 
-    QMetaObject::invokeMethod(this, "dataUpdated", Qt::QueuedConnection, Q_ARG(const QByteArray, data));
+    QMetaObject::invokeMethod(this, "dataUpdated", Qt::QueuedConnection, Q_ARG(QByteArray, data));
 
     return result;
 }
@@ -87,7 +87,11 @@ void EEPROM::setFrequencyBand(FrequencyBand newValue) {
             break;
     }
 
-    QMetaObject::invokeMethod(this, "dataUpdated", Qt::QueuedConnection, Q_ARG(const QByteArray, data));
+    QMetaObject::invokeMethod(this, "dataUpdated", Qt::QueuedConnection, Q_ARG(QByteArray, data));
+}
+
+bool EEPROM::getAdd300Mhz() const {
+    return add300Mhz;
 }
 
 int EEPROM::getFirstChannelOffset() const {

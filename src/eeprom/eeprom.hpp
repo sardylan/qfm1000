@@ -31,14 +31,15 @@
 
 #define OFFSET_CHANNEL_FIRST 0x26
 #define OFFSET_CHANNEL_FIRST_ALTERNATIVE 0x21
+
+#define OFFSET_LAST_USED_CHANNEL 0x1
+#define OFFSET_LAST_USED_CTCSS 0x2
 #define OFFSET_STARTUP_CHANNEL 0x6D7
 #define OFFSET_KEY_BEEP 0x6EB
 #define OFFSET_TOT 0x719
 #define OFFSET_LOW_POWER 0x71E
 #define OFFSET_BUTTONS 0x729
 
-#define OFFSET_LAST_USED_CHANNEL 0x1
-#define OFFSET_LAST_USED_CTCSS 0x2
 
 namespace qfm1000::eeprom {
 
@@ -163,6 +164,8 @@ namespace qfm1000::eeprom {
         [[nodiscard]] FrequencyBand getFrequencyBand() const;
 
         void setFrequencyBand(FrequencyBand newValue);
+
+        [[nodiscard]] bool getAdd300Mhz() const;
 
         [[nodiscard]] int getFirstChannelOffset() const;
 
