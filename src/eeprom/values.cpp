@@ -52,9 +52,9 @@ QString Values::frequency(Frequency frequency) {
     QString kHz = frequencyNumbers.mid(3, 3);
     QString hz = frequencyNumbers.mid(6, 3);
 
-    QString frequencyString = QString("%1.%2").arg(MHz).arg(kHz);
+    QString frequencyString = QString("%1.%2").arg(MHz, kHz);
     if (hz.at(0) != '0')
-        frequencyString.append(".").append(hz.mid(0, 1));
+        frequencyString.append(".").append(hz.midRef(0, 1));
 
     return frequencyString;
 }
