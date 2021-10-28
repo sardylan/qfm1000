@@ -41,6 +41,8 @@ int TableModel::columnCount(const QModelIndex &parent) const {
 }
 
 QVariant TableModel::data(const QModelIndex &index, int role) const {
+    unsigned int value;
+
     if (!index.isValid())
         return QVariant();
 
@@ -60,14 +62,38 @@ QVariant TableModel::data(const QModelIndex &index, int role) const {
                 unsigned int rxFreq = eeprom->getChannelRxFreq(channel, status->getFrequencyBand());
                 return shiftToStr(txFreq, rxFreq);
             }
-            case 3:
-                return ctcssValues[eeprom->getChannelRxCtcss(channel)];
-            case 4:
-                return ctcssValues[eeprom->getChannelTxCtcss(channel)];
-            case 5:
-                return squelchValues[eeprom->getChannelSquelch(channel)];
-            case 6:
-                return powerValues[eeprom->getChannelPower(channel)];
+            case 3: {
+                value = eeprom->getChannelRxCtcss(channel);
+                if (value < 0)
+                    value = 0;
+                if (value > ctcssValues.size() - 1)
+                    value = ctcssValues.size() - 1;
+                return ctcssValues[value];
+            }
+            case 4: {
+                value = eeprom->getChannelTxCtcss(channel);
+                if (value < 0)
+                    value = 0;
+                if (value > ctcssValues.size() - 1)
+                    value = ctcssValues.size() - 1;
+                return ctcssValues[value];
+            }
+            case 5: {
+                value = eeprom->getChannelSquelch(channel);
+                if (value < 0)
+                    value = 0;
+                if (value > squelchValues.size() - 1)
+                    value = squelchValues.size() - 1;
+                return squelchValues[value];
+            }
+            case 6: {
+                value = eeprom->getChannelPower(channel);
+                if (value < 0)
+                    value = 0;
+                if (value > powerValues.size() - 1)
+                    value = powerValues.size() - 1;
+                return powerValues[value];
+            }
             case 7:
                 return boolToStr(eeprom->getChannelSelectiveCalling(channel));
             case 8:
