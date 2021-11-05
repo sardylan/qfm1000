@@ -1,4 +1,4 @@
-find_package(Qt5 REQUIRED COMPONENTS
+find_package(Qt6 REQUIRED COMPONENTS
         Core Gui Svg Widgets SerialPort OpenGL)
 
 configure_file(version.hpp.in version.hpp)
@@ -35,12 +35,12 @@ target_link_libraries(qfm1000
         inoprog
         widgets
         delegators
-        Qt5::Core
-        Qt5::Gui
-        Qt5::Svg
-        Qt5::Widgets
-        Qt5::SerialPort
-        Qt5::OpenGL)
+        Qt6::Core
+        Qt6::Gui
+        Qt6::Svg
+        Qt6::Widgets
+        Qt6::SerialPort
+        Qt6::OpenGL)
 
 if (WIN32)
     file(MAKE_DIRECTORY ${PROJECT_BINARY_DIR}/windeployqt)
@@ -53,7 +53,7 @@ if (WIN32)
 
     add_custom_command(TARGET qfm1000
             POST_BUILD
-            COMMAND ${QT5_DEPLOYQT_BIN} $<TARGET_FILE:qfm1000> ${QFM1000_DEPLOYQT_TYPE} --dir ${PROJECT_BINARY_DIR}/windeployqt)
+            COMMAND ${QT_DEPLOYQT_BIN} $<TARGET_FILE:qfm1000> ${QFM1000_DEPLOYQT_TYPE} --dir ${PROJECT_BINARY_DIR}/windeployqt)
 
     #install(DIRECTORY ${PROJECT_BINARY_DIR}/windeployqt/
     #        DESTINATION ${QFM1000_TARGET_INSTALL_DIR}
@@ -64,7 +64,7 @@ elseif (APPLE)
             MACOSX_BUNDLE_ICON_FILE ../../icons/macos/icon.icns)
     add_custom_command(TARGET qfm1000
             POST_BUILD
-            COMMAND ${QT5_DEPLOYQT_BIN} $<TARGET_FILE:qfm1000> ${QFM1000_DEPLOYQT_TYPE})
+            COMMAND ${QT_DEPLOYQT_BIN} $<TARGET_FILE:qfm1000> ${QFM1000_DEPLOYQT_TYPE})
 endif ()
 
 if (UNIX)

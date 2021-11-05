@@ -33,13 +33,10 @@ using namespace qfm1000::inoprog;
 #define INOPROG_SERIAL_SLEEP 25
 
 InoProg::InoProg(QObject *parent) : Service(parent) {
-#if QT_VERSION >= QT_VERSION_CHECK(5, 8, 0)
-    connect(&serialPort, &QSerialPort::errorOccurred, this, &InoProg::errorOccurred);
-#endif
-
     portSpeed = QSerialPort::Baud115200;
-
     ready = false;
+
+    connect(&serialPort, &QSerialPort::errorOccurred, this, &InoProg::errorOccurred);
 }
 
 InoProg::~InoProg() = default;
@@ -58,6 +55,10 @@ QSerialPort::BaudRate InoProg::getPortSpeed() const {
 
 void InoProg::setPortSpeed(QSerialPort::BaudRate newValue) {
     InoProg::portSpeed = newValue;
+}
+
+void InoProg::connectSignals() {
+    connect(&serialPort, &QSerialPort::errorOccurred, this, &InoProg::errorOccurred);
 }
 
 bool InoProg::isReady() {
@@ -92,35 +93,36 @@ void InoProg::programmerStart() {
 
     serialPort.setFlowControl(QSerialPort::NoFlowControl);
 
-    if (serialPort.open(QIODevice::ReadWrite)) {
-        serialPort.clear();
-
-        if (serialPort.bytesAvailable() < 1)
-            serialPort.waitForReadyRead(INOPROG_SERIAL_WAIT);
-
-        if (serialPort.bytesAvailable() < 1) {
-            qCritical() << "Arduino not answering";
-            emitError(InoProgError::INOPROG_ERROR_NO_ANSWER);
-            programmerStop(false);
-            return;
-        }
-
-        QByteArray data = serialPort.read(1);
-        if (data.at(0) != INOPROG_PROTOCOL_READY) {
-            qCritical() << "Arduino not ready";
-            emitError(InoProgError::INOPROG_ERROR_NOT_READY);
-            programmerStop(false);
-            return;
-        }
-
-        ready = true;
-        serialPort.clear();
-        QMetaObject::invokeMethod(this, "connected", Qt::QueuedConnection);
-    } else {
+    if (!serialPort.open(QIODevice::ReadWrite)) {
         qCritical() << "Unable to open serial port";
         emitError(InoProgError::INOPROG_ERROR_UNABLE_OPEN_SERIAL);
         programmerStop(false);
+        return;
     }
+
+    serialPort.clear();
+
+    if (serialPort.bytesAvailable() < 1)
+        serialPort.waitForReadyRead(INOPROG_SERIAL_WAIT);
+
+    if (serialPort.bytesAvailable() < 1) {
+        qCritical() << "Arduino not answering";
+        emitError(InoProgError::INOPROG_ERROR_NO_ANSWER);
+        programmerStop(false);
+        return;
+    }
+
+    QByteArray data = serialPort.read(1);
+    if (data.at(0) != INOPROG_PROTOCOL_READY) {
+        qCritical() << "Arduino not ready";
+        emitError(InoProgError::INOPROG_ERROR_NOT_READY);
+        programmerStop(false);
+        return;
+    }
+
+    ready = true;
+    serialPort.clear();
+    QMetaObject::invokeMethod(this, &InoProg::connected, Qt::QueuedConnection);
 }
 
 void InoProg::programmerStop(bool sendSignal) {
@@ -130,7 +132,7 @@ void InoProg::programmerStop(bool sendSignal) {
     ready = false;
 
     if (sendSignal)
-        QMetaObject::invokeMethod(this, "disconnected", Qt::QueuedConnection);
+        QMetaObject::invokeMethod(this, &InoProg::disconnected, Qt::QueuedConnection);
 }
 
 void InoProg::errorOccurred(QSerialPort::SerialPortError serialPortError) {
@@ -156,7 +158,7 @@ QByteArray InoProg::readEeprom() {
         for (int p = 0; p < INOPROG_EEPROM_PAGE_COUNT; p++) {
             auto pageNum = (PageNum) p;
 
-            QFuture<QByteArray> readPageFuture = QtConcurrent::run(this, &InoProg::readPage, pageNum);
+            QFuture<QByteArray> readPageFuture = QtConcurrent::run(&InoProg::readPage, this, pageNum);
             QByteArray pageData = readPageFuture.result();
 
             if (pageData.size() != INOPROG_EEPROM_PAGE_SIZE) {
@@ -200,7 +202,7 @@ void InoProg::writeEeprom(const QByteArray &data) {
             auto pageNum = (PageNum) p;
 
             QByteArray pageData = data.mid(INOPROG_EEPROM_PAGE_SIZE * pageNum, INOPROG_EEPROM_PAGE_SIZE);
-            QFuture<bool> writePageFuture = QtConcurrent::run(this, &InoProg::writePage, pageNum, pageData);
+            QFuture<bool> writePageFuture = QtConcurrent::run(&InoProg::writePage, this, pageNum, pageData);
             bool result = writePageFuture.result();
 
             if (!result) {

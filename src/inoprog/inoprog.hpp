@@ -89,6 +89,8 @@ namespace qfm1000::inoprog {
         QSerialPort serialPort;
         bool ready;
 
+        void connectSignals();
+
         bool isReady();
 
         void programmerStart();
@@ -103,9 +105,9 @@ namespace qfm1000::inoprog {
 
         void errorOccurred(QSerialPort::SerialPortError serialPortError);
 
-        QByteArray readPage(PageNum num);
+        QByteArray readPage(qfm1000::inoprog::PageNum num);
 
-        bool writePage(PageNum num, const QByteArray &pageData);
+        bool writePage(qfm1000::inoprog::PageNum num, const QByteArray &pageData);
 
     signals:
 
@@ -113,11 +115,11 @@ namespace qfm1000::inoprog {
 
         void disconnected();
 
-        void error(InoProgError inoProgError);
+        void error(qfm1000::inoprog::InoProgError inoProgError);
 
-        void pageRead(PageNum num);
+        void pageRead(qfm1000::inoprog::PageNum num);
 
-        void pageWritten(PageNum num);
+        void pageWritten(qfm1000::inoprog::PageNum num);
 
         void progress(int max, int value);
 

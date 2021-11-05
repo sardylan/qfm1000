@@ -20,27 +20,29 @@
 
 #include <QtCore/QtCore>
 #include <QtCore/QtMath>
+#include <QtCore/QRegularExpression>
+#include <QtCore/QRegularExpressionMatch>
 
 #include "values.hpp"
 
 using namespace qfm1000::eeprom;
 
 Frequency Values::parseFrequencyString(const QString &frequencyString) {
-    if (frequencyString.contains(QRegExp(R"(^\d{3}\.{0,1}$)"))) {
-        QRegExp regExp(R"(^(\d{3})\.{0,1}$)");
-        regExp.indexIn(frequencyString);
-        return regExp.cap(1).leftJustified(3, '0').toUInt() * 1000000;
-    } else if (frequencyString.contains(QRegExp(R"(^\d{3}\.{0,1}\d{0,3}$)"))) {
-        QRegExp regExp(R"(^(\d{3})\.{0,1}(\d{0,3})$)");
-        regExp.indexIn(frequencyString);
-        return regExp.cap(1).toUInt() * 1000000
-               + regExp.cap(2).leftJustified(3, '0').toUInt() * 1000;
-    } else if (frequencyString.contains(QRegExp(R"(^\d{3}\.{0,1}\d{0,3}\.{0,1}\d{0,3}$)"))) {
-        QRegExp regExp(R"(^(\d{3})\.{0,1}(\d{0,3})\.{0,1}(\d{0,3})$)");
-        regExp.indexIn(frequencyString);
-        return regExp.cap(1).toUInt() * 1000000
-               + regExp.cap(2).leftJustified(3, '0').toUInt() * 1000
-               + regExp.cap(3).leftJustified(3, '0').toUInt();
+    if (frequencyString.contains(QRegularExpression(R"(^\d{3}\.{0,1}$)"))) {
+        QRegularExpression regularExpression(R"(^(\d{3})\.{0,1}$)");
+        QRegularExpressionMatch regularExpressionMatch = regularExpression.match(frequencyString);
+        return regularExpressionMatch.captured(1).leftJustified(3, '0').toUInt() * 1000000;
+    } else if (frequencyString.contains(QRegularExpression(R"(^\d{3}\.{0,1}\d{0,3}$)"))) {
+        QRegularExpression regularExpression(R"(^(\d{3})\.{0,1}(\d{0,3})$)");
+        QRegularExpressionMatch regularExpressionMatch = regularExpression.match(frequencyString);
+        return regularExpressionMatch.captured(1).toUInt() * 1000000
+               + regularExpressionMatch.captured(2).leftJustified(3, '0').toUInt() * 1000;
+    } else if (frequencyString.contains(QRegularExpression(R"(^\d{3}\.{0,1}\d{0,3}\.{0,1}\d{0,3}$)"))) {
+        QRegularExpression regularExpression(R"(^(\d{3})\.{0,1}(\d{0,3})\.{0,1}(\d{0,3})$)");
+        QRegularExpressionMatch regularExpressionMatch = regularExpression.match(frequencyString);
+        return regularExpressionMatch.captured(1).toUInt() * 1000000
+               + regularExpressionMatch.captured(2).leftJustified(3, '0').toUInt() * 1000
+               + regularExpressionMatch.captured(3).leftJustified(3, '0').toUInt();
     }
 
     return 0u;
@@ -54,7 +56,7 @@ QString Values::frequency(Frequency frequency) {
 
     QString frequencyString = QString("%1.%2").arg(MHz, kHz);
     if (hz.at(0) != '0')
-        frequencyString.append(".").append(hz.midRef(0, 1));
+        frequencyString.append(".").append(hz.mid(0, 1));
 
     return frequencyString;
 }

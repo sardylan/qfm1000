@@ -1,4 +1,4 @@
-find_package(Qt5 REQUIRED COMPONENTS
+find_package(Qt6 REQUIRED COMPONENTS
         Core Gui Widgets)
 
 add_library(delegators
@@ -10,9 +10,9 @@ add_library(delegators
 
 target_link_libraries(delegators
         eeprom
-        Qt5::Core
-        Qt5::Gui
-        Qt5::Widgets)
+        Qt6::Core
+        Qt6::Gui
+        Qt6::Widgets)
 
 target_include_directories(delegators
         INTERFACE ${CMAKE_CURRENT_SOURCE_DIR})

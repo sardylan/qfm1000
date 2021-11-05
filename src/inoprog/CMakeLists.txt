@@ -1,4 +1,4 @@
-find_package(Qt5 REQUIRED COMPONENTS
+find_package(Qt6 REQUIRED COMPONENTS
         Core SerialPort Concurrent)
 
 add_library(inoprog
@@ -6,8 +6,8 @@ add_library(inoprog
 
 target_link_libraries(inoprog
         utilities
-        Qt5::Core
-        Qt5::SerialPort
-        Qt5::Concurrent)
+        Qt6::Core
+        Qt6::SerialPort
+        Qt6::Concurrent)
 
 target_include_directories(inoprog PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})

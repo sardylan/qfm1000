@@ -33,6 +33,8 @@ namespace qfm1000::utilities {
 
         explicit Service(QObject *parent = nullptr);
 
+        Service(const Service &other) = delete;
+
         ~Service() override;
 
     public slots:

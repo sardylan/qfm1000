@@ -44,7 +44,7 @@ jobs:
         run: cmake -E make_directory ${{runner.workspace}}\build
       - name: "Configure CMake"
         working-directory: ${{runner.workspace}}\build
-        run: cmake ${{runner.workspace}}/qfm1000 -DCMAKE_BUILD_TYPE=$BUILD_TYPE -DQT5_PREFIX="D:\a\qfm1000\Qt\${{ matrix.qt_ver }}\${{ matrix.qt_arch }}"
+        run: cmake ${{runner.workspace}}/qfm1000 -DCMAKE_BUILD_TYPE=$BUILD_TYPE -DQT_PREFIX="D:\a\qfm1000\Qt\${{ matrix.qt_ver }}\${{ matrix.qt_arch }}"
       - name: "Build"
         working-directory: ${{runner.workspace}}\build
         run: cmake --build . --config $BUILD_TYPE
