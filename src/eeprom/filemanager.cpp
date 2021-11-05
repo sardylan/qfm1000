@@ -102,7 +102,7 @@ FileFormat FileManager::detectFormat(const QByteArray &rawData) {
     bool containsOnlyIntelStartCodes = true;
 
     for (const QString &row : rows)
-        if (!row.startsWith(":"))
+        if (row.startsWith(":"))
             containsIntelStartCodes = true;
         else
             containsOnlyIntelStartCodes = false;
