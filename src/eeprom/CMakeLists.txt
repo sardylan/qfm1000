@@ -19,7 +19,7 @@ target_link_libraries(eeprom-eeprom-test
         eeprom Qt6::Core Qt6::Test)
 
 add_test(eeprom-eeprom-test
-        eeprom-eeprom-test -o test-result-eeprom-eeprom.xml,xunitxml)
+        eeprom-eeprom-test -o test-result-eeprom-eeprom.xml,junitxml)
 
 add_executable(eeprom-values-test
         test/values.cpp test/values.hpp)
@@ -28,4 +28,4 @@ target_link_libraries(eeprom-values-test
         eeprom Qt6::Core Qt6::Test)
 
 add_test(eeprom-values-test
-        eeprom-values-test -o test-result-eeprom-values.xml,xunitxml)
+        eeprom-values-test -o test-result-eeprom-values.xml,junitxml)
