@@ -20,8 +20,9 @@ jobs:
         with:
           fetch-depth: 0
       - name: "Install Qt"
-        shell: bash
-        run: sudo apt install qt5-default libqt5svg5-dev libqt5serialport5-dev
+        uses: jurplel/install-qt-action@v2
+        with:
+          version: 6.2.1
       - name: "Create Build Environment"
         run: cmake -E make_directory ${{runner.workspace}}/build
       - name: "Configure CMake"
