@@ -168,10 +168,5 @@ QString SerialPort::prettyConfig(
     }
 
     return QString("%1 %2 %3-%4-%5 %6")
-            .arg(portName)
-            .arg(baudRateString)
-            .arg(dataBitsString)
-            .arg(parityString)
-            .arg(stopBitsString)
-            .arg(flowControlString);
+            .arg(portName, baudRateString, dataBitsString, parityString, stopBitsString, flowControlString);
 }
