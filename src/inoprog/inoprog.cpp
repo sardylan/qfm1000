@@ -158,7 +158,12 @@ QByteArray InoProg::readEeprom() {
         for (int p = 0; p < INOPROG_EEPROM_PAGE_COUNT; p++) {
             auto pageNum = (PageNum) p;
 
-            QFuture<QByteArray> readPageFuture = QtConcurrent::run(&InoProg::readPage, this, pageNum);
+            QFuture<QByteArray> readPageFuture =
+#if QT_VERSION >= QT_VERSION_CHECK(6, 0, 0)
+                    QtConcurrent::run(&InoProg::readPage, this, pageNum);
+#else
+                    QtConcurrent::run(this, &InoProg::readPage, pageNum);
+#endif
             QByteArray pageData = readPageFuture.result();
 
             if (pageData.size() != INOPROG_EEPROM_PAGE_SIZE) {
@@ -202,7 +207,12 @@ void InoProg::writeEeprom(const QByteArray &data) {
             auto pageNum = (PageNum) p;
 
             QByteArray pageData = data.mid(INOPROG_EEPROM_PAGE_SIZE * pageNum, INOPROG_EEPROM_PAGE_SIZE);
-            QFuture<bool> writePageFuture = QtConcurrent::run(&InoProg::writePage, this, pageNum, pageData);
+            QFuture<bool> writePageFuture =
+#if QT_VERSION >= QT_VERSION_CHECK(6, 0, 0)
+                    QtConcurrent::run(&InoProg::writePage, this, pageNum, pageData);
+#else
+                    QtConcurrent::run(this, &InoProg::writePage, pageNum, pageData);
+#endif
             bool result = writePageFuture.result();
 
             if (!result) {

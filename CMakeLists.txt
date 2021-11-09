@@ -1,14 +1,16 @@
-cmake_minimum_required(VERSION 3.20)
+cmake_minimum_required(VERSION 3.18)
 project(qfm1000)
 
 if (UNIX)
     include(GNUInstallDirs)
 endif ()
 
-set(CMAKE_CXX_STANDARD 23)
+set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
 
-cmake_policy(SET CMP0115 NEW)
+if (${CMAKE_VERSION} VERSION_GREATER_EQUAL "3.20.0")
+    cmake_policy(SET CMP0115 NEW)
+endif ()
 
 include(CTest)
 
@@ -21,7 +23,7 @@ set(CMAKE_AUTORCC ON)
 set(QT_PREFIX "$ENV{QTDIR}" CACHE PATH "Qt prefix path")
 
 find_program(QT_QMAKE_BIN
-        qmake6
+        qmake
         PATHS "${QT_PREFIX}/bin")
 
 if (NOT QT_QMAKE_BIN)
@@ -55,6 +57,17 @@ set(ORGANIZATION_NAME "The HellNet.org")
 set(ORGANIZATION_DOMAIN "thehellnet.org")
 
 set(APPLICATION_VERSION "${APPLICATION_VERSION_MAJOR}.${APPLICATION_VERSION_MINOR}.${APPLICATION_VERSION_PATCH}")
+
+find_package(Qt6 COMPONENTS Core Gui Svg Widgets SerialPort OpenGL Concurrent Test QUIET)
+if (NOT Qt6_FOUND)
+    find_package(Qt5 5.15 COMPONENTS Core Gui Svg Widgets SerialPort OpenGL Concurrent Test REQUIRED)
+endif ()
+
+if (Qt6_FOUND)
+    message(STATUS "Building using Qt6")
+elseif(Qt5_FOUND)
+    message(STATUS "Building using Qt5")
+endif ()
 
 enable_testing()
 

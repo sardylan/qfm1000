@@ -1,6 +1,3 @@
-find_package(Qt6 REQUIRED COMPONENTS
-        Core Gui Widgets)
-
 add_library(delegators
         readonly.cpp readonly.hpp
         flag.cpp flag.hpp
@@ -10,9 +7,9 @@ add_library(delegators
 
 target_link_libraries(delegators
         eeprom
-        Qt6::Core
-        Qt6::Gui
-        Qt6::Widgets)
+        Qt::Core
+        Qt::Gui
+        Qt::Widgets)
 
 target_include_directories(delegators
         INTERFACE ${CMAKE_CURRENT_SOURCE_DIR})

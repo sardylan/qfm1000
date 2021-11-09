@@ -1,6 +1,3 @@
-find_package(Qt6 REQUIRED COMPONENTS
-        Core Gui Svg Widgets SerialPort OpenGL)
-
 configure_file(version.hpp.in version.hpp)
 
 include_directories(${CMAKE_CURRENT_BINARY_DIR})
@@ -36,12 +33,12 @@ target_link_libraries(qfm1000
         inoprog
         widgets
         delegators
-        Qt6::Core
-        Qt6::Gui
-        Qt6::Svg
-        Qt6::Widgets
-        Qt6::SerialPort
-        Qt6::OpenGL)
+        Qt::Core
+        Qt::Gui
+        Qt::Svg
+        Qt::Widgets
+        Qt::SerialPort
+        Qt::OpenGL)
 
 if (WIN32)
     file(MAKE_DIRECTORY ${PROJECT_BINARY_DIR}/windeployqt)
