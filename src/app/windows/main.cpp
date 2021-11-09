@@ -62,6 +62,9 @@ void Main::connectSignals() {
     connect(ui->actionConfiguration, &QAction::triggered, this, &Main::actionConfiguration, Qt::QueuedConnection);
 
     connect(ui->actionFileOpen, &QAction::triggered, this, &Main::actionFileOpen, Qt::QueuedConnection);
+
+    connect(ui->actionProgrammerRead, &QAction::triggered, this, &Main::actionProgrammerRead, Qt::QueuedConnection);
+    connect(ui->actionProgrammerWrite, &QAction::triggered, this, &Main::actionProgrammerWrite, Qt::QueuedConnection);
 }
 
 void Main::initUi() {

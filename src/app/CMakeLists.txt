@@ -18,6 +18,7 @@ add_executable(qfm1000
         windows/license.cpp windows/license.hpp windows/license.ui
         windows/config.cpp windows/config.hpp windows/config.ui
         windows/instance.cpp windows/instance.hpp windows/instance.ui
+        windows/inoprog.cpp windows/inoprog.hpp windows/inoprog.ui
         instance.cpp instance.hpp
         status.cpp status.hpp
         config.cpp config.hpp

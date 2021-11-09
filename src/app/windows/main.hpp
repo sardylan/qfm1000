@@ -101,6 +101,10 @@ namespace qfm1000::app::windows {
 
         void actionFileOpen();
 
+        void actionProgrammerRead();
+
+        void actionProgrammerWrite();
+
     };
 
 }

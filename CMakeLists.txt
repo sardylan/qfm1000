@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.18)
+cmake_minimum_required(VERSION 3.20)
 project(qfm1000)
 
 if (UNIX)
@@ -21,11 +21,11 @@ set(CMAKE_AUTORCC ON)
 set(QT_PREFIX "$ENV{QTDIR}" CACHE PATH "Qt prefix path")
 
 find_program(QT_QMAKE_BIN
-        qmake
+        qmake6
         PATHS "${QT_PREFIX}/bin")
 
 if (NOT QT_QMAKE_BIN)
-    message(FATAL_ERROR "qmake not found. set QT_PREFIX.")
+    message(FATAL_ERROR "qmake6 not found. set QT_PREFIX.")
 endif ()
 
 set(CMAKE_PREFIX_PATH "${QT_PREFIX}/lib/cmake")

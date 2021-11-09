@@ -30,6 +30,7 @@
 #include "config.hpp"
 
 #include "windows/main.hpp"
+#include "windows/inoprog.hpp"
 
 #include "../eeprom/eeprom.hpp"
 #include "../inoprog/inoprog.hpp"
@@ -59,9 +60,12 @@ namespace qfm1000::app {
         Config *config;
 
         windows::Main *mainWindow;
+        windows::InoProg *inoProgWindow;
 
         quint64 counter;
         QMap<quint64, Instance *> *instances;
+
+        inoprog::InoProg *inoProg;
 
         void connectSignals() const;
 
@@ -70,6 +74,10 @@ namespace qfm1000::app {
     private slots:
 
         void actionFileOpen();
+
+        void actionProgrammerRead();
+
+        void actionProgrammerWrite();
 
         void displayAbout();
 

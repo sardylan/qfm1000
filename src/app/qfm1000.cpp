@@ -45,17 +45,25 @@ QFM1000::QFM1000(QObject *parent) : QObject(parent) {
     config = new Config();
 
     mainWindow = new windows::Main();
+    inoProgWindow = new windows::InoProg();
 
     counter = 0;
     instances = new QMap<quint64, Instance *>();
+
+    inoProg = new inoprog::InoProg();
 }
 
 QFM1000::~QFM1000() {
+    delete inoProg;
+
     for (Instance *instance: instances->values())
         delete instance;
 
     delete instances;
+
+    delete inoProgWindow;
     delete mainWindow;
+
     delete config;
     delete status;
 }
@@ -94,6 +102,9 @@ void QFM1000::connectSignals() const {
     connect(mainWindow, &windows::Main::actionConfiguration, this, &QFM1000::actionConfiguration);
 
     connect(mainWindow, &windows::Main::actionFileOpen, this, &QFM1000::actionFileOpen);
+
+    connect(mainWindow, &windows::Main::actionProgrammerRead, this, &QFM1000::actionProgrammerRead);
+    connect(mainWindow, &windows::Main::actionProgrammerWrite, this, &QFM1000::actionProgrammerWrite);
 }
 
 void QFM1000::stop() {
@@ -114,7 +125,7 @@ void QFM1000::actionFileOpen() {
     QStringList selectedFiles = fileDialog.selectedFiles();
     qDebug() << "Files to open:" << selectedFiles;
 
-    for (const QString &selectedFile:selectedFiles) {
+    for (const QString &selectedFile: selectedFiles) {
         qDebug() << "Loading" << selectedFile;
 
         quint64 id = counter;
@@ -147,6 +158,20 @@ void QFM1000::actionFileOpen() {
                 Q_ARG(qfm1000::app::windows::Instance*, instance->getWindow())
         );
     }
+}
+
+void QFM1000::actionProgrammerRead() {
+    qInfo() << "Starting reading process with Arduino Programmer";
+
+    qDebug() << "Displaying InoProg dialog";
+    QMetaObject::invokeMethod(inoProgWindow, &windows::InoProg::exec, Qt::QueuedConnection);
+}
+
+void QFM1000::actionProgrammerWrite() {
+    qInfo() << "Starting writing process with Arduino Programmer";
+
+    qDebug() << "Displaying InoProg dialog";
+    QMetaObject::invokeMethod(inoProgWindow, &windows::InoProg::exec, Qt::QueuedConnection);
 }
 
 void QFM1000::displayAbout() {
