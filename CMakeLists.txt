@@ -20,27 +20,21 @@ set(CMAKE_AUTOMOC ON)
 set(CMAKE_AUTOUIC ON)
 set(CMAKE_AUTORCC ON)
 
-set(QT_PREFIX "$ENV{QTDIR}" CACHE PATH "Qt prefix path")
-
-find_program(QT_QMAKE_BIN
-        qmake
-        PATHS "${QT_PREFIX}/bin")
-
-if (NOT QT_QMAKE_BIN)
-    message(FATAL_ERROR "qmake6 not found. set QT_PREFIX.")
-endif ()
-
-set(CMAKE_PREFIX_PATH "${QT_PREFIX}/lib/cmake")
+if(Qt6_DIR)
+    set(CMAKE_PREFIX_PATH "${Qt6_DIR}/lib/cmake")
+elseif(Qt5_DIR)
+    set(CMAKE_PREFIX_PATH "${Qt5_DIR}/lib/cmake")
+endif()
 
 if (WIN32 OR APPLE)
     if (WIN32)
         find_program(QT_DEPLOYQT_BIN
                 windeployqt
-                PATHS "${QT_PREFIX}/bin")
+                PATHS ENV Qt6_DIR ENV Qt5_DIR)
     elseif (APPLE)
         find_program(QT_DEPLOYQT_BIN
                 macdeployqt
-                PATHS "${QT_PREFIX}/bin")
+                PATHS ENV Qt6_DIR ENV Qt5_DIR)
     endif ()
 
     if (NOT QT_DEPLOYQT_BIN)
@@ -60,7 +54,7 @@ set(APPLICATION_VERSION "${APPLICATION_VERSION_MAJOR}.${APPLICATION_VERSION_MINO
 
 find_package(Qt6 COMPONENTS Core Gui Svg Widgets SerialPort OpenGL Concurrent Test QUIET)
 if (NOT Qt6_FOUND)
-    find_package(Qt5 5.15 COMPONENTS Core Gui Svg Widgets SerialPort OpenGL Concurrent Test REQUIRED)
+    find_package(Qt5 5.12 COMPONENTS Core Gui Svg Widgets SerialPort OpenGL Concurrent Test REQUIRED)
 endif ()
 
 if (Qt6_FOUND)
