@@ -13,23 +13,13 @@ env:
 jobs:
   build_and_test_windows:
     name: Build and Test (Windows)
-    runs-on: ${{ matrix.os }}
+    runs-on: windows-2019
     strategy:
       fail-fast: false
       matrix:
-        os:
-          - windows-2019
         qt_ver:
           - 6.2.1
-        qt_arch:
-          - win64_msvc2019_64
-        include:
-          - os: windows-2019
-            qt_ver: 5.15.2
-            qt_arch: win64_msvc2019_64
-          - os: windows-2016
-            qt_ver: 5.12.8
-            qt_arch: win32_msvc2017_64
+          - 5.15.2
     steps:
       - name: "Checkout"
         uses: actions/checkout@v2
@@ -39,12 +29,12 @@ jobs:
         uses: jurplel/install-qt-action@v2
         with:
           version: ${{ matrix.qt_ver }}
-          arch: ${{ matrix.qt_arch }}
+          arch: win64_msvc2019_64
       - name: "Create Build Environment"
         run: cmake -E make_directory ${{runner.workspace}}\build
       - name: "Configure CMake"
         working-directory: ${{runner.workspace}}\build
-        run: cmake ${{runner.workspace}}/qfm1000 -DCMAKE_BUILD_TYPE=$BUILD_TYPE"
+        run: cmake ${{runner.workspace}}\qfm1000 -DCMAKE_BUILD_TYPE=$BUILD_TYPE
       - name: "Build"
         working-directory: ${{runner.workspace}}\build
         run: cmake --build . --config $BUILD_TYPE --parallel
