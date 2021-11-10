@@ -2,7 +2,7 @@ version: 2.1
 jobs:
   package-ubuntu-focal:
     docker:
-      - image: cimg/base:20.04
+      - image: cimg/base:stable-20.04
         environment:
           BUILD_TYPE: Release
           DEBIAN_FRONTEND: noninteractive
