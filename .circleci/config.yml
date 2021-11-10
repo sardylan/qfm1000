@@ -27,9 +27,15 @@ jobs:
       - run:
           name: "Running tests"
           command: "cd ~/qfm1000/build && ctest -C $BUILD_TYPE --output-on-failure"
+      - store_test_results:
+          path:
+            ~/qfm1000/build/test/eeprom/test-result-eeprom-eeprom.xml
+            ~/qfm1000/build/test/eeprom/test-result-eeprom-values.xml
       - run:
           name: "Packaging"
           command: "cd ~/qfm1000/build && cpack"
+      - store_artifacts:
+          path:
 workflows:
   package:
     jobs:
