@@ -11,9 +11,9 @@ jobs:
       - run:
           name: "Installing libs and tools"
           command: |
-            sudo apt update
-            sudo apt install -y build-essential pkg-config cmake git
-            sudo apt install -y qt5-default libqt5svg5-dev libqt5serialport5-dev
+            apt update
+            apt install -y build-essential pkg-config cmake git
+            apt install -y qt5-default libqt5svg5-dev libqt5serialport5-dev
       - checkout
       - run:
           name: "Creating Building directory"
@@ -50,9 +50,9 @@ jobs:
       - run:
           name: "Installing libs and tools"
           command: |
-            sudo apt update
-            sudo apt install -y build-essential pkg-config cmake git
-            sudo apt install -y qt5-default libqt5svg5-dev libqt5serialport5-dev
+            apt update
+            apt install -y build-essential pkg-config cmake git
+            apt install -y qt5-default libqt5svg5-dev libqt5serialport5-dev
       - checkout
       - run:
           name: "Creating Building directory"
