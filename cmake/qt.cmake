@@ -36,13 +36,16 @@ message(STATUS "Qt prefix: ${QT_PREFIX}")
 
 set(CMAKE_PREFIX_PATH "${QT_PREFIX}/lib/cmake")
 
+set(QT_LIB_NAME "Qt")
+set(QT_TEST_OUTPUT_FORMAT "junitxml")
+
 if (${QT_VERSION} VERSION_LESS "5.15.0")
     set(QT_LIB_NAME "Qt5")
-else ()
-    set(QT_LIB_NAME "Qt")
+    set(QT_TEST_OUTPUT_FORMAT "xunitxml")
 endif ()
 
-message(STATUS "Qt lib name: ${QT_LIB_NAME}")
+message(STATUS "Qt lib name for linking: ${QT_LIB_NAME}")
+message(STATUS "Qt tests output format: ${QT_TEST_OUTPUT_FORMAT}")
 
 find_package(Qt6 COMPONENTS Core Gui Svg Widgets SerialPort OpenGL Concurrent Test QUIET)
 if (NOT Qt6_FOUND)

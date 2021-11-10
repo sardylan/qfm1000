@@ -24,7 +24,7 @@
 #include <QtTest/QtTest>
 #include <QtTest/QSignalSpy>
 
-#include "../eeprom.hpp"
+#include "../../src/eeprom/eeprom.hpp"
 
 namespace qfm1000::eeprom {
 

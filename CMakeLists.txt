@@ -53,6 +53,8 @@ enable_testing()
 include(cmake/flags.cmake)
 
 add_subdirectory(src)
+add_subdirectory(test)
+
 add_subdirectory(desktop)
 
 include(cmake/packaging.cmake)
