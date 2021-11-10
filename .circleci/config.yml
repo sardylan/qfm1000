@@ -1,44 +1,5 @@
 version: 2.1
 jobs:
-  package-debian-buster:
-    docker:
-      - image: debian:buster
-        environment:
-          BUILD_TYPE: Release
-          DEBIAN_FRONTEND: noninteractive
-    working_directory: ~/qfm1000
-    steps:
-      - run:
-          name: "Installing libs and tools"
-          command: |
-            apt update
-            apt install -y build-essential pkg-config cmake git
-            apt install -y qt5-default libqt5svg5-dev libqt5serialport5-dev
-      - checkout
-      - run:
-          name: "Creating Building directory"
-          command: "cmake -E make_directory ~/qfm1000/build"
-      - run:
-          name: "Configuring project"
-          command: "cd ~/qfm1000/build && cmake ~/qfm1000 -DCMAKE_BUILD_TYPE=$BUILD_TYPE"
-      - run:
-          name: "Building project"
-          command: "cd ~/qfm1000/build && cmake --build . --config $BUILD_TYPE --parallel"
-      - run:
-          name: "Running tests"
-          command: "cd ~/qfm1000/build && ctest -C $BUILD_TYPE --output-on-failure"
-      - store_test_results:
-          path: ~/qfm1000/build/test/eeprom/test-result-eeprom-eeprom.xml
-      - store_test_results:
-          path: ~/qfm1000/build/test/eeprom/test-result-eeprom-values.xml
-      - run:
-          name: "Packaging"
-          command: |
-            (cd ~/qfm1000/build && cpack)
-            mkdir ~/qfm1000/build/deb
-            cp -a ~/qfm1000/build/*.deb ~/qfm1000/build/deb/
-      - store_artifacts:
-          path: ~/qfm1000/build/deb
   package-debian-bullseye:
     docker:
       - image: debian:bullseye
@@ -52,7 +13,7 @@ jobs:
           command: |
             apt update
             apt install -y build-essential pkg-config cmake git
-            apt install -y qt5-default libqt5svg5-dev libqt5serialport5-dev
+            apt install -y qtbase5-dev qtchooser qt5-qmake qtbase5-dev-tools libqt5svg5-dev libqt5serialport5-dev
       - checkout
       - run:
           name: "Creating Building directory"
@@ -120,6 +81,5 @@ jobs:
 workflows:
   package:
     jobs:
-      - package-debian-buster
       - package-debian-bullseye
       - package-ubuntu-focal
