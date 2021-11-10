@@ -10,12 +10,13 @@ on:
     - cron: "17 15 * * 3"
 env:
   BUILD_TYPE: Release
+  DEBIAN_FRONTEND: noninteractive
   SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
   GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 jobs:
   analyze:
     name: Analyze
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-20.04
     strategy:
       fail-fast: false
       matrix:
@@ -42,7 +43,7 @@ jobs:
       - name: "Build"
         working-directory: ${{runner.workspace}}/build
         shell: bash
-        run: cmake --build . --config $BUILD_TYPE
+        run: cmake --build . --config $BUILD_TYPE -parallel
       - name: "Test"
         working-directory: ${{runner.workspace}}/build
         shell: bash

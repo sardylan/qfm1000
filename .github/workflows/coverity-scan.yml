@@ -8,6 +8,7 @@ on:
       - coverity_scan
 env:
   BUILD_TYPE: Release
+  DEBIAN_FRONTEND: noninteractive
   SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
   GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
   COVERITY_SCAN_TOKEN: ${{ secrets.COVERITY_SCAN_TOKEN }}

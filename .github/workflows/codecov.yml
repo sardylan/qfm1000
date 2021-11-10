@@ -8,6 +8,7 @@ on:
       - main
 env:
   BUILD_TYPE: Debug
+  DEBIAN_FRONTEND: noninteractive
   SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
   GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 jobs:
@@ -20,9 +21,8 @@ jobs:
         with:
           fetch-depth: 0
       - name: "Install Qt"
-        uses: jurplel/install-qt-action@v2
-        with:
-          version: 6.2.1
+        shell: bash
+        run: sudo apt install -y qt5-default libqt5svg5-dev libqt5serialport5-dev
       - name: "Create Build Environment"
         run: cmake -E make_directory ${{runner.workspace}}/build
       - name: "Configure CMake"
@@ -32,7 +32,7 @@ jobs:
       - name: "Build"
         working-directory: ${{runner.workspace}}/build
         shell: bash
-        run: cmake --build . --config $BUILD_TYPE
+        run: cmake --build . --config $BUILD_TYPE --parallel
       - name: "Test"
         working-directory: ${{runner.workspace}}/build
         shell: bash
