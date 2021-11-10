@@ -33,9 +33,12 @@ jobs:
           path: ~/qfm1000/build/test/eeprom/test-result-eeprom-values.xml
       - run:
           name: "Packaging"
-          command: "cd ~/qfm1000/build && cpack"
+          command: |
+            (cd ~/qfm1000/build && cpack)
+            mkdir ~/qfm1000/build/deb
+            cp -a ~/qfm1000/build/*.deb ~/qfm1000/build/deb/
       - store_artifacts:
-          path: ~/qfm1000/build/*.deb
+          path: ~/qfm1000/build/deb
 workflows:
   package:
     jobs:
