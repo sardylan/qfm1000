@@ -2,7 +2,7 @@ version: 2.1
 jobs:
   package-ubuntu-focal:
     docker:
-      - image: ubuntu-2004
+      - image: cimg/base:20.04
         environment:
           BUILD_TYPE: Release
           DEBIAN_FRONTEND: noninteractive
@@ -11,7 +11,7 @@ jobs:
       - checkout
       - run:
           name: "Installing"
-          command: "sudo apt install -y qt5-default libqt5svg5-dev libqt5serialport5-dev"
+          command: "sudo apt install -y build-essential pkg-config cmake qt5-default libqt5svg5-dev libqt5serialport5-dev"
       - run:
           name: "Creating Building directory"
           command: "cmake -E make_directory ~/qfm1000/build"
