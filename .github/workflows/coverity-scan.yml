@@ -39,7 +39,7 @@ jobs:
       - name: "Test"
         working-directory: ${{runner.workspace}}/build
         shell: bash
-        run: PATH=${{runner.workspace}}/cov-analysis-linux64/bin:$PATH ctest -C $BUILD_TYPE
+        run: PATH=${{runner.workspace}}/cov-analysis-linux64/bin:$PATH ctest -C $BUILD_TYPE --output-on-failure
       - name: "Submit the result to Coverity Scan"
         working-directory: ${{runner.workspace}}
         run: |
