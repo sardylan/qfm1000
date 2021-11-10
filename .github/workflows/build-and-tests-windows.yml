@@ -31,13 +31,17 @@ jobs:
           version: ${{ matrix.qt_ver }}
           arch: win64_msvc2019_64
       - name: "Create Build Environment"
+        shell: cmd
         run: cmake -E make_directory ${{runner.workspace}}\build
       - name: "Configure CMake"
         working-directory: ${{runner.workspace}}\build
+        shell: cmd
         run: cmake ${{runner.workspace}}\qfm1000 -DCMAKE_BUILD_TYPE=%BUILD_TYPE%
       - name: "Build"
         working-directory: ${{runner.workspace}}\build
+        shell: cmd
         run: cmake --build . --config %BUILD_TYPE% --parallel
       - name: "Test"
         working-directory: ${{runner.workspace}}\build
-        run: ctest -C $BUILD_TYPE --output-on-failure
+        shell: cmd
+        run: ctest -C %BUILD_TYPE% --output-on-failure
