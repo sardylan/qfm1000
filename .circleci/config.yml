@@ -1,0 +1,29 @@
+version: 2.1
+jobs:
+  package-ubuntu-focal:
+    docker:
+      - image: ubuntu-2004
+        environment:
+          BUILD_TYPE: Release
+          DEBIAN_FRONTEND: noninteractive
+    working_directory: ~/qfm1000
+    steps:
+      - checkout
+      - run:
+          name: "Installing"
+          command: "sudo apt install -y qt5-default libqt5svg5-dev libqt5serialport5-dev"
+      - run:
+          name: "Creating Building directory"
+          command: "cmake -E make_directory ~/qfm1000/build"
+      - run:
+          name: "Configuring project"
+          command: "cd ~/qfm1000/build && cmake ~/qfm1000 -DCMAKE_BUILD_TYPE=$BUILD_TYPE"
+      - run:
+          name: "Compiling"
+          command: "cd ~/qfm1000/build && cmake --build . --config $BUILD_TYPE --parallel"
+      - run:
+          name: "Running tests"
+          command: "cd ~/qfm1000/build && ctest -C $BUILD_TYPE --output-on-failure"
+      - run:
+          name: "Packaging"
+          command: "cd ~/qfm1000/build && cpack"
