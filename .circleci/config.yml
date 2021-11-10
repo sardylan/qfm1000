@@ -11,7 +11,7 @@ jobs:
       - checkout
       - run:
           name: "Installing"
-          command: "sudo apt install -y build-essential pkg-config cmake qt5-default libqt5svg5-dev libqt5serialport5-dev"
+          command: "sudo apt update && apt install -y build-essential pkg-config cmake qt5-default libqt5svg5-dev libqt5serialport5-dev"
       - run:
           name: "Creating Building directory"
           command: "cmake -E make_directory ~/qfm1000/build"
