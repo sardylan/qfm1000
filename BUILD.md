@@ -31,7 +31,7 @@ version taken from the official repositories of your distribution.
 
 Development is always focused on the last library version, though you can use any version of Qt 5.
  
-On both **Ubuntu 20.04 *(Xenial Xerus)*** and **Debian 10 *(Buster)*** you can add them using this command:
+On both **Ubuntu 20.04 *(Focal Fossa)*** and **Debian 10 *(Buster)*** you can add them using this command:
 
 ```bash
 sudo apt-get install qt5-default libqt5serialport5-dev libqt5svg5-dev
@@ -58,17 +58,42 @@ Prepare project to be compiled:
 cmake ~/git/qfm1000
 ```
 
+### Windows
+
+**TO-DO**
+
+### MacOS
+
+**TO-DO**
+
+## Compiling software
+
 Now you can compile to software:
 
 ```bash
-make 
+cmake --build . --parallel 
 ```
 
-To speed-up the build you can add `-jn` option to make command, where `n` is the number of concurrent processes
-to run simultaneously, like this:
+The compiled binary to run can be found in `src/app/qfm1000`, inside the build directory.
+
+## Run tests
+
+Use this command if you want to run available tests:
 
 ```bash
-make -j8 
+ctest --output-on-failure
 ```
 
-The compiled binary to run can be found in `src/qfm1000`, inside the build directory.
+## Create packages
+
+Packages are created using cmake CPack feature. To create a package, run this command:
+
+```bash
+cpack
+```
+
+The output will be the following:
+
+- Linux: `.deb` package
+- MacOS: `.app` folder, as software bundle
+- Windows: `.msi` installer, using WiX Toolset

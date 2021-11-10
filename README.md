@@ -2,21 +2,21 @@
 
 > Simple tool for editing channels and configuration parameters of Philips FM1000 radio.
 
-[![CodeQL](https://github.com/sardylan/qfm1000/actions/workflows/codeql-analysis.yml/badge.svg?branch=main)](https://github.com/sardylan/qfm1000/actions/workflows/codeql-analysis.yml)
-[![Coverity Scan Build Status](https://scan.coverity.com/projects/13866/badge.svg)](https://scan.coverity.com/projects/sardylan-qfm1000)
-[![FOSSA Status](https://app.fossa.com/api/projects/git%2Bgithub.com%2Fsardylan%2Fqfm1000.svg?type=shield)](https://app.fossa.com/projects/git%2Bgithub.com%2Fsardylan%2Fqfm1000?ref=badge_shield)
-
 [![Build and Test](https://github.com/sardylan/qfm1000/actions/workflows/build-and-tests-linux.yml/badge.svg)](https://github.com/sardylan/qfm1000/actions/workflows/build-and-tests-linux.yml)
 [![Build and Test](https://github.com/sardylan/qfm1000/actions/workflows/build-and-tests-windows.yml/badge.svg)](https://github.com/sardylan/qfm1000/actions/workflows/build-and-tests-windows.yml)
 [![Build and Test](https://github.com/sardylan/qfm1000/actions/workflows/build-and-tests-macos.yml/badge.svg)](https://github.com/sardylan/qfm1000/actions/workflows/build-and-tests-macos.yml)
 
-qFM1000 is a simple tool for editing channels and configuration parameters
-saved into the 24C16 EEPROMs mounted inside of any Philips FM-1000 like
-radio devices.
+[![CodeQL](https://github.com/sardylan/qfm1000/actions/workflows/codeql-analysis.yml/badge.svg?branch=main)](https://github.com/sardylan/qfm1000/actions/workflows/codeql-analysis.yml)
+[![Coverity Scan Build Status](https://scan.coverity.com/projects/13866/badge.svg)](https://scan.coverity.com/projects/sardylan-qfm1000)
+[![FOSSA Status](https://app.fossa.com/api/projects/git%2Bgithub.com%2Fsardylan%2Fqfm1000.svg?type=shield)](https://app.fossa.com/projects/git%2Bgithub.com%2Fsardylan%2Fqfm1000?ref=badge_shield)
 
-qFM1000 is written using C++, is based on the Qt/C++ cross-platform framework
-and can be built using cmake in Linux, Windows, or MacOS with gcc, CLang or
-Visual Studio compilers.
+*****CircleCI packaging:***** [![CircleCI Packaging](https://circleci.com/gh/sardylan/qfm1000.svg?style=svg)](https://app.circleci.com/pipelines/github/sardylan/qfm1000)
+
+qFM1000 is a simple tool for editing channels and configuration parameters saved into the 24C16 EEPROMs mounted inside
+of any Philips FM-1000 like radio devices.
+
+qFM1000 is written using C++, is based on the Qt/C++ cross-platform framework and can be built using cmake in
+Linux, Windows, or MacOS with gcc, CLang or Visual Studio compilers.
 
 ![qFm1000](doc/img/window_main_00.png)
 
@@ -24,12 +24,13 @@ Visual Studio compilers.
 
 All releases are created using CPack extension of CMake builder.
 
-Since I'm still working on a complete refactoring, there are no pre-compiled
-installers of the new version. You can still find old ones on the
-[Releases](https://github.com/sardylan/qfm1000/releases) section.
+Since I'm still working on a complete refactoring, there are no pre-compiled installers of the new version.
+You can still find old ones on the [Releases](https://github.com/sardylan/qfm1000/releases) section.
 
 ## Changelog
 
+* 0.7.1 Legacy
+    * FIX: Fixes SEGFAULT in case of not supported EEPROMs
 * 0.7.0
     * ADD: "New File" feature
 * 0.6.1
@@ -77,10 +78,9 @@ installers of the new version. You can still find old ones on the
 
 ## Development environment
 
-The whole project is developed under GNU/Linux Ubuntu 20.04 using JetBrains CLion IDE,
-and uses CMake as build tool, but can be developed using any IDE, included simple
-file editors like [VIm](https://en.wikipedia.org/wiki/Vim_(text_editor))
-or [Notepad](https://en.wikipedia.org/wiki/Microsoft_Notepad).
+The whole project is developed under GNU/Linux Ubuntu using JetBrains CLion IDE, and uses CMake as build tool,
+but can be developed using any IDE, included simple file editors like
+[VIm](https://en.wikipedia.org/wiki/Vim_(text_editor)) or [Notepad](https://en.wikipedia.org/wiki/Microsoft_Notepad).
 
 Please have a look to [BUILD.md](BUILD.md) for installing required tools and libraries.
 
