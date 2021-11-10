@@ -18,7 +18,6 @@ jobs:
       fail-fast: false
       matrix:
         qt_ver:
-          - 6.2.1
           - 5.15.2
           - 5.12.8
     steps:
