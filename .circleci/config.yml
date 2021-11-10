@@ -10,11 +10,11 @@ jobs:
     steps:
       - checkout
       - run:
-          name: "Updating packages lists"
-          command: "sudo apt update"
-      - run:
           name: "Installing libs and tools"
-          command: "sudo apt install -y build-essential pkg-config cmake qt5-default libqt5svg5-dev libqt5serialport5-dev"
+          command: |
+            sudo apt update
+            sudo apt install -y build-essential pkg-config cmake
+            sudo apt install -y qt5-default libqt5svg5-dev libqt5serialport5-dev
       - run:
           name: "Creating Building directory"
           command: "cmake -E make_directory ~/qfm1000/build"
@@ -28,14 +28,14 @@ jobs:
           name: "Running tests"
           command: "cd ~/qfm1000/build && ctest -C $BUILD_TYPE --output-on-failure"
       - store_test_results:
-          path:
-            ~/qfm1000/build/test/eeprom/test-result-eeprom-eeprom.xml
-            ~/qfm1000/build/test/eeprom/test-result-eeprom-values.xml
+          path: ~/qfm1000/build/test/eeprom/test-result-eeprom-eeprom.xml
+      - store_test_results:
+          path: ~/qfm1000/build/test/eeprom/test-result-eeprom-values.xml
       - run:
           name: "Packaging"
           command: "cd ~/qfm1000/build && cpack"
       - store_artifacts:
-          path: cd ~/qfm1000/build/*.deb
+          path: ~/qfm1000/build/*.deb
 workflows:
   package:
     jobs:
