@@ -34,10 +34,10 @@ jobs:
         run: cmake -E make_directory ${{runner.workspace}}\build
       - name: "Configure CMake"
         working-directory: ${{runner.workspace}}\build
-        run: cmake ${{runner.workspace}}\qfm1000 -DCMAKE_BUILD_TYPE=$BUILD_TYPE
+        run: cmake ${{runner.workspace}}\qfm1000 -DCMAKE_BUILD_TYPE=%BUILD_TYPE%
       - name: "Build"
         working-directory: ${{runner.workspace}}\build
-        run: cmake --build . --config $BUILD_TYPE --parallel
+        run: cmake --build . --config %BUILD_TYPE% --parallel
       - name: "Test"
         working-directory: ${{runner.workspace}}\build
         run: ctest -C $BUILD_TYPE --output-on-failure
