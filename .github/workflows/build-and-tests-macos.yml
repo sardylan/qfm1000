@@ -13,18 +13,14 @@ env:
 jobs:
   build_and_test_macos:
     name: Build and Test (MacOS)
-    runs-on: ${{ matrix.os }}
+    runs-on: macos-11
     strategy:
       fail-fast: false
       matrix:
-        os:
-          - macos-11
         qt_ver:
           - 6.2.1
           - 5.15.2
           - 5.12.8
-        qt_arch:
-          - clang_64
     steps:
       - name: "Checkout"
         uses: actions/checkout@v2
@@ -34,7 +30,6 @@ jobs:
         uses: jurplel/install-qt-action@v2
         with:
           version: ${{ matrix.qt_ver }}
-          arch: ${{ matrix.qt_arch }}
       - name: "Create Build Environment"
         run: cmake -E make_directory ${{runner.workspace}}/build
       - name: "Configure CMake"
@@ -44,7 +39,7 @@ jobs:
       - name: "Build"
         working-directory: ${{runner.workspace}}/build
         shell: bash
-        run: cmake --build . --config $BUILD_TYPE
+        run: cmake --build . --config $BUILD_TYPE --parallel
       - name: "Test"
         working-directory: ${{runner.workspace}}/build
         shell: bash
