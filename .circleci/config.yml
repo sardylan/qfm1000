@@ -35,7 +35,7 @@ jobs:
           name: "Packaging"
           command: "cd ~/qfm1000/build && cpack"
       - store_artifacts:
-          path:
+          path: cd ~/qfm1000/build/*.deb
 workflows:
   package:
     jobs:
