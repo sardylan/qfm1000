@@ -27,3 +27,7 @@ jobs:
       - run:
           name: "Packaging"
           command: "cd ~/qfm1000/build && cpack"
+workflows:
+  package:
+    jobs:
+      - package-ubuntu-focal
