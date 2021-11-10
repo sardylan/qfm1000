@@ -91,7 +91,7 @@ jobs:
           command: |
             apt update
             apt install -y build-essential pkg-config cmake git file
-            apt install -y qt5-default libqt5svg5-dev libqt5serialport5-dev
+            apt install -y qtbase5-dev qtchooser qt5-qmake qtbase5-dev-tools libqt5svg5-dev libqt5serialport5-dev
       - checkout
       - run:
           name: "Creating Building directory"
@@ -130,7 +130,7 @@ jobs:
           command: |
             apt update
             apt install -y build-essential pkg-config cmake git file
-            apt install -y qt5-default libqt5svg5-dev libqt5serialport5-dev
+            apt install -y qtbase5-dev qtchooser qt5-qmake qtbase5-dev-tools libqt5svg5-dev libqt5serialport5-dev
       - checkout
       - run:
           name: "Creating Building directory"
