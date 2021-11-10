@@ -3,8 +3,8 @@ add_library(inoprog
 
 target_link_libraries(inoprog
         utilities
-        Qt::Core
-        Qt::SerialPort
-        Qt::Concurrent)
+        ${QT_LIB_NAME}::Core
+        ${QT_LIB_NAME}::SerialPort
+        ${QT_LIB_NAME}::Concurrent)
 
 target_include_directories(inoprog PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})

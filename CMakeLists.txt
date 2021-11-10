@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.18)
+cmake_minimum_required(VERSION 3.16.3)
 project(qfm1000)
 
 if (UNIX)
@@ -20,11 +20,7 @@ set(CMAKE_AUTOMOC ON)
 set(CMAKE_AUTOUIC ON)
 set(CMAKE_AUTORCC ON)
 
-if(Qt6_DIR)
-    set(CMAKE_PREFIX_PATH "${Qt6_DIR}/lib/cmake")
-elseif(Qt5_DIR)
-    set(CMAKE_PREFIX_PATH "${Qt5_DIR}/lib/cmake")
-endif()
+include(cmake/qt.cmake)
 
 if (WIN32 OR APPLE)
     if (WIN32)
@@ -52,21 +48,11 @@ set(ORGANIZATION_DOMAIN "thehellnet.org")
 
 set(APPLICATION_VERSION "${APPLICATION_VERSION_MAJOR}.${APPLICATION_VERSION_MINOR}.${APPLICATION_VERSION_PATCH}")
 
-find_package(Qt6 COMPONENTS Core Gui Svg Widgets SerialPort OpenGL Concurrent Test QUIET)
-if (NOT Qt6_FOUND)
-    find_package(Qt5 5.12 COMPONENTS Core Gui Svg Widgets SerialPort OpenGL Concurrent Test REQUIRED)
-endif ()
-
-if (Qt6_FOUND)
-    message(STATUS "Building using Qt6")
-elseif(Qt5_FOUND)
-    message(STATUS "Building using Qt5")
-endif ()
-
 enable_testing()
 
+include(cmake/flags.cmake)
+
 add_subdirectory(src)
+add_subdirectory(desktop)
 
-#add_subdirectory(desktop)
-
-#include(cmake/packaging.cmake)
+include(cmake/packaging.cmake)

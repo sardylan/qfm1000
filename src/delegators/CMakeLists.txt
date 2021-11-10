@@ -7,9 +7,9 @@ add_library(delegators
 
 target_link_libraries(delegators
         eeprom
-        Qt::Core
-        Qt::Gui
-        Qt::Widgets)
+        ${QT_LIB_NAME}::Core
+        ${QT_LIB_NAME}::Gui
+        ${QT_LIB_NAME}::Widgets)
 
 target_include_directories(delegators
         INTERFACE ${CMAKE_CURRENT_SOURCE_DIR})

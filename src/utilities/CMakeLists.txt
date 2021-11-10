@@ -3,8 +3,8 @@ add_library(utilities
         serialport.cpp serialport.hpp)
 
 target_link_libraries(utilities
-        Qt::Core
-		Qt::SerialPort)
+        ${QT_LIB_NAME}::Core
+		${QT_LIB_NAME}::SerialPort)
 
 target_include_directories(utilities
         INTERFACE ${CMAKE_CURRENT_SOURCE_DIR})

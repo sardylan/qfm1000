@@ -33,12 +33,12 @@ target_link_libraries(qfm1000
         inoprog
         widgets
         delegators
-        Qt::Core
-        Qt::Gui
-        Qt::Svg
-        Qt::Widgets
-        Qt::SerialPort
-        Qt::OpenGL)
+        ${QT_LIB_NAME}::Core
+        ${QT_LIB_NAME}::Gui
+        ${QT_LIB_NAME}::Svg
+        ${QT_LIB_NAME}::Widgets
+        ${QT_LIB_NAME}::SerialPort
+        ${QT_LIB_NAME}::OpenGL)
 
 if (WIN32)
     file(MAKE_DIRECTORY ${PROJECT_BINARY_DIR}/windeployqt)
