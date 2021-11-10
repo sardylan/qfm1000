@@ -13,7 +13,7 @@ jobs:
           name: "Updating packages lists"
           command: "sudo apt update"
       - run:
-          name: "Installing"
+          name: "Installing libs and tools"
           command: "sudo apt install -y build-essential pkg-config cmake qt5-default libqt5svg5-dev libqt5serialport5-dev"
       - run:
           name: "Creating Building directory"
@@ -22,7 +22,7 @@ jobs:
           name: "Configuring project"
           command: "cd ~/qfm1000/build && cmake ~/qfm1000 -DCMAKE_BUILD_TYPE=$BUILD_TYPE"
       - run:
-          name: "Compiling"
+          name: "Building project"
           command: "cd ~/qfm1000/build && cmake --build . --config $BUILD_TYPE --parallel"
       - run:
           name: "Running tests"
