@@ -38,13 +38,16 @@ elseif (WIN32)
 
     set(CPACK_WIX_UPGRADE_GUID "E6D59A10-31FD-4512-868C-4F86EF50950F")
     set(CPACK_WIX_PROPERTY_ARPHELPLINK "https://github.com/sardylan/qfm1000")
-    set(CPACK_WIX_LICENSE_RTF doc/gpl-3.0.rtf)
+    set(CPACK_WIX_LICENSE_RTF ${CMAKE_SOURCE_DIR}/doc/gpl-3.0.rtf)
+    set(CPACK_WIX_UI_BANNER ${CMAKE_SOURCE_DIR}/doc/wix-ui-banner.png)
+    set(CPACK_WIX_UI_DIALOG ${CMAKE_SOURCE_DIR}/doc/wix-ui-dialog.png)
     #    set(CPACK_WIX_PROPERTY_ARPSIZE "0")
 
-    set(CPACK_PACKAGE_INSTALL_DIRECTORY "qFM1000 ${CPACK_PACKAGE_VERSION}")
+    set(CPACK_WIX_ROOT_FEATURE_TITLE "qFM1000")
+    set(CPACK_WIX_ROOT_FEATURE_DESCRIPTION "qFM1000 Application bundle")
+
+    set(CPACK_PACKAGE_INSTALL_DIRECTORY "qFM1000")
     set(CPACK_PACKAGE_ICON ../icons/windows/icon-256.ico)
-    set(CPACK_WIX_UI_BANNER doc/wix-ui-banner.png)
-    set(CPACK_WIX_UI_DIALOG doc/wix-ui-dialog.png)
 
     set(CPACK_PACKAGE_FILE_NAME "qfm1000-${CPACK_PACKAGE_VERSION}")
 elseif (APPLE)
@@ -56,14 +59,14 @@ endif ()
 
 include(CPack)
 
-cpack_add_component(qfm1000
-        DISPLAY_NAME "qFM1000"
-        DESCRIPTION "Simple tool for editing channels and configuration parameters of Philips FM1000 radio."
+cpack_add_component(app_qfm1000
+        DISPLAY_NAME "Binary"
+        DESCRIPTION "Simple tool for editing channels and configuration parameters of Philips FM1000 radio"
         REQUIRED)
 
 if (WIN32 OR APPLE)
-    cpack_add_component(qtlibs
+    cpack_add_component(qt_libs
             DISPLAY_NAME "Qt libs"
             DESCRIPTION "Qt libraries"
-            DEPENDS qfm1000)
+            REQUIRED)
 endif ()

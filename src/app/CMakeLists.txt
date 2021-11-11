@@ -40,6 +40,12 @@ target_link_libraries(qfm1000
         ${QT_LIB_NAME}::SerialPort
         ${QT_LIB_NAME}::OpenGL)
 
+if (UNIX)
+    set(QFM1000_TARGET_INSTALL_DIR ${CMAKE_INSTALL_BINDIR})
+else ()
+    set(QFM1000_TARGET_INSTALL_DIR ".")
+endif ()
+
 if (WIN32)
     file(MAKE_DIRECTORY ${PROJECT_BINARY_DIR}/windeployqt)
 
@@ -53,9 +59,8 @@ if (WIN32)
             POST_BUILD
             COMMAND ${QT_DEPLOYQT_BIN} $<TARGET_FILE:qfm1000> ${QFM1000_DEPLOYQT_TYPE} --dir ${PROJECT_BINARY_DIR}/windeployqt)
 
-    #install(DIRECTORY ${PROJECT_BINARY_DIR}/windeployqt/
-    #        DESTINATION ${QFM1000_TARGET_INSTALL_DIR}
-    #        COMPONENT qtlibs)
+    install(DIRECTORY ${PROJECT_BINARY_DIR}/windeployqt/
+            DESTINATION ${QFM1000_TARGET_INSTALL_DIR} COMPONENT qt_libs)
 elseif (APPLE)
     set_target_properties(qfm1000
             PROPERTIES
@@ -65,13 +70,6 @@ elseif (APPLE)
             COMMAND ${QT_DEPLOYQT_BIN} $<TARGET_FILE:qfm1000> ${QFM1000_DEPLOYQT_TYPE})
 endif ()
 
-if (UNIX)
-    set(QFM1000_TARGET_INSTALL_DIR ${CMAKE_INSTALL_BINDIR})
-else ()
-    set(QFM1000_TARGET_INSTALL_DIR ".")
-endif ()
-
 install(TARGETS qfm1000
-        RUNTIME DESTINATION ${QFM1000_TARGET_INSTALL_DIR}
-        BUNDLE DESTINATION ${QFM1000_TARGET_INSTALL_DIR}
-        COMPONENT qfm1000)
+        RUNTIME DESTINATION ${QFM1000_TARGET_INSTALL_DIR} COMPONENT app_qfm1000
+        BUNDLE DESTINATION ${QFM1000_TARGET_INSTALL_DIR} COMPONENT app_qfm1000)
