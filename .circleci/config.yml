@@ -201,62 +201,6 @@ jobs:
             cp -a ~/qfm1000/build/*.deb ~/qfm1000/build/deb/
       - store_artifacts:
           path: ~/qfm1000/build/deb
-  package-windows-x64:
-    machine:
-      image: mcr.microsoft.com/windows/nanoserver
-    environment:
-      BUILD_TYPE: Release
-    working_directory: $env:HOMEPATH\qfm1000
-    steps:
-      - run:
-          name: "Creating Building directory"
-          shell: powershell.exe
-          command: New-Item -Path $env:HOMEPATH\qfm1000 -Name qfm1000 -ItemType directory
-      - run:
-          name: "Installing CMake"
-          shell: powershell.exe
-          command: |
-            Invoke-WebRequest -Uri "https://github.com/Kitware/CMake/releases/download/v3.21.4/cmake-3.21.4-windows-x86_64.msi" -OutFile $env:HOMEPATH\cmake-3.21.4-windows-x86_64.msi
-            msiexec.exe /i $env:HOMEPATH\cmake-3.21.4-windows-x86_64.msi /QN
-      - run:
-          name: "Installing WiX Toolset"
-          shell: powershell.exe
-          command: |
-            Invoke-WebRequest -Uri "https://github.com/wixtoolset/wix3/releases/download/wix3112rtm/wix311.exe" -OutFile $env:HOMEPATH\wix311.exe
-            $env:HOMEPATH\wix311.exe /quiet
-      - checkout
-      - run:
-          name: "Configuring project"
-          shell: powershell.exe
-          command: |
-            cd $env:HOMEPATH\qfm1000\build
-            cmake $env:HOMEPATH\qfm1000 -DCMAKE_BUILD_TYPE=%BUILD_TYPE%
-      - run:
-          name: "Building project"
-          shell: powershell.exe
-          command: |
-            cd $env:HOMEPATH\qfm1000\build
-            cmake --build . --config %BUILD_TYPE% --parallel
-      - run:
-          name: "Running tests"
-          shell: powershell.exe
-          command: |
-            cd $env:HOMEPATH\qfm1000\build
-            ctest -C %BUILD_TYPE% --output-on-failure"
-      - store_test_results:
-          path: ~/qfm1000/build/test/eeprom/test-result-eeprom-eeprom.xml
-      - store_test_results:
-          path: ~/qfm1000/build/test/eeprom/test-result-eeprom-values.xml
-      - run:
-          name: "Packaging"
-          shell: powershell.exe
-          command: |
-            cd $env:HOMEPATH\qfm1000\build
-            cpack
-            New-Item -Path $env:HOMEPATH\qfm1000\build -Name msi -ItemType directory
-            Copy-Item *.msi -Destination $env:HOMEPATH\qfm1000\build\msi
-      - store_artifacts:
-          path: $env:HOMEPATH\qfm1000\build\msi
 workflows:
   package:
     jobs:
@@ -265,4 +209,3 @@ workflows:
       - package-ubuntu-hirsute
       - package-ubuntu-impish
       - package-ubuntu-jammy
-      - package-windows-x64
