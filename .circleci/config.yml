@@ -202,7 +202,8 @@ jobs:
       - store_artifacts:
           path: ~/qfm1000/build/deb
   package-windows-x64:
-    executor: win/default
+    machine:
+      image: windows-default
     environment:
       BUILD_TYPE: Release
     working_directory: $env:HOMEPATH\qfm1000
