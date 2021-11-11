@@ -38,11 +38,13 @@ elseif (WIN32)
 
     set(CPACK_WIX_UPGRADE_GUID "E6D59A10-31FD-4512-868C-4F86EF50950F")
     set(CPACK_WIX_PROPERTY_ARPHELPLINK "https://github.com/sardylan/qfm1000")
-    set(CPACK_WIX_LICENSE_RTF ../doc/gpl-3.0.rtf)
+    set(CPACK_WIX_LICENSE_RTF doc/gpl-3.0.rtf)
     #    set(CPACK_WIX_PROPERTY_ARPSIZE "0")
 
     set(CPACK_PACKAGE_INSTALL_DIRECTORY "qFM1000 ${CPACK_PACKAGE_VERSION}")
     set(CPACK_PACKAGE_ICON ../icons/windows/icon-256.ico)
+    set(CPACK_WIX_UI_BANNER doc/wix-ui-banner.png)
+    set(CPACK_WIX_UI_DIALOG doc/wix-ui-dialog.png)
 
     set(CPACK_PACKAGE_FILE_NAME "qfm1000-${CPACK_PACKAGE_VERSION}")
 elseif (APPLE)
