@@ -203,7 +203,7 @@ jobs:
           path: ~/qfm1000/build/deb
   package-windows-x64:
     machine:
-      image: windows-default
+      image: mcr.microsoft.com/windows/nanoserver
     environment:
       BUILD_TYPE: Release
     working_directory: $env:HOMEPATH\qfm1000
