@@ -205,42 +205,42 @@ jobs:
     executor: win/default
     environment:
       BUILD_TYPE: Release
-    working_directory: %HOMEPATH%\qfm1000
+    working_directory: $env:HOMEPATH\qfm1000
     steps:
       - run:
           name: "Creating Building directory"
           shell: powershell.exe
-          command: New-Item -Path %HOMEPATH%\qfm1000 -Name qfm1000 -ItemType directory
+          command: New-Item -Path $env:HOMEPATH\qfm1000 -Name qfm1000 -ItemType directory
       - run:
           name: "Installing CMake"
           shell: powershell.exe
           command: |
-            Invoke-WebRequest -Uri "https://github.com/Kitware/CMake/releases/download/v3.21.4/cmake-3.21.4-windows-x86_64.msi" -OutFile %HOMEPATH%\cmake-3.21.4-windows-x86_64.msi
-            msiexec.exe /i %HOMEPATH%\cmake-3.21.4-windows-x86_64.msi /QN
+            Invoke-WebRequest -Uri "https://github.com/Kitware/CMake/releases/download/v3.21.4/cmake-3.21.4-windows-x86_64.msi" -OutFile $env:HOMEPATH\cmake-3.21.4-windows-x86_64.msi
+            msiexec.exe /i $env:HOMEPATH\cmake-3.21.4-windows-x86_64.msi /QN
       - run:
           name: "Installing WiX Toolset"
           shell: powershell.exe
           command: |
-            Invoke-WebRequest -Uri "https://github.com/wixtoolset/wix3/releases/download/wix3112rtm/wix311.exe" -OutFile %HOMEPATH%\wix311.exe
-            %HOMEPATH%\wix311.exe /quiet
+            Invoke-WebRequest -Uri "https://github.com/wixtoolset/wix3/releases/download/wix3112rtm/wix311.exe" -OutFile $env:HOMEPATH\wix311.exe
+            $env:HOMEPATH\wix311.exe /quiet
       - checkout
       - run:
           name: "Configuring project"
           shell: powershell.exe
           command: |
-            cd %HOMEPATH%\qfm1000\build
-            cmake %HOMEPATH%\qfm1000 -DCMAKE_BUILD_TYPE=%BUILD_TYPE%
+            cd $env:HOMEPATH\qfm1000\build
+            cmake $env:HOMEPATH\qfm1000 -DCMAKE_BUILD_TYPE=%BUILD_TYPE%
       - run:
           name: "Building project"
           shell: powershell.exe
           command: |
-            cd %HOMEPATH%\qfm1000\build
+            cd $env:HOMEPATH\qfm1000\build
             cmake --build . --config %BUILD_TYPE% --parallel
       - run:
           name: "Running tests"
           shell: powershell.exe
           command: |
-            cd %HOMEPATH%\qfm1000\build
+            cd $env:HOMEPATH\qfm1000\build
             ctest -C %BUILD_TYPE% --output-on-failure"
       - store_test_results:
           path: ~/qfm1000/build/test/eeprom/test-result-eeprom-eeprom.xml
@@ -250,12 +250,12 @@ jobs:
           name: "Packaging"
           shell: powershell.exe
           command: |
-            cd %HOMEPATH%\qfm1000\build
+            cd $env:HOMEPATH\qfm1000\build
             cpack
-            New-Item -Path %HOMEPATH%\qfm1000\build -Name msi -ItemType directory
-            Copy-Item *.msi -Destination %HOMEPATH%\qfm1000\build\msi
+            New-Item -Path $env:HOMEPATH\qfm1000\build -Name msi -ItemType directory
+            Copy-Item *.msi -Destination $env:HOMEPATH\qfm1000\build\msi
       - store_artifacts:
-          path: %HOMEPATH%\qfm1000\build\msi
+          path: $env:HOMEPATH\qfm1000\build\msi
 workflows:
   package:
     jobs:
