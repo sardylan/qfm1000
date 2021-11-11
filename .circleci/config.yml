@@ -134,7 +134,7 @@ jobs:
       - checkout
       - run:
           name: "Patching sources"
-          command: "cd / && patch -Np0 ~/qfm1000/patch/qt-5.15.2_gcc-11.patch"
+          command: "cd / && patch -Np0 -i ~/qfm1000/patch/qt-5.15.2_gcc-11.patch"
       - run:
           name: "Creating Building directory"
           command: "cmake -E make_directory ~/qfm1000/build"
@@ -176,7 +176,7 @@ jobs:
       - checkout
       - run:
           name: "Patching sources"
-          command: "cd / && patch -Np0 ~/qfm1000/patch/qt-5.15.2_gcc-11.patch"
+          command: "cd / && patch -Np0 -i ~/qfm1000/patch/qt-5.15.2_gcc-11.patch"
       - run:
           name: "Creating Building directory"
           command: "cmake -E make_directory ~/qfm1000/build"
