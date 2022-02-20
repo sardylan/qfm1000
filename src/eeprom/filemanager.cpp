@@ -170,3 +170,7 @@ QByteArray FileManager::byteArrayToIntelHex(const QByteArray &rawData) {
     // TODO: To implement
     return QByteArray(rawData);
 }
+
+void FileManager::registerMetaTypes() {
+    qRegisterMetaType<qfm1000::eeprom::FileFormat>("qfm1000::eeprom::FileFormat");
+}

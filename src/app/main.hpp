@@ -25,16 +25,28 @@
 
 #include <csignal>
 
+#endif
+
+#ifdef Q_OS_WINDOWS
+
+#include <Windows.h>
+
+#endif
+
+int main(int argc, char *argv[]);
+
+#ifdef Q_OS_LINUX
+
 void signalHandler(int signal);
 
 #endif
 
 #ifdef Q_OS_WINDOWS
 
-#include <windows.h>
-
 BOOL WINAPI ctrlHandler(DWORD ctrlHandler);
 
 #endif
+
+void registerMetaTypes();
 
 #endif

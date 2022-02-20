@@ -27,10 +27,10 @@
 #include "eeprom.hpp"
 
 #define EEPROM_FILES_NAME_FILTERS QStringList() \
-<< "All EEPROM formats [*.bin, *.hex] (*.bin *.hex)" \
-<< "Only Binary EEPROM [*.bin] (*.bin)" \
-<< "Only Intel HEX EEPROM [*.hex] (*.hex)" \
-<< "All files [*] (*)"
+    << "All EEPROM formats [*.bin, *.hex] (*.bin *.hex)" \
+    << "Only Binary EEPROM [*.bin] (*.bin)" \
+    << "Only Intel HEX EEPROM [*.hex] (*.hex)" \
+    << "All files [*] (*)"
 
 namespace qfm1000::eeprom {
 
@@ -49,6 +49,8 @@ namespace qfm1000::eeprom {
         static bool
         saveToFile(EEPROM *eeprom, const QString &filename, const FileFormat &fileFormat = FileFormat::FORMAT_UNKNOWN);
 
+        static void registerMetaTypes();
+
     private:
 
         static QByteArray parseFile(const QByteArray &rawData);
@@ -62,6 +64,9 @@ namespace qfm1000::eeprom {
         static QByteArray byteArrayToIntelHex(const QByteArray &rawData);
     };
 
+    QDebug operator<<(QDebug debug, const FileFormat &fileFormat);
 }
+
+Q_DECLARE_METATYPE(qfm1000::eeprom::FileFormat)
 
 #endif
