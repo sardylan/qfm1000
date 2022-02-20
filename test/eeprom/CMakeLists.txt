@@ -7,6 +7,15 @@ target_link_libraries(eeprom-eeprom-test
 add_test(eeprom-eeprom-test
         eeprom-eeprom-test -o test-result-eeprom-eeprom.xml,${QT_TEST_OUTPUT_FORMAT})
 
+add_executable(eeprom-filemanager-test
+        filemanager.cpp filemanager.hpp)
+
+target_link_libraries(eeprom-filemanager-test
+        eeprom ${QT_LIB_NAME}::Core ${QT_LIB_NAME}::Test)
+
+add_test(eeprom-eeprom-test
+        eeprom-eeprom-test -o test-result-eeprom-eeprom.xml,${QT_TEST_OUTPUT_FORMAT})
+
 add_executable(eeprom-values-test
         values.cpp values.hpp)
 
