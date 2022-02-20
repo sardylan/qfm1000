@@ -20,6 +20,8 @@
 
 #include "values.hpp"
 
+#include "../../src/eeprom/values.hpp"
+
 using namespace qfm1000::eeprom;
 
 QTEST_MAIN(ValuesTest)

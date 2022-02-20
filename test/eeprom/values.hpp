@@ -24,8 +24,6 @@
 #include <QtTest/QtTest>
 #include <QtTest/QSignalSpy>
 
-#include "../../src/eeprom/values.hpp"
-
 namespace qfm1000::eeprom {
 
     class ValuesTest : public QObject {
