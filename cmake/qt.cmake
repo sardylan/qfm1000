@@ -51,3 +51,5 @@ find_package(Qt6 COMPONENTS Core Gui Svg Widgets SerialPort OpenGL Concurrent Te
 if (NOT Qt6_FOUND)
     find_package(Qt5 5.12 COMPONENTS Core Gui Svg Widgets SerialPort OpenGL Concurrent Test REQUIRED)
 endif ()
+
+add_definitions(-DQ_COMPILER_INITIALIZER_LISTS)
