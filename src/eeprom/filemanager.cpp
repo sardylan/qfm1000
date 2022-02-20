@@ -95,13 +95,13 @@ QByteArray FileManager::parseFile(const QByteArray &rawData) {
     return data;
 }
 
-FileFormat FileManager::detectFormat(const QByteArray &rawData) {
+FileManager::FileFormat FileManager::detectFormat(const QByteArray &rawData) {
     QStringList rows = splitInLines(rawData);
 
     bool containsIntelStartCodes = false;
     bool containsOnlyIntelStartCodes = true;
 
-    for (const QString &row : rows)
+    for (const QString &row: rows)
         if (row.startsWith(":"))
             containsIntelStartCodes = true;
         else
@@ -132,15 +132,15 @@ QByteArray FileManager::intelHexToByteArray(const QByteArray &rawData) {
     QByteArray data;
     int previousOffest = 0;
 
-    for (const QString &row : rows) {
+    for (const QString &row: rows) {
         unsigned int checksum = 0;
-        for (auto &c : QByteArray::fromHex(row.toLatin1()))
+        for (auto &c: QByteArray::fromHex(row.toLatin1()))
             checksum += (unsigned char) c;
 
         checksum &= 0b11111111;
 
         if (checksum != 0)
-            return QByteArray();
+            return {};
 
         int size = row.mid(1, 2).toInt(nullptr, 16);
         int offset = row.mid(3, 4).toInt(nullptr, 16);
@@ -153,12 +153,12 @@ QByteArray FileManager::intelHexToByteArray(const QByteArray &rawData) {
             continue;
 
         if (offset != previousOffest)
-            return QByteArray();
+            return {};
 
         previousOffest = offset + size;
 
         if (lineData.size() != size)
-            return QByteArray();
+            return {};
 
         data.append(lineData);
     }
@@ -168,9 +168,28 @@ QByteArray FileManager::intelHexToByteArray(const QByteArray &rawData) {
 
 QByteArray FileManager::byteArrayToIntelHex(const QByteArray &rawData) {
     // TODO: To implement
-    return QByteArray(rawData);
+    return {rawData};
 }
 
 void FileManager::registerMetaTypes() {
-    qRegisterMetaType<qfm1000::eeprom::FileFormat>("qfm1000::eeprom::FileFormat");
+    qRegisterMetaType<qfm1000::eeprom::FileManager::FileFormat>("qfm1000::eeprom::FileManager::FileFormat");
+}
+
+QDebug operator<<(QDebug debug, const qfm1000::eeprom::FileManager::FileFormat &fileFormat) {
+    QDebugStateSaver saver(debug);
+
+    switch (fileFormat) {
+
+        case FileManager::FileFormat::FORMAT_UNKNOWN:
+            debug.nospace() << "Unknown";
+            break;
+        case FileManager::FileFormat::FORMAT_BINARY:
+            debug.nospace() << "Binary";
+            break;
+        case FileManager::FileFormat::FORMAT_INTEL_HEX:
+            debug.nospace() << "Intel HEX";
+            break;
+    }
+
+    return debug;
 }

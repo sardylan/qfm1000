@@ -21,6 +21,7 @@
 #ifndef __QFM1000__EEPROM__FILEMANAGER__H
 #define __QFM1000__EEPROM__FILEMANAGER__H
 
+#include <QtCore/QDebug>
 #include <QtCore/QByteArray>
 #include <QtCore/QString>
 
@@ -32,7 +33,7 @@
     << "Only Intel HEX EEPROM [*.hex] (*.hex)" \
     << "All files [*] (*)"
 
-namespace qfm1000::eeprom {
+namespace qfm1000::eeprom::FileManager {
 
     enum class FileFormat {
         FORMAT_UNKNOWN,
@@ -40,33 +41,25 @@ namespace qfm1000::eeprom {
         FORMAT_INTEL_HEX
     };
 
-    class FileManager {
+    bool loadFromFile(EEPROM *eeprom, const QString &filename);
 
-    public:
+    bool saveToFile(EEPROM *eeprom, const QString &filename, const FileFormat &fileFormat = FileFormat::FORMAT_UNKNOWN);
 
-        static bool loadFromFile(EEPROM *eeprom, const QString &filename);
+    QByteArray parseFile(const QByteArray &rawData);
 
-        static bool
-        saveToFile(EEPROM *eeprom, const QString &filename, const FileFormat &fileFormat = FileFormat::FORMAT_UNKNOWN);
+    FileFormat detectFormat(const QByteArray &rawFile);
 
-        static void registerMetaTypes();
+    QStringList splitInLines(const QByteArray &rawData);
 
-    private:
+    QByteArray intelHexToByteArray(const QByteArray &rawData);
 
-        static QByteArray parseFile(const QByteArray &rawData);
+    QByteArray byteArrayToIntelHex(const QByteArray &rawData);
 
-        static FileFormat detectFormat(const QByteArray &rawFile);
+    void registerMetaTypes();
 
-        static QStringList splitInLines(const QByteArray &rawData);
-
-        static QByteArray intelHexToByteArray(const QByteArray &rawData);
-
-        static QByteArray byteArrayToIntelHex(const QByteArray &rawData);
-    };
-
-    QDebug operator<<(QDebug debug, const FileFormat &fileFormat);
+    QDebug operator<<(QDebug debug, const qfm1000::eeprom::FileManager::FileFormat &fileFormat);
 }
 
-Q_DECLARE_METATYPE(qfm1000::eeprom::FileFormat)
+Q_DECLARE_METATYPE(qfm1000::eeprom::FileManager::FileFormat)
 
 #endif
