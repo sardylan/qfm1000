@@ -567,13 +567,267 @@ void EEPROM::registerMetaTypes() {
     qRegisterMetaType<qfm1000::eeprom::Param>("qfm1000::eeprom::Param");
 }
 
+QDebug qfm1000::eeprom::operator<<(QDebug debug, const FrequencyBand &frequencyBand) {
+    QDebugStateSaver saver(debug);
+
+    switch (frequencyBand) {
+
+        case FrequencyBand::E0:
+            debug.nospace() << "E0";
+            break;
+        case FrequencyBand::B0:
+            debug.nospace() << "B0";
+            break;
+        case FrequencyBand::A9:
+            debug.nospace() << "A9";
+            break;
+        case FrequencyBand::K1:
+            debug.nospace() << "K1";
+            break;
+        case FrequencyBand::K2:
+            debug.nospace() << "K2";
+            break;
+        case FrequencyBand::K8:
+            debug.nospace() << "K8";
+            break;
+        case FrequencyBand::K9:
+            debug.nospace() << "K9";
+            break;
+        case FrequencyBand::TD:
+            debug.nospace() << "TD";
+            break;
+        case FrequencyBand::TM:
+            debug.nospace() << "TM";
+            break;
+        case FrequencyBand::TZ:
+            debug.nospace() << "TZ";
+            break;
+        case FrequencyBand::T4:
+            debug.nospace() << "T4";
+            break;
+        case FrequencyBand::U0:
+            debug.nospace() << "U0";
+            break;
+        case FrequencyBand::W1:
+            debug.nospace() << "W1";
+            break;
+        case FrequencyBand::W4:
+            debug.nospace() << "W4";
+            break;
+    }
+
+    return debug;
+}
+
+QDebug qfm1000::eeprom::operator<<(QDebug debug, const Flag &flag) {
+    QDebugStateSaver saver(debug);
+
+    switch (flag) {
+
+        case Flag::ENABLED:
+            debug.nospace() << "enabled";
+            break;
+        case Flag::DISABLED:
+            debug.nospace() << "disabled";
+            break;
+    }
+
+    return debug;
+}
+
+QDebug qfm1000::eeprom::operator<<(QDebug debug, const CTCSS &ctcss) {
+    QDebugStateSaver saver(debug);
+
+    switch (ctcss) {
+
+        case CTCSS::TONE_OFF:
+            debug.nospace() << "OFF";
+            break;
+        case CTCSS::TONE_67_0:
+            debug.nospace() << "67.0 Hz";
+            break;
+        case CTCSS::TONE_71_9:
+            debug.nospace() << "71.9 Hz";
+            break;
+        case CTCSS::TONE_74_4:
+            debug.nospace() << "74.4 Hz";
+            break;
+        case CTCSS::TONE_77_0:
+            debug.nospace() << "77.0 Hz";
+            break;
+        case CTCSS::TONE_79_7:
+            debug.nospace() << "79.7 Hz";
+            break;
+        case CTCSS::TONE_82_5:
+            debug.nospace() << "82.5 Hz";
+            break;
+        case CTCSS::TONE_85_4:
+            debug.nospace() << "85.4 Hz";
+            break;
+        case CTCSS::TONE_88_5:
+            debug.nospace() << "88.5 Hz";
+            break;
+        case CTCSS::TONE_91_5:
+            debug.nospace() << "91.5 Hz";
+            break;
+        case CTCSS::TONE_94_8:
+            debug.nospace() << "94.8 Hz";
+            break;
+        case CTCSS::TONE_97_4:
+            debug.nospace() << "97.4 Hz";
+            break;
+        case CTCSS::TONE_100_0:
+            debug.nospace() << "100.0 Hz";
+            break;
+        case CTCSS::TONE_103_5:
+            debug.nospace() << "103.5 Hz";
+            break;
+        case CTCSS::TONE_107_2:
+            debug.nospace() << "107.2 Hz";
+            break;
+        case CTCSS::TONE_110_9:
+            debug.nospace() << "110.9 Hz";
+            break;
+        case CTCSS::TONE_114_8:
+            debug.nospace() << "114.8 Hz";
+            break;
+        case CTCSS::TONE_118_8:
+            debug.nospace() << "118.8 Hz";
+            break;
+        case CTCSS::TONE_123_0:
+            debug.nospace() << "123.0 Hz";
+            break;
+        case CTCSS::TONE_127_3:
+            debug.nospace() << "127.3 Hz";
+            break;
+        case CTCSS::TONE_131_8:
+            debug.nospace() << "131.8 Hz";
+            break;
+        case CTCSS::TONE_136_5:
+            debug.nospace() << "136.5 Hz";
+            break;
+        case CTCSS::TONE_141_3:
+            debug.nospace() << "141.3 Hz";
+            break;
+        case CTCSS::TONE_146_2:
+            debug.nospace() << "146.2 Hz";
+            break;
+        case CTCSS::TONE_151_4:
+            debug.nospace() << "151.4 Hz";
+            break;
+        case CTCSS::TONE_156_7:
+            debug.nospace() << "156.7 Hz";
+            break;
+        case CTCSS::TONE_162_2:
+            debug.nospace() << "162.2 Hz";
+            break;
+        case CTCSS::TONE_167_9:
+            debug.nospace() << "167.9 Hz";
+            break;
+        case CTCSS::TONE_173_8:
+            debug.nospace() << "173.8 Hz";
+            break;
+        case CTCSS::TONE_179_9:
+            debug.nospace() << "179.9 Hz";
+            break;
+        case CTCSS::TONE_186_2:
+            debug.nospace() << "186.2 Hz";
+            break;
+        case CTCSS::TONE_192_8:
+            debug.nospace() << "192.8 Hz";
+            break;
+        case CTCSS::TONE_203_5:
+            debug.nospace() << "203.5 Hz";
+            break;
+        case CTCSS::TONE_210_7:
+            debug.nospace() << "210.7 Hz";
+            break;
+        case CTCSS::TONE_218_1:
+            debug.nospace() << "218.1 Hz";
+            break;
+        case CTCSS::TONE_225_7:
+            debug.nospace() << "225.7 Hz";
+            break;
+        case CTCSS::TONE_233_6:
+            debug.nospace() << "233.6 Hz";
+            break;
+        case CTCSS::TONE_241_8:
+            debug.nospace() << "241.8 Hz";
+            break;
+        case CTCSS::TONE_250_3:
+            debug.nospace() << "250.3 Hz";
+            break;
+    }
+
+    return debug;
+}
+
+QDebug qfm1000::eeprom::operator<<(QDebug debug, const Power &power) {
+    QDebugStateSaver saver(debug);
+
+    switch (power) {
+
+        case Power::DISABLED:
+            debug.nospace() << "disabled";
+            break;
+        case Power::WATT_1:
+            debug.nospace() << "1W";
+            break;
+        case Power::WATT_6:
+            debug.nospace() << "6W";
+            break;
+        case Power::WATT_10:
+            debug.nospace() << "10W";
+            break;
+        case Power::WATT_15:
+            debug.nospace() << "15W";
+            break;
+        case Power::WATT_25:
+            debug.nospace() << "25W";
+            break;
+    }
+
+    return debug;
+}
+
+QDebug qfm1000::eeprom::operator<<(QDebug debug, const Squelch &squelch) {
+    QDebugStateSaver saver(debug);
+
+    switch (squelch) {
+
+        case Squelch::OPEN:
+            debug.nospace() << "open";
+            break;
+        case Squelch::SINAD_9DB:
+            debug.nospace() << "9dB SINAD";
+            break;
+        case Squelch::SINAD_12DB:
+            debug.nospace() << "12dB SINAD";
+            break;
+        case Squelch::SINAD_15DB:
+            debug.nospace() << "15dB SINAD";
+            break;
+        case Squelch::SINAD_18DB:
+            debug.nospace() << "18dB SINAD";
+            break;
+        case Squelch::SINAD_21DB:
+            debug.nospace() << "21dB SINAD";
+            break;
+        case Squelch::SINAD_24DB:
+            debug.nospace() << "24dB SINAD";
+            break;
+    }
+
+    return debug;
+}
+
 QDebug qfm1000::eeprom::operator<<(QDebug debug, const Param &param) {
     QDebugStateSaver saver(debug);
 
     switch (param) {
 
         case Param::NONE:
-            debug.nospace() << "None";
+            debug.nospace() << "none";
             break;
         case Param::PARAM_FREQ_RX:
             debug.nospace() << "RX Freq";

@@ -252,6 +252,16 @@ namespace qfm1000::eeprom {
 
     };
 
+    QDebug operator<<(QDebug debug, const FrequencyBand &frequencyBand);
+
+    QDebug operator<<(QDebug debug, const Flag &flag);
+
+    QDebug operator<<(QDebug debug, const CTCSS &ctcss);
+
+    QDebug operator<<(QDebug debug, const Power &power);
+
+    QDebug operator<<(QDebug debug, const Squelch &squelch);
+
     QDebug operator<<(QDebug debug, const Param &param);
 
 }
