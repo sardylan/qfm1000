@@ -1,0 +1,47 @@
+name: "Build and Test (Windows)"
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+env:
+  BUILD_TYPE: Release
+  SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+jobs:
+  build_and_test_windows:
+    name: Build and Test (Windows)
+    runs-on: windows-2019
+    strategy:
+      fail-fast: false
+      matrix:
+        qt_ver:
+          - 6.2.1
+          - 5.15.2
+    steps:
+      - name: "Checkout"
+        uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+      - name: "Install Qt"
+        uses: jurplel/install-qt-action@v2
+        with:
+          version: ${{ matrix.qt_ver }}
+          arch: win64_msvc2019_64
+      - name: "Create Build Environment"
+        shell: cmd
+        run: cmake -E make_directory ${{runner.workspace}}\build
+      - name: "Configure CMake"
+        working-directory: ${{runner.workspace}}\build
+        shell: cmd
+        run: cmake ${{runner.workspace}}\qfm1000 -DCMAKE_BUILD_TYPE=%BUILD_TYPE%
+      - name: "Build"
+        working-directory: ${{runner.workspace}}\build
+        shell: cmd
+        run: cmake --build . --config %BUILD_TYPE% --parallel
+      - name: "Test"
+        working-directory: ${{runner.workspace}}\build
+        shell: cmd
+        run: ctest -C %BUILD_TYPE% --output-on-failure
