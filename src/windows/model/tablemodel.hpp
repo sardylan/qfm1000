@@ -23,43 +23,36 @@
 #define __QFM1000_WINDOWS_MODEL_TABLEMODEL_H
 
 #include <QAbstractTableModel>
-#include <QPair>
 #include <QList>
+#include <QPair>
 #include <QString>
 
-#include <status.hpp>
 #include <eeprom.hpp>
+#include <status.hpp>
 
 class TableModel : public QAbstractTableModel {
-Q_OBJECT
+  Q_OBJECT
 
 private:
-    Status *status;
-    EEPROM *eeprom;
-
-    static unsigned int strFreqToInt(QString input);
-
-    static QString intFreqToStr(unsigned int input);
-
-    static QString shiftToStr(unsigned int txFreq, unsigned int rxFreq);
-
-    static QString boolToStr(bool value);
+  Status *status;
+  EEPROM *eeprom;
 
 public:
-    explicit TableModel(QObject *parent = nullptr);
+  explicit TableModel(QObject *parent = nullptr);
 
-    int rowCount(const QModelIndex &parent) const override;
+  int rowCount(const QModelIndex &parent) const override;
 
-    int columnCount(const QModelIndex &parent) const override;
+  int columnCount(const QModelIndex &parent) const override;
 
-    QVariant data(const QModelIndex &index, int role) const override;
+  QVariant data(const QModelIndex &index, int role) const override;
 
-    QVariant headerData(int section, Qt::Orientation orientation, int role) const override;
+  QVariant headerData(int section, Qt::Orientation orientation,
+                      int role) const override;
 
-    Qt::ItemFlags flags(const QModelIndex &index) const override;
+  Qt::ItemFlags flags(const QModelIndex &index) const override;
 
-    bool setData(const QModelIndex &index, const QVariant &value, int role = Qt::EditRole) override;
-
+  bool setData(const QModelIndex &index, const QVariant &value,
+               int role = Qt::EditRole) override;
 };
 
 #endif

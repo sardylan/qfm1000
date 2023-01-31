@@ -24,6 +24,7 @@
 
 #include "tablemodel.hpp"
 #include "helper.hpp"
+#include "utilities.hpp"
 
 TableModel::TableModel(QObject *parent) : QAbstractTableModel(parent) {
     eeprom = EEPROM::getInstance();
@@ -54,13 +55,13 @@ QVariant TableModel::data(const QModelIndex &index, int role) const {
 
         switch (index.column()) {
             case 0:
-                return intFreqToStr(eeprom->getChannelRxFreq(channel, status->getFrequencyBand()));
+                return ModelUtilities::intFreqToStr(eeprom->getChannelRxFreq(channel, status->getFrequencyBand()));
             case 1:
-                return intFreqToStr(eeprom->getChannelTxFreq(channel, status->getFrequencyBand()));
+                return ModelUtilities::intFreqToStr(eeprom->getChannelTxFreq(channel, status->getFrequencyBand()));
             case 2: {
                 unsigned int txFreq = eeprom->getChannelTxFreq(channel, status->getFrequencyBand());
                 unsigned int rxFreq = eeprom->getChannelRxFreq(channel, status->getFrequencyBand());
-                return shiftToStr(txFreq, rxFreq);
+                return ModelUtilities::shiftToStr(txFreq, rxFreq);
             }
             case 3: {
                 value = eeprom->getChannelRxCtcss(channel);
@@ -95,9 +96,9 @@ QVariant TableModel::data(const QModelIndex &index, int role) const {
                 return powerValues[value];
             }
             case 7:
-                return boolToStr(eeprom->getChannelSelectiveCalling(channel));
+                return ModelUtilities::boolToStr(eeprom->getChannelSelectiveCalling(channel));
             case 8:
-                return boolToStr(eeprom->getChannelCpuOffset(channel));
+                return ModelUtilities::boolToStr(eeprom->getChannelCpuOffset(channel));
             default:
                 return QVariant();
         }
@@ -148,14 +149,14 @@ bool TableModel::setData(const QModelIndex &index, const QVariant &value, int ro
         unsigned int newValue = 0;
         switch (index.column()) {
             case 0:
-                newValue = strFreqToInt(value.toString());
+                newValue = ModelUtilities::strFreqToInt(value.toString());
                 if (newValue == 0)
                     return false;
                 eeprom->setChannelRxFreq(channel, newValue, status->getFrequencyBand());
                 break;
 
             case 1:
-                newValue = strFreqToInt(value.toString());
+                newValue = ModelUtilities::strFreqToInt(value.toString());
                 if (newValue == 0)
                     return false;
                 eeprom->setChannelTxFreq(channel, newValue, status->getFrequencyBand());
@@ -202,47 +203,4 @@ Qt::ItemFlags TableModel::flags(const QModelIndex &index) const {
 
     Qt::ItemFlags itemFlags = QAbstractTableModel::flags(index) | Qt::ItemIsEditable;
     return itemFlags;
-}
-
-unsigned int TableModel::strFreqToInt(QString input) {
-    if (input.contains(QRegExp(R"(^\d{3}\.{0,1}$)"))) {
-        QRegExp regExp(R"(^(\d{3})\.{0,1}$)");
-        regExp.indexIn(input);
-        return regExp.cap(1).leftJustified(3, '0').toUInt() * 1000000;
-    } else if (input.contains(QRegExp(R"(^\d{3}\.{0,1}\d{0,3}$)"))) {
-        QRegExp regExp(R"(^(\d{3})\.{0,1}(\d{0,3})$)");
-        regExp.indexIn(input);
-        return regExp.cap(1).toUInt() * 1000000
-               + regExp.cap(2).leftJustified(3, '0').toUInt() * 1000;
-    } else if (input.contains(QRegExp(R"(^\d{3}\.{0,1}\d{0,3}\.{0,1}\d{0,3}$)"))) {
-        QRegExp regExp(R"(^(\d{3})\.{0,1}(\d{0,3})\.{0,1}(\d{0,3})$)");
-        regExp.indexIn(input);
-        return regExp.cap(1).toUInt() * 1000000
-               + regExp.cap(2).leftJustified(3, '0').toUInt() * 1000
-               + regExp.cap(3).leftJustified(3, '0').toUInt();
-    } else {
-        return 0;
-    }
-}
-
-QString TableModel::intFreqToStr(unsigned int input) {
-    double khz = (float) input / 1000;
-    return QString::number(khz, 'f', 1);
-}
-
-QString TableModel::shiftToStr(unsigned int txFreq, unsigned int rxFreq) {
-    auto shift = (int) qFabs((int) txFreq - (int) rxFreq);
-    double khz = (float) shift / 1000;
-    QString value = QString::number(khz, 'f', 1);
-
-    if (txFreq > rxFreq)
-        value.insert(0, "+");
-    else if (txFreq < rxFreq)
-        value.insert(0, "-");
-
-    return value;
-}
-
-QString TableModel::boolToStr(bool value) {
-    return value ? "enabled" : "disabled";
 }

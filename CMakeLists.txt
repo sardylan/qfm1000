@@ -54,10 +54,13 @@ if (WIN32 OR APPLE)
     endif ()
 endif ()
 
+set(QT_TEST_OUTPUT_FORMAT "xunitxml")
+message(STATUS "Qt tests output format: ${QT_TEST_OUTPUT_FORMAT}")
+
 set(QFM1000_APPLICATION_NAME "qFM1000")
 set(QFM1000_APPLICATION_VERSION_MAJOR "0")
 set(QFM1000_APPLICATION_VERSION_MINOR "7")
-set(QFM1000_APPLICATION_VERSION_PATCH "1")
+set(QFM1000_APPLICATION_VERSION_PATCH "2")
 
 set(QFM1000_ORGANIZATION_NAME "The HellNet.org")
 set(QFM1000_ORGANIZATION_DOMAIN "thehellnet.org")
@@ -67,6 +70,7 @@ set(QFM1000_APPLICATION_VERSION "${QFM1000_APPLICATION_VERSION_MAJOR}.${QFM1000_
 enable_testing()
 
 add_subdirectory(src)
+add_subdirectory(tests)
 
 add_subdirectory(desktop)
 
