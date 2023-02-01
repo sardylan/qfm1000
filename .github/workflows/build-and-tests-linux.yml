@@ -18,7 +18,7 @@ jobs:
       matrix:
         config:
           - os: ubuntu-22.04
-            pkgs: qtbase5-dev qtchooser qt5-qmake qtbase5-dev-tools
+            pkgs: qtbase5-dev qtchooser qt5-qmake qtbase5-dev-tools libqt5svg5-dev libqt5serialport5-dev
           - os: ubuntu-20.04
             pkgs: qt5-default libqt5svg5-dev libqt5serialport5-dev
     runs-on: ${{ matrix.config.os }}
