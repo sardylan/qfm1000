@@ -16,9 +16,11 @@ jobs:
     name: Build and Test (Linux)
     strategy:
       matrix:
-        os:
-          - ubuntu-22.04
-          - ubuntu-20.04
+        - os: ubuntu-22.04
+          pkgs: qtbase5-dev qtchooser qt5-qmake qtbase5-dev-tools
+        - os: ubuntu-20.04
+          pkgs: qt5-default libqt5svg5-dev libqt5serialport5-dev
+    runs-on: ${{ matrix.os }}
     steps:
       - name: "Checkout"
         uses: actions/checkout@v3
@@ -26,7 +28,7 @@ jobs:
           fetch-depth: 0
       - name: "Install Qt"
         shell: bash
-        run: sudo apt install -y qt5-default libqt5svg5-dev libqt5serialport5-dev
+        run: sudo apt install -y ${{ matrix.pkgs }}
       - name: "Create Build Environment"
         run: cmake -E make_directory ${{runner.workspace}}/build
       - name: "Configure CMake"
