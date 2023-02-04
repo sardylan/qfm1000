@@ -25,7 +25,7 @@
 #include "utilities.hpp"
 
 unsigned int ModelUtilities::strFreqToInt(QString input) {
-  if (!input.contains(".") and input.length() >= 7) {
+  if (!input.contains(".") && input.length() >= 7) {
     return input.toUInt();
   } else if (input.contains(QRegExp(R"(^\d{1,3}\.{0,1}$)"))) {
     QRegExp regExp(R"(^(\d{1,3})\.{0,1}$)");
