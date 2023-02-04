@@ -33,7 +33,7 @@ jobs:
       - name: "Adds some var envs"
         run: |
           echo "SHORT_SHA=`echo ${GITHUB_SHA} | cut -c1-8`" >> $GITHUB_ENV
-          echo "QTDIR=`echo ${Qt5_DIR}" >> $GITHUB_ENV
+          echo "QTDIR=`echo ${Qt5_DIR}`" >> $GITHUB_ENV
       - name: "Create Build Environment"
         run: cmake -E make_directory ${{runner.workspace}}/build
       - name: "Configure CMake"
