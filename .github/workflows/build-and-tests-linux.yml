@@ -3,6 +3,8 @@ on:
   push:
     branches: 
       - 0.7
+    tags:
+      - v*
   pull_request:
     branches:
       - 0.7
