@@ -34,7 +34,7 @@ jobs:
       - name: "Install Qt"
         uses: jurplel/install-qt-action@v3
         with:
-          version: ${{ matrix.qt.versionver }}
+          version: ${{ matrix.qt.version }}
           arch: ${{ matrix.qt.arch }}
       - name: "Create Build Environment"
         shell: cmd
