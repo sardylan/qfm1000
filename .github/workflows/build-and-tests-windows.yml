@@ -35,7 +35,7 @@ jobs:
           version: ${{ matrix.qt.version }}
           arch: ${{ matrix.qt.arch }}
       - name: "Add some env vars"
-        run: echo "set QTDIR=% %Qt5_Dir% >> $env:GITHUB_ENV
+        run: echo "set QTDIR" %Qt5_Dir% >> $env:GITHUB_ENV
       - name: "Create Build Environment"
         shell: cmd
         run: cmake -E make_directory ${{runner.workspace}}\build
