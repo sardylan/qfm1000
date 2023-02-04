@@ -21,7 +21,6 @@ jobs:
       matrix:
         qt:
           - version: 5.15.2
-          - version: 6.5.0
     steps:
       - name: "Checkout"
         uses: actions/checkout@v3
@@ -34,7 +33,7 @@ jobs:
       - name: "Adds some var envs"
         run: |
           echo "SHORT_SHA=`echo ${GITHUB_SHA} | cut -c1-8`" >> $GITHUB_ENV
-          echo "QT5_PREFIX=/Users/runner/work/qfm1000/Qt/${{ matrix.qt.version }}/clang_64" >> $GITHUB_ENV
+          echo "QTDIR=`echo ${Qt5_DIR}" >> $GITHUB_ENV
       - name: "Create Build Environment"
         run: cmake -E make_directory ${{runner.workspace}}/build
       - name: "Configure CMake"
