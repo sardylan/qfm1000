@@ -3,6 +3,8 @@ on:
   push:
     branches:
       - 0.7
+    tags:
+      - v*
   pull_request:
     branches:
       - 0.7
@@ -17,9 +19,13 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        qt_ver:
-          - 6.2.1
-          - 5.15.2
+        qt:
+          - version: 5.15.2
+            arch: win32_msvc2019
+          - version: 5.15.2
+            arch: win64_msvc2019_64
+          - version: 6.5.0
+            arch: win64_msvc2019_64
     steps:
       - name: "Checkout"
         uses: actions/checkout@v3
@@ -28,8 +34,8 @@ jobs:
       - name: "Install Qt"
         uses: jurplel/install-qt-action@v3
         with:
-          version: ${{ matrix.qt_ver }}
-          arch: win64_msvc2019_64
+          version: ${{ matrix.qt.versionver }}
+          arch: ${{ matrix.qt.arch }}
       - name: "Create Build Environment"
         shell: cmd
         run: cmake -E make_directory ${{runner.workspace}}\build
@@ -49,3 +55,10 @@ jobs:
         working-directory: ${{runner.workspace}}\build
         shell: cmd
         run: cpack
+      - name: "Upload Release Asset"
+        if: startsWith(github.ref, 'refs/tags/v')
+        uses: softprops/action-gh-release@v1
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          name: "qFM1000 ${{ github.ref_name }}"
+          files: "${{ runner.workspace }}/build/*.msi"

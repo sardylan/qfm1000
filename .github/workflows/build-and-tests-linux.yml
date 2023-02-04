@@ -57,5 +57,5 @@ jobs:
         uses: softprops/action-gh-release@v1
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
-          name: "qFM1000-${{ github.ref_name }}"
-          files: "${{ runner.workspace }}/build/qfm1000-${{ github.ref_name }}-amd64.deb"
+          name: "qFM1000 ${{ github.ref_name }}"
+          files: "${{ runner.workspace }}/build/*.deb"

@@ -3,6 +3,8 @@ on:
   push:
     branches:
       - 0.7
+    tags:
+      - v*
   pull_request:
     branches:
       - 0.7
@@ -17,9 +19,9 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        qt_ver:
-          - 5.15.2
-          - 5.12.8
+        qt:
+          - version: 5.15.2
+          - version: 6.5.0
     steps:
       - name: "Checkout"
         uses: actions/checkout@v3
@@ -47,3 +49,10 @@ jobs:
         working-directory: ${{runner.workspace}}/build
         shell: bash
         run: cpack
+#      - name: "Upload Release Asset"
+#        if: startsWith(github.ref, 'refs/tags/v')
+#        uses: softprops/action-gh-release@v1
+#        with:
+#          token: ${{ secrets.GITHUB_TOKEN }}
+#          name: "qFM1000 ${{ github.ref_name }}"
+#          files: "${{ runner.workspace }}/build/*.msi"
