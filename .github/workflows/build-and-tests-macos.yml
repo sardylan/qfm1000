@@ -30,7 +30,7 @@ jobs:
       - name: "Install Qt"
         uses: jurplel/install-qt-action@v3
         with:
-          version: ${{ matrix.qt.verison }}
+          version: ${{ matrix.qt.version }}
       - name: "Create Build Environment"
         run: cmake -E make_directory ${{runner.workspace}}/build
       - name: "Configure CMake"

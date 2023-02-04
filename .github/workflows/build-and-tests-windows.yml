@@ -36,13 +36,17 @@ jobs:
         with:
           version: ${{ matrix.qt.version }}
           arch: ${{ matrix.qt.arch }}
+      - name: "Add some env vars"
+        run:
+          - echo ${{ matrix.qt.arch }} >> $env:QT_ARCH_ENV
+          - echo ("QT5_PREFIX=D:\a\qfm1000\Qt\${{ matrix.qt.version }}\" $env:QT_ARCH.replace('win64_', '').replace('win32_', '')) >> $env:GITHUB_ENV
       - name: "Create Build Environment"
         shell: cmd
         run: cmake -E make_directory ${{runner.workspace}}\build
       - name: "Configure CMake"
         working-directory: ${{runner.workspace}}\build
         shell: cmd
-        run: cmake ${{runner.workspace}}\qfm1000 -DCMAKE_BUILD_TYPE=%BUILD_TYPE%
+        run: cmake ${{runner.workspace}}\qfm1000 -DCMAKE_BUILD_TYPE=%BUILD_TYPE% -DQT5_DIR=D:\a\qfm1000\Qt\${{ matrix.qt.version }}\msvc2019
       - name: "Build"
         working-directory: ${{runner.workspace}}\build
         shell: cmd
