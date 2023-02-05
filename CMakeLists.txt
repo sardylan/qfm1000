@@ -14,7 +14,7 @@ set(CMAKE_AUTOMOC ON)
 set(CMAKE_AUTOUIC ON)
 set(CMAKE_AUTORCC ON)
 
-set(QT5_PREFIX "$ENV{QTDIR}" CACHE PATH "Qt5 prefix path")
+set(QT5_PREFIX "$ENV{Qt5_Dir}" CACHE PATH "Qt5 prefix path")
 
 find_program(QT5_QMAKE_BIN
         qmake
