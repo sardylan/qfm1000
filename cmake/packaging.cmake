@@ -46,6 +46,7 @@ elseif (APPLE)
 
     set(CPACK_BUNDLE_NAME "qFM1000 ${CPACK_PACKAGE_VERSION}")
     set(CPACK_BUNDLE_PLIST "${CMAKE_SOURCE_DIR}/Info.plist")
+    set(CPACK_BUNDLE_ICON "${CMAKE_SOURCE_DIR}/../icons/macos/icon.icns")
 endif ()
 
 include(CPack)
