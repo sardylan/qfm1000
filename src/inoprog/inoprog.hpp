@@ -25,8 +25,6 @@
 #include <QtCore/QMutex>
 #include <QtSerialPort/QSerialPort>
 
-#include <utilities/service.hpp>
-
 #define INOPROG_EEPROM_PAGE_SIZE 8
 #define INOPROG_EEPROM_PAGE_COUNT 256
 
@@ -35,8 +33,6 @@
 #define INOPROG_PROTOCOL_ERROR 'E'
 #define INOPROG_PROTOCOL_READ 'R'
 #define INOPROG_PROTOCOL_WRITE 'W'
-
-using namespace qfm1000;
 
 namespace qfm1000::inoprog {
 
@@ -50,7 +46,7 @@ namespace qfm1000::inoprog {
         INOPROG_ERROR_PAGE
     };
 
-    class InoProg : public utilities::Service {
+    class InoProg : public QObject {
     Q_OBJECT
 
     public:
@@ -71,9 +67,9 @@ namespace qfm1000::inoprog {
 
     public slots:
 
-        void start() override;
+        void start();
 
-        void stop() override;
+        void stop();
 
         QByteArray readEeprom();
 
@@ -81,7 +77,7 @@ namespace qfm1000::inoprog {
 
     private:
 
-        QMutex mutex;
+        QMutex *mutex;
 
         QString portName;
         QSerialPort::BaudRate portSpeed;

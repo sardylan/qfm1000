@@ -19,8 +19,9 @@
 
 
 #include <QtCore/QDebug>
-#include <QtCore/QThread>
 #include <QtCore/QFuture>
+#include <QtCore/QMutexLocker>
+#include <QtCore/QThread>
 
 #include <QtConcurrent/QtConcurrent>
 
@@ -32,14 +33,18 @@ using namespace qfm1000::inoprog;
 #define INOPROG_SERIAL_WAIT 5000
 #define INOPROG_SERIAL_SLEEP 25
 
-InoProg::InoProg(QObject *parent) : Service(parent) {
-    portSpeed = QSerialPort::Baud115200;
+InoProg::InoProg(QObject *parent) : QObject(parent) {
+    mutex = new QMutex();
+
+    portSpeed = QSerialPort::Baud9600;
     ready = false;
 
     connect(&serialPort, &QSerialPort::errorOccurred, this, &InoProg::errorOccurred);
 }
 
-InoProg::~InoProg() = default;
+InoProg::~InoProg() {
+    delete mutex;
+};
 
 const QString &InoProg::getPortName() const {
     return portName;
@@ -66,21 +71,17 @@ bool InoProg::isReady() {
 }
 
 void InoProg::start() {
-    mutex.lock();
+    QMutexLocker mutexLocker(mutex);
 
     if (!serialPort.isOpen())
         programmerStart();
-
-    mutex.unlock();
 }
 
 void InoProg::stop() {
-    mutex.lock();
+    QMutexLocker mutexLocker(mutex);
 
     if (serialPort.isOpen())
         programmerStop();
-
-    mutex.unlock();
 }
 
 void InoProg::programmerStart() {
@@ -146,9 +147,9 @@ void InoProg::errorOccurred(QSerialPort::SerialPortError serialPortError) {
 }
 
 QByteArray InoProg::readEeprom() {
-    QByteArray eepromData;
+    QMutexLocker mutexLocker(mutex);
 
-    mutex.lock();
+    QByteArray eepromData;
 
     emitProgress(-1);
 
@@ -190,13 +191,11 @@ QByteArray InoProg::readEeprom() {
         eepromData.clear();
     }
 
-    mutex.unlock();
-
     return eepromData;
 }
 
 void InoProg::writeEeprom(const QByteArray &data) {
-    mutex.lock();
+    QMutexLocker mutexLocker(mutex);
 
     emitProgress(-1);
 
@@ -235,8 +234,6 @@ void InoProg::writeEeprom(const QByteArray &data) {
         qCritical() << "Serial port is not ready";
         emitError(InoProgError::INOPROG_ERROR_SERIAL_PORT);
     }
-
-    mutex.unlock();
 }
 
 QByteArray InoProg::readPage(PageNum num) {
@@ -299,8 +296,7 @@ void InoProg::emitProgress(int value) {
             "progress",
             Qt::QueuedConnection,
             Q_ARG(int, INOPROG_EEPROM_PAGE_COUNT),
-            Q_ARG(int, value)
-    );
+            Q_ARG(int, value));
 }
 
 void InoProg::emitError(InoProgError inoProgError) {
@@ -308,8 +304,7 @@ void InoProg::emitError(InoProgError inoProgError) {
             this,
             "error",
             Qt::QueuedConnection,
-            Q_ARG(InoProgError, inoProgError)
-    );
+            Q_ARG(InoProgError, inoProgError));
 }
 
 void InoProg::registerMetaTypes() {

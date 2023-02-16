@@ -61,7 +61,7 @@ int main(int argc, char *argv[]) {
 
     mainApplication = new qfm1000::app::QFM1000();
     QApplication::connect(mainApplication, &qfm1000::app::QFM1000::finished, []() { QCoreApplication::exit(); });
-    QMetaObject::invokeMethod(mainApplication, &qfm1000::app::QFM1000::entryPoint, Qt::BlockingQueuedConnection);
+    QMetaObject::invokeMethod(mainApplication, &qfm1000::app::QFM1000::entryPoint, Qt::QueuedConnection);
 
 #ifdef Q_OS_LINUX
     signal(SIGINT, signalHandler);
@@ -86,7 +86,7 @@ void signalHandler(int signal) {
     switch (signal) {
         case SIGINT:
         case SIGTERM:
-            mainApplication->stop();
+            QMetaObject::invokeMethod(mainApplication, &qfm1000::app::QFM1000::stop, Qt::QueuedConnection);
             break;
 
         default:
@@ -102,7 +102,7 @@ BOOL WINAPI ctrlHandler(DWORD fdwCtrlType) {
     switch (fdwCtrlType) {
         case CTRL_C_EVENT:
         case CTRL_CLOSE_EVENT:
-            mainApplication->stop();
+            QMetaObject::invokeMethod(mainApplication, &qfm1000::app::QFM1000::stop, Qt::QueuedConnection);
             return TRUE;
 
         default:
