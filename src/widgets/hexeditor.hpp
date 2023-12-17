@@ -39,10 +39,9 @@
 namespace qfm1000::widgets {
 
     class HexEditor : public QWidget {
-    Q_OBJECT
+        Q_OBJECT
 
     public:
-
         explicit HexEditor(QWidget *parent = nullptr);
 
         ~HexEditor() override;
@@ -62,11 +61,9 @@ namespace qfm1000::widgets {
         void setByteSelected(int bytePosition, bool selected);
 
     protected:
-
         void paintEvent(QPaintEvent *event) override;
 
     private:
-
         QByteArray data;
         int pageSize;
 
@@ -99,9 +96,8 @@ namespace qfm1000::widgets {
     signals:
 
         void ensureVisible(int x, int y);
-
     };
 
-}
+}// namespace qfm1000::widgets
 
 #endif

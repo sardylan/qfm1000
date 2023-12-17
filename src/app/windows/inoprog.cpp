@@ -33,14 +33,12 @@ InoProg::InoProg(QWidget *parent) : QDialog(parent), ui(new Ui::InoProg) {
     initUi();
 }
 
-InoProg::~InoProg() {
-    delete ui;
-}
+InoProg::~InoProg() { delete ui; }
 
-void InoProg::connectSignals() {
-    qInfo() << "Connecting signals";
-}
+void InoProg::connectSignals() { qInfo() << "Connecting signals"; }
 
 void InoProg::initUi() {
     qInfo() << "Initalizing UI";
+
+    ui->progressBar->setValue(-1);
 }

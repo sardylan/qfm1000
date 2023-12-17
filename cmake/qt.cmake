@@ -1,13 +1,11 @@
 find_program(QT_QMAKE_BIN
-        qmake
+        NAMES qmake6 qmake
         PATHS ENV Qt6_DIR ENV Qt5_DIR
         PATH_SUFFIXES bin
         NO_DEFAULT_PATH)
 
-if (NOT QT_QMAKE_BIN)
-    find_program(QT_QMAKE_BIN
-            qmake)
-endif ()
+find_program(QT_QMAKE_BIN
+        NAMES qmake6 qmake)
 
 if (NOT QT_QMAKE_BIN)
     message(FATAL_ERROR "QMake binary not found")

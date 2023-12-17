@@ -18,15 +18,15 @@
  */
 
 
-#include <QtCore/QDebug>
-#include <QtCore/QtGlobal>
 #include <QtCore/QChar>
+#include <QtCore/QDebug>
 #include <QtCore/QString>
+#include <QtCore/QtGlobal>
 
-#include <QtGui/QPainter>
+#include <QtGui/QBrush>
 #include <QtGui/QFontDatabase>
 #include <QtGui/QPaintEvent>
-#include <QtGui/QBrush>
+#include <QtGui/QPainter>
 
 #include "hexeditor.hpp"
 
@@ -52,9 +52,7 @@ HexEditor::HexEditor(QWidget *parent) : QWidget(parent) {
 
 HexEditor::~HexEditor() = default;
 
-const QByteArray &HexEditor::getData() const {
-    return data;
-}
+const QByteArray &HexEditor::getData() const { return data; }
 
 void HexEditor::setData(const QByteArray &newValue) {
     qInfo() << "Setting data";
@@ -70,9 +68,7 @@ void HexEditor::setData(const QByteArray &newValue) {
     invokeUpdate();
 }
 
-int HexEditor::getPageSize() const {
-    return pageSize;
-}
+int HexEditor::getPageSize() const { return pageSize; }
 
 void HexEditor::setPageSize(int newValue) {
     qInfo() << "Setting page size";
@@ -87,8 +83,7 @@ void HexEditor::setPageSize(int newValue) {
 void HexEditor::setByte(int pos, const char &byte) {
     qInfo() << "Setting byte";
 
-    if (pos < 0 || pos >= data.size())
-        return;
+    if (pos < 0 || pos >= data.size()) return;
 
     data.replace(pos, 1, &byte, 1);
     invokeUpdate();
@@ -102,16 +97,13 @@ void HexEditor::setByteSelected(int bytePosition, bool selected) {
 void HexEditor::initSelectionMap() {
     selectionMap.clear();
 
-    for (int i = 0; i < data.size(); i++)
-        selectionMap.insert(i, false);
+    for (int i = 0; i < data.size(); i++) selectionMap.insert(i, false);
 }
 
-void HexEditor::updateRows() {
-    rows = (data.size() / pageSize) + 1;
-}
+void HexEditor::updateRows() { rows = static_cast<int>(static_cast<double>(data.size()) / pageSize) + 1; }
 
 void HexEditor::updatePosSize() {
-    addressesSize = QString::number(data.size(), 16).size();
+    addressesSize = static_cast<int>(QString::number(data.size(), 16).size());
     marginHex = (addressesSize + 1) * cellSizeHorizontal;
 }
 
@@ -156,18 +148,19 @@ void HexEditor::paintPageAddresses(QPainter &painter, int page, int offset) cons
     int y = marginTop + (page * cellSizeVertical) + 1;
 
     int start = offset;
-    int end = offset + (pageSize - 1) < data.size() ? offset + (pageSize - 1) : data.size();
+    int end = offset + (pageSize - 1) < static_cast<int>(data.size()) ? offset + (pageSize - 1)
+                                                                      : static_cast<int>(data.size());
 
-    painter.setBrush(QBrush("#404d54"));
+    painter.setBrush(QBrush(QColor(0x40, 0x4d, 0x54)));
     painter.setRenderHint(QPainter::Antialiasing, false);
     painter.drawRect(QRect(0, (page * cellSizeVertical) - 1, marginHex, cellSizeVertical));
 
     QString text = QString("%1-%2")
-            .arg(start, addressesSize, 16, QLatin1Char('0'))
-            .arg(end, addressesSize, 16, QLatin1Char('0'))
-            .toUpper();
+                           .arg(start, addressesSize, 16, QLatin1Char('0'))
+                           .arg(end, addressesSize, 16, QLatin1Char('0'))
+                           .toUpper();
 
-    painter.setPen(QPen("#CCCCCC"));
+    painter.setPen(QPen(QColor(0xcc, 0xcc, 0xcc)));
     painter.drawText(x, y, text);
 
     painter.setBrush(origBrush);
@@ -178,7 +171,7 @@ void HexEditor::paintPageData(QPainter &painter, int page, int offset) {
     QFont origFont = painter.font();
     QPen origPen = painter.pen();
 
-    painter.setPen(QPen("#222222"));
+//    painter.setPen(QPen(QColor(0x22, 0x22, 0x22)));
     painter.setBackground(QBrush(Qt::red));
 
     QFont font = painter.font();
@@ -189,21 +182,16 @@ void HexEditor::paintPageData(QPainter &painter, int page, int offset) {
 
     for (int col = 0; col < pageSize; col++) {
         int idx = offset + col;
-        if (idx >= data.size())
-            break;
+        if (idx >= data.size()) break;
 
         bool selected = selectionMap.value(idx, false);
 
         int x = marginLeft + marginHex + (col * cellSizeHorizontal);
         quint8 ch = data.at(idx);
-        QString text = QString("%1")
-                .arg(ch, 2, 16, QLatin1Char('0'))
-                .toUpper();
+        QString text = QString("%1").arg(ch, 2, 16, QLatin1Char('0')).toUpper();
 
         if (selected) {
-            QMetaObject::invokeMethod(this, "ensureVisible",
-                                      Qt::QueuedConnection,
-                                      Q_ARG(int, x), Q_ARG(int, y));
+            QMetaObject::invokeMethod(this, "ensureVisible", Qt::QueuedConnection, Q_ARG(int, x), Q_ARG(int, y));
 
             painter.setBackgroundMode(Qt::OpaqueMode);
         }
